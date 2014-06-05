@@ -16,7 +16,8 @@ namespace Tesla.Net
         private readonly HandlerFunc _handler;
         private readonly CancellationTokenSource _cts;
         private readonly Socket _listenerSocket;
-        private readonly IPEndPoint _localEndPoint;
+        
+        private IPEndPoint _localEndPoint;
 
         private int _started;
         private int _stopped;
@@ -57,6 +58,9 @@ namespace Tesla.Net
             {
                 _listenerSocket.Bind(_localEndPoint);
                 _listenerSocket.Listen(500);
+
+                // Need to reassign endpoint to reflect dynamic IP/port allocation if any.
+                _localEndPoint = (IPEndPoint) _listenerSocket.LocalEndPoint;
             }
             catch (SocketException) { /* TODO: Process exception. */ }
             catch (ObjectDisposedException) { /* TODO: Process exception. */ }
