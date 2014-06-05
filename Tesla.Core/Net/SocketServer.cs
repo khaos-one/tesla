@@ -63,7 +63,7 @@ namespace Tesla.Net
                     Disconnect(socket);
                     return;
                 }
-
+                
                 try
                 {
                     await _handler(socket);
