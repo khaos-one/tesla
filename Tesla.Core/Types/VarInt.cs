@@ -62,6 +62,10 @@ namespace Tesla.Types
             _value = v;
         }
 
+        public VarInt(BigInteger v)
+        {
+            _value = v;
+        }
         #endregion
 
 
@@ -89,24 +93,53 @@ namespace Tesla.Types
             return result;
         }
 
-        public byte[] ToBytes()
+        public IEnumerable<byte> ToByteArray()
         {
-            throw new NotImplementedException();
+            //var neededBytes = (long) (BigInteger.Log(_value, 2) + 1) >> 3;
+            var value = _value;
+
+            unchecked
+            {
+                do
+                {
+                    var tmp = value & 0x7f;
+                    value >>= 7;
+
+                    if (value != 0)
+                    {
+                        tmp |= 0x80;
+                    }
+
+                    yield return (byte) tmp;
+                } while (value != 0);
+            }
         }
+
+        // TODO: Implement ZigZag encoding/decoding.
 
         public int CompareTo(object obj)
         {
-            throw new NotImplementedException();
+            return _value.CompareTo(((VarInt) obj)._value);
         }
 
         public int CompareTo(VarInt other)
         {
-            throw new NotImplementedException();
+            return _value.CompareTo(other._value);
         }
 
         public bool Equals(VarInt other)
         {
-            throw new NotImplementedException();
+            return _value.Equals(other._value);
+        }
+
+        public static VarInt operator +(VarInt a, VarInt b)
+        {
+            return new VarInt(a._value + b._value);
+        }
+
+        public static VarInt operator -(VarInt a, VarInt b)
+        {
+            return new VarInt(a._value - b._value);
         }
     }
 }
