@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tesla.Types
 {
     public struct VarInt
-        : IComparable,
+        : IFormattable,
+          IComparable,
           IComparable<VarInt>,
           IEquatable<VarInt>
     {
@@ -73,16 +71,18 @@ namespace Tesla.Types
         {
             BigInteger result = 0;
             var shift = 0;
+            var endReached = false;
 
             unchecked
             {
                 foreach (var b in v)
                 {
                     var tmp = (byte) (b & 0x7f);
-                    result |= tmp << shift;
+                    result |= (BigInteger) tmp << shift;
 
                     if ((b & 0x80) == 0)
                     {
+                        endReached = true;
                         break;
                     }
 
@@ -90,10 +90,20 @@ namespace Tesla.Types
                 }
             }
 
+            if (!endReached)
+            {
+                throw new ArgumentException("VarInt byte array was truncated.");
+            }
+
             return result;
         }
 
-        public IEnumerable<byte> ToByteArray()
+        public long NeededBytes
+        {
+            get { return (long) (BigInteger.Log(_value, 2) + 1) >> 3; }
+        }
+
+        public IEnumerable<byte> ToBytes()
         {
             //var neededBytes = (long) (BigInteger.Log(_value, 2) + 1) >> 3;
             var value = _value;
@@ -102,7 +112,7 @@ namespace Tesla.Types
             {
                 do
                 {
-                    var tmp = value & 0x7f;
+                    var tmp = (byte) (value & 0x7f);
                     value >>= 7;
 
                     if (value != 0)
@@ -110,12 +120,66 @@ namespace Tesla.Types
                         tmp |= 0x80;
                     }
 
-                    yield return (byte) tmp;
+                    yield return tmp;
                 } while (value != 0);
             }
         }
 
         // TODO: Implement ZigZag encoding/decoding.
+
+        #region Implicit Conversion Operators
+
+        public static implicit operator VarInt(Byte[] v)
+        {
+            return new VarInt(v);
+        }
+
+        public static implicit operator VarInt(BigInteger v)
+        {
+            return new VarInt(v);
+        }
+
+        public static implicit operator VarInt(Byte v)
+        {
+            return new VarInt(v);
+        }
+
+        public static implicit operator VarInt(Int16 v)
+        {
+            return new VarInt(v);
+        }
+
+        public static implicit operator VarInt(Int32 v)
+        {
+            return new VarInt(v);
+        }
+
+        public static implicit operator VarInt(Int64 v)
+        {
+            return new VarInt(v);
+        }
+
+        public static implicit operator VarInt(SByte v)
+        {
+            return new VarInt(v);
+        }
+
+        public static implicit operator VarInt(UInt16 v)
+        {
+            return new VarInt(v);
+        }
+
+        public static implicit operator VarInt(UInt32 v)
+        {
+            return new VarInt(v);
+        }
+
+        public static implicit operator VarInt(UInt64 v)
+        {
+            return new VarInt(v);
+        }
+
+        #endregion
 
         public int CompareTo(object obj)
         {
@@ -132,6 +196,8 @@ namespace Tesla.Types
             return _value.Equals(other._value);
         }
 
+        #region Math operators
+
         public static VarInt operator +(VarInt a, VarInt b)
         {
             return new VarInt(a._value + b._value);
@@ -140,6 +206,49 @@ namespace Tesla.Types
         public static VarInt operator -(VarInt a, VarInt b)
         {
             return new VarInt(a._value - b._value);
+        }
+
+        public static VarInt operator *(VarInt a, VarInt b)
+        {
+            return new VarInt(a._value*b._value);
+        }
+
+        public static VarInt operator /(VarInt a, VarInt b)
+        {
+            return new VarInt(a._value/b._value);
+        }
+
+        public static VarInt operator &(VarInt a, VarInt b)
+        {
+            return new VarInt(a._value & b._value);
+        }
+
+        public static VarInt operator |(VarInt a, VarInt b)
+        {
+            return new VarInt(a._value | b._value);
+        }
+
+        public static VarInt operator ^(VarInt a, VarInt b)
+        {
+            return new VarInt(a._value ^ b._value);
+        }
+
+        public static VarInt operator <<(VarInt a, int b)
+        {
+            return new VarInt(a._value << b);
+        }
+
+        public static VarInt operator >>(VarInt a, int b)
+        {
+            return new VarInt(a._value >> b);
+        }
+
+        #endregion
+
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            // ReSharper disable once AssignNullToNotNullAttribute
+            return _value.ToString(format, formatProvider);
         }
     }
 }
