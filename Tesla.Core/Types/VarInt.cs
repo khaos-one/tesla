@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
 namespace Tesla.Types
@@ -98,9 +99,18 @@ namespace Tesla.Types
             return result;
         }
 
+        public long NeededBits
+        {
+            get
+            {
+                var pure = Math.Ceiling((decimal) BigInteger.Log(_value, 2) + 1);
+                return (long) (pure + Math.Ceiling(pure/7) - 1);
+            }
+        }
+
         public long NeededBytes
         {
-            get { return (long) (BigInteger.Log(_value, 2) + 1) >> 3; }
+            get { return (long) (Math.Ceiling((decimal) NeededBits/8)); }
         }
 
         public IEnumerable<byte> ToBytes()
@@ -123,6 +133,11 @@ namespace Tesla.Types
                     yield return tmp;
                 } while (value != 0);
             }
+        }
+
+        public byte[] ToByteArray()
+        {
+            return ToBytes().ToArray();
         }
 
         // TODO: Implement ZigZag encoding/decoding.
