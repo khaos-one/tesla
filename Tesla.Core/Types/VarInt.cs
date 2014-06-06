@@ -96,14 +96,14 @@ namespace Tesla.Types
                 throw new ArgumentException("VarInt byte array was truncated.");
             }
 
-            return result;
+            return DecodeZigZag(result);
         }
 
         public long NeededBits
         {
             get
             {
-                var pure = Math.Ceiling((decimal) BigInteger.Log(_value, 2) + 1);
+                var pure = Math.Ceiling((decimal) BigInteger.Log(BigInteger.Abs(_value), 2) + 1);
                 return (long) (pure + Math.Ceiling(pure/7) - 1);
             }
         }
@@ -115,8 +115,8 @@ namespace Tesla.Types
 
         public IEnumerable<byte> ToBytes()
         {
-            //var neededBytes = (long) (BigInteger.Log(_value, 2) + 1) >> 3;
-            var value = _value;
+            //var value = _value < 0 ? EncodeZigZag(_value, (int) NeededBits) : _value;
+            var value = EncodeZigZag(_value, (int) NeededBits);
 
             unchecked
             {
@@ -140,7 +140,20 @@ namespace Tesla.Types
             return ToBytes().ToArray();
         }
 
-        // TODO: Implement ZigZag encoding/decoding.
+        private static BigInteger EncodeZigZag(BigInteger value, int bitLength)
+        {
+            return (value << 1) ^ (value >> (bitLength - 1));
+        }
+
+        private static BigInteger DecodeZigZag(BigInteger value)
+        {
+            if ((value & 0x1) == 0x1)
+            {
+                return (-1*((value >> 1) + 1));
+            }
+
+            return value >> 1;
+        }
 
         #region Implicit Conversion Operators
 
