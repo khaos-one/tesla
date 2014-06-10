@@ -1,15 +1,16 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Tesla.Core")]
+[assembly: AssemblyTitle("Tesla.Storage")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Tesla.Core")]
-[assembly: AssemblyCopyright("Copyright © Егор 'kha0s' Зеленский, 2014")]
+[assembly: AssemblyProduct("Tesla.Storage")]
+[assembly: AssemblyCopyright("Copyright © Егор 'khaos' Зеленский, 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("743de9e3-1cc5-4e1d-ad6d-f940edb3be0d")]
+[assembly: Guid("e2f0cb96-ebcd-407f-b272-ffe68ee37b0c")]
 
 // Version information for an assembly consists of the following four values:
 //
