@@ -32,6 +32,8 @@ namespace Tesla.Net
         {
             ListenerSocket.Bind(LocalEndPoint);
             ListenerSocket.Listen(500);
+
+            LocalEndPoint = (IPEndPoint) ListenerSocket.LocalEndPoint;
         }
 
         protected override async Task<Action> AcceptClient()

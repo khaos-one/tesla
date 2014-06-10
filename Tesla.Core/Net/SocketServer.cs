@@ -10,6 +10,7 @@ namespace Tesla.Net
 {
     using HandlerFunc = Func<Socket, Task>;
 
+    [Obsolete("This class was replaced by TcpServer implementation.")]
     public class SocketServer
         : IDisposable
     {
