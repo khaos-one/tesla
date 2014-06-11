@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Tesla.Net
 {
-    public abstract class ServerBase<THandler>
+    public abstract class SocketServerBase<THandler>
         : IServer
     {
         private readonly CancellationTokenSource _cts;
@@ -19,18 +19,18 @@ namespace Tesla.Net
 
         public IPEndPoint LocalEndPoint { get; protected set; }
 
-        protected ServerBase(THandler handlerFunc, IPAddress ip, int port)
+        protected SocketServerBase(THandler handlerFunc, IPAddress ip, int port)
         {
             HandlerFunc = handlerFunc;
             LocalEndPoint = new IPEndPoint(ip, port);
             _cts = new CancellationTokenSource();
         }
 
-        protected ServerBase(THandler handlerFunc, int port)
+        protected SocketServerBase(THandler handlerFunc, int port)
             : this(handlerFunc, IPAddress.Any, port)
         { }
 
-        protected ServerBase(THandler handlerFunc)
+        protected SocketServerBase(THandler handlerFunc)
             : this(handlerFunc, 0)
         { }
 

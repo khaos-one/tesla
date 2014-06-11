@@ -9,10 +9,10 @@ namespace Tesla.Net
 {
     using HandlerFunc = Func<Socket, Task>;
 
-    public sealed class TcpServer
-        : ServerBase<HandlerFunc>
+    public sealed class TcpSocketServer
+        : SocketServerBase<HandlerFunc>
     {
-        public TcpServer(HandlerFunc handlerFunc, IPAddress ip, int port)
+        public TcpSocketServer(HandlerFunc handlerFunc, IPAddress ip, int port)
             : base(handlerFunc, ip, port)
         {
             ListenerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -20,11 +20,11 @@ namespace Tesla.Net
             ListenerSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
         }
 
-        public TcpServer(HandlerFunc handlerFunc, int port) 
+        public TcpSocketServer(HandlerFunc handlerFunc, int port) 
             : this(handlerFunc, IPAddress.Any, port)
         { }
 
-        public TcpServer(HandlerFunc handlerFunc) 
+        public TcpSocketServer(HandlerFunc handlerFunc) 
             : this(handlerFunc, 0)
         { }
 

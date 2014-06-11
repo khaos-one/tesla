@@ -34,6 +34,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,11 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BufferManagerExtensions.cs" />
     <Compile Include="IO\StreamExtensions.cs" />
+    <Compile Include="Net\IPEndPointExtensions.cs" />
     <Compile Include="Net\IServer.cs" />
-    <Compile Include="Net\ServerBase.cs" />
+    <Compile Include="Net\SocketServerBase.cs" />
     <Compile Include="Net\SocketExtensions.cs" />
-    <Compile Include="Net\SocketServer.cs" />
     <Compile Include="Net\TcpServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types\VarInt.cs" />
