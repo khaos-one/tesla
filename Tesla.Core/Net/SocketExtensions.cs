@@ -19,12 +19,6 @@ namespace Tesla.Net
             return Task<Socket>.Factory.FromAsync(socket.BeginAccept, socket.EndAccept, null);
         }
 
-        //public static Task<int> ReceiveFromAsync(this Socket socket, byte[] buffer, int offset, int size, SocketFlags flags, ref EndPoint endPoint)
-        //{
-        //    UdpClient
-        //    return Task<int>.Factory.FromAsync(socket.BeginReceiveFrom(buffer, offset, size, flags, ref endPoint), socket.EndReceiveFrom(null, ref endPoint), null);
-        //}
-
         public static IAsyncResult BeginReceiveFrom(this Socket socket, AsyncCallback requestCallback)
         {
             EndPoint endPoint;
@@ -39,7 +33,7 @@ namespace Tesla.Net
                     break;
             }
 
-            var buffer = BufferManagerExtensions.Instance().TakeBuffer(MaxUdpDatagramSize);
+            var buffer = ProgramBuffer.Manager.TakeBuffer(MaxUdpDatagramSize);
             return socket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref endPoint, requestCallback, buffer);
         }
 
@@ -64,7 +58,7 @@ namespace Tesla.Net
             var returnBuffer = new byte[received];
 
             Buffer.BlockCopy(buffer, 0, returnBuffer, 0, returnBuffer.Length);
-            BufferManagerExtensions.Instance().ReturnBuffer(buffer);
+            ProgramBuffer.Manager.ReturnBuffer(buffer);
 
             return returnBuffer;
         }
