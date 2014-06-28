@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Tesla.Net
@@ -8,6 +9,7 @@ namespace Tesla.Net
     {
         public IHttpHandler NextHandler;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected async void ToNextHandler(HttpListenerContext context)
         {
             if (NextHandler != null)

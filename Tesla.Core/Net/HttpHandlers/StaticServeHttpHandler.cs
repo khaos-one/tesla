@@ -36,7 +36,10 @@ namespace Tesla.Net.HttpHandlers
 
                 if (idx == -1)
                 {
-                    ToNextHandler(context);
+                    if (NextHandler != null)
+                        await NextHandler.Handle(context);
+                    else
+                        throw new HttpException(HttpStatusCode.NotFound);
                 }
                 else
                 {
@@ -59,7 +62,10 @@ namespace Tesla.Net.HttpHandlers
             }
             else
             {
-                ToNextHandler(context);
+                if (NextHandler != null)
+                    await NextHandler.Handle(context);
+                else
+                    throw new HttpException(HttpStatusCode.NotFound);
             }
         }
     }
