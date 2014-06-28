@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Tesla.Net;
+using Tesla.Web.HttpHandlers;
 
 namespace Sandbox
 {
@@ -10,11 +13,23 @@ namespace Sandbox
     {
         static void Main(string[] args)
         {
-            var httpserver = new HttpServer(async context =>
+            StaticServeHttpHandler.BasePath = Directory.GetCurrentDirectory();
+            StaticServeHttpHandler.NextHandler = PathActivatorHttpHandler.Handle;
+            PathActivatorHttpHandler.Bindings.Add("/admin", async context =>
             {
-                var responseBytes = Encoding.UTF8.GetBytes("<html><body><pre>It's working!</pre></body></html>");
+                var template = new Sample
+                {
+                    Model = new
+                    {
+                        hello = "This is a string from the code!"
+                    }
+                };
+
+                var responseBytes = Encoding.UTF8.GetBytes(template.TransformText());
                 context.Response.OutputStream.Write(responseBytes, 0, responseBytes.Length);
-            }, "http://*:8080/");
+            });
+
+            var httpserver = new HttpServer(StaticServeHttpHandler.Handle, "http://*:8080/");
 
             httpserver.Start();
             Console.WriteLine("Http server started.");

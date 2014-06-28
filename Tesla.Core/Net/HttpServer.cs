@@ -2,20 +2,23 @@
 using System.Diagnostics;
 using System.Net;
 using System.Threading.Tasks;
+using Tesla.IO;
 
 namespace Tesla.Net
 {
-    using HandlerFunc = Func<HttpListenerContext, Task>;
-
+    //using HandlerFunc = Func<HttpListenerContext, Task>;
+    
     public class HttpServer
         : ServerBase
     {
+        public delegate Task HandlerFunc(HttpListenerContext context);
+
         protected HttpListener Listener;
-        protected HandlerFunc HandlerFunc;
+        protected HandlerFunc Handler;
 
         public HttpServer(HandlerFunc handlerFunc, string[] uriPrefixes)
         {
-            HandlerFunc = handlerFunc;
+            Handler = handlerFunc;
             Listener = new HttpListener();
             Array.ForEach(uriPrefixes, x => Listener.Prefixes.Add(x));
         }
@@ -26,6 +29,18 @@ namespace Tesla.Net
 
         public HttpServer(HandlerFunc handlerFunc)
             : this(handlerFunc, "http://*:80/")
+        { }
+
+        public HttpServer(IHttpHandler handler, string[] uriPrefixes)
+            : this(handler.Handle, uriPrefixes)
+        { }
+
+        public HttpServer(IHttpHandler handler, string uriPrefix)
+            : this(handler.Handle, new[] { uriPrefix })
+        { }
+
+        public HttpServer(IHttpHandler handler)
+            : this(handler.Handle, "http://*:80/")
         { }
 
         protected override void OnStart()
@@ -40,7 +55,13 @@ namespace Tesla.Net
             {
                 try
                 {
-                    await HandlerFunc(context);
+                    await Handler(context);
+                }
+                catch (HttpException e)
+                {
+                    context.Response.StatusCode = (Int32) e.HttpCode;
+                    context.Response.OutputStream.Write(HttpException.FormatErrorCode(context.Response.StatusCode,
+                        context.Response.StatusDescription));
                 }
                 catch (Exception e)
                 {
