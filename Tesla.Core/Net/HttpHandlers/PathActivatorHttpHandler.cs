@@ -6,27 +6,22 @@ namespace Tesla.Net.HttpHandlers
 {
     public class PathActivatorHttpHandler
         : HttpHandlerBase,
-          IDictionary<string, IHttpHandler>
+          IDictionary<string, HttpHandlerFunc>
     {
-        protected readonly IDictionary<string, IHttpHandler> Bindings =
-            new Dictionary<string, IHttpHandler>();
-
-        public void AddBinding(string path, IHttpHandler handler)
-        {
-            Bindings.Add(path, handler);
-        }
+        protected readonly IDictionary<string, HttpHandlerFunc> Bindings =
+            new Dictionary<string, HttpHandlerFunc>();
 
         public override async Task Handle(HttpListenerContext context)
         {
             var path = context.Request.Url.AbsolutePath;
 
             if (Bindings.ContainsKey(path))
-                await Bindings[path].Handle(context);
+                await Bindings[path](context);
             else
                 throw new HttpException(HttpStatusCode.NotFound);
         }
 
-        public void Add(string key, IHttpHandler value)
+        public void Add(string key, HttpHandlerFunc value)
         {
             Bindings.Add(key, value);
         }
@@ -46,23 +41,23 @@ namespace Tesla.Net.HttpHandlers
             return Bindings.Remove(key);
         }
 
-        public bool TryGetValue(string key, out IHttpHandler value)
+        public bool TryGetValue(string key, out HttpHandlerFunc value)
         {
             return Bindings.TryGetValue(key, out value);
         }
 
-        public ICollection<IHttpHandler> Values
+        public ICollection<HttpHandlerFunc> Values
         {
             get { return Bindings.Values; }
         }
 
-        public IHttpHandler this[string key]
+        public HttpHandlerFunc this[string key]
         {
             get { return Bindings[key]; }
             set { Bindings[key] = value; }
         }
 
-        public void Add(KeyValuePair<string, IHttpHandler> item)
+        public void Add(KeyValuePair<string, HttpHandlerFunc> item)
         {
             Bindings.Add(item);
         }
@@ -72,12 +67,12 @@ namespace Tesla.Net.HttpHandlers
             Bindings.Clear();
         }
 
-        public bool Contains(KeyValuePair<string, IHttpHandler> item)
+        public bool Contains(KeyValuePair<string, HttpHandlerFunc> item)
         {
             return Bindings.Contains(item);
         }
 
-        public void CopyTo(KeyValuePair<string, IHttpHandler>[] array, int arrayIndex)
+        public void CopyTo(KeyValuePair<string, HttpHandlerFunc>[] array, int arrayIndex)
         {
             Bindings.CopyTo(array, arrayIndex);
         }
@@ -92,12 +87,12 @@ namespace Tesla.Net.HttpHandlers
             get { return Bindings.IsReadOnly; }
         }
 
-        public bool Remove(KeyValuePair<string, IHttpHandler> item)
+        public bool Remove(KeyValuePair<string, HttpHandlerFunc> item)
         {
             return Bindings.Remove(item);
         }
 
-        public IEnumerator<KeyValuePair<string, IHttpHandler>> GetEnumerator()
+        public IEnumerator<KeyValuePair<string, HttpHandlerFunc>> GetEnumerator()
         {
             return Bindings.GetEnumerator();
         }

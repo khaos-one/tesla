@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using Tesla.Net;
-using Tesla.Web.HttpHandlers;
+using Tesla.Net.HttpHandlers;
 
 namespace Sandbox
 {
@@ -13,27 +10,35 @@ namespace Sandbox
     {
         static void Main(string[] args)
         {
-            StaticServeHttpHandler.BasePath = Directory.GetCurrentDirectory();
-            StaticServeHttpHandler.NextHandler = PathActivatorHttpHandler.Handle;
-            PathActivatorHttpHandler.Bindings.Add("/admin", async context =>
+            var handler = new StaticServeHttpHandler(Directory.GetCurrentDirectory())
             {
-                var template = new Sample
+                NextHandler = new PathActivatorHttpHandler()
                 {
-                    Model = new
                     {
-                        hello = "This is a string from the code!"
+                        "/home",
+                        async context =>
+                        {
+                            var template = new Sample
+                            {
+                                Model = new
+                                {
+                                    hello = "This is a string from the code!"
+                                }
+                            };
+
+                            var responseBytes = Encoding.UTF8.GetBytes(template.TransformText());
+                            context.Response.OutputStream.Write(responseBytes, 0, responseBytes.Length);
+                        }
                     }
-                };
+                }
+            };
 
-                var responseBytes = Encoding.UTF8.GetBytes(template.TransformText());
-                context.Response.OutputStream.Write(responseBytes, 0, responseBytes.Length);
-            });
+            var httpServer = new HttpServer(handler, "http://*:8080/");
 
-            var httpserver = new HttpServer(StaticServeHttpHandler.Handle, "http://*:8080/");
-
-            httpserver.Start();
+            httpServer.Start();
             Console.WriteLine("Http server started.");
             Console.ReadLine();
+            httpServer.Stop();
         }
     }
 }

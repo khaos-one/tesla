@@ -19,7 +19,12 @@ namespace Tesla.Net.HttpHandlers
             "application/x-javascript", "text/plain", "image/png", "image/x-icon", "application/pdf"
         };
 
-        public string BasePath;
+        protected string BasePath;
+
+        public StaticServeHttpHandler(string basePath)
+        {
+            BasePath = basePath;
+        }
 
         public override async Task Handle(HttpListenerContext context)
         {

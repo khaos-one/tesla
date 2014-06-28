@@ -11,23 +11,21 @@ namespace Tesla.Net
     public class HttpServer
         : ServerBase
     {
-        public delegate Task HandlerFunc(HttpListenerContext context);
-
         protected HttpListener Listener;
-        protected HandlerFunc Handler;
+        protected HttpHandlerFunc Handler;
 
-        public HttpServer(HandlerFunc handlerFunc, string[] uriPrefixes)
+        public HttpServer(HttpHandlerFunc handlerFunc, string[] uriPrefixes)
         {
             Handler = handlerFunc;
             Listener = new HttpListener();
             Array.ForEach(uriPrefixes, x => Listener.Prefixes.Add(x));
         }
 
-        public HttpServer(HandlerFunc handlerFunc, string uriPrefix)
+        public HttpServer(HttpHandlerFunc handlerFunc, string uriPrefix)
             : this(handlerFunc, new[] {uriPrefix})
         { }
 
-        public HttpServer(HandlerFunc handlerFunc)
+        public HttpServer(HttpHandlerFunc handlerFunc)
             : this(handlerFunc, "http://*:80/")
         { }
 

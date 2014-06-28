@@ -6,7 +6,7 @@ namespace Tesla.Net
     public abstract class HttpHandlerBase
         : IHttpHandler
     {
-        protected IHttpHandler NextHandler;
+        public IHttpHandler NextHandler;
 
         protected async void ToNextHandler(HttpListenerContext context)
         {

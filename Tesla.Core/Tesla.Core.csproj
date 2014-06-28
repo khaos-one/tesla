@@ -45,6 +45,7 @@
     <Compile Include="IO\StreamExtensions.cs" />
     <Compile Include="Net\HttpException.cs" />
     <Compile Include="Net\HttpHandlerBase.cs" />
+    <Compile Include="Net\HttpHandlerFunc.cs" />
     <Compile Include="Net\HttpHandlers\HttpHandlerWrapper.cs" />
     <Compile Include="Net\HttpHandlers\PathActivatorHttpHandler.cs" />
     <Compile Include="Net\HttpHandlers\StaticServeHttpHandler.cs" />

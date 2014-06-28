@@ -6,9 +6,9 @@ namespace Tesla.Net.HttpHandlers
     public class HttpHandlerWrapper
         : HttpHandlerBase
     {
-        protected HttpServer.HandlerFunc Handler;
+        protected HttpHandlerFunc Handler;
 
-        public HttpHandlerWrapper(HttpServer.HandlerFunc handler)
+        public HttpHandlerWrapper(HttpHandlerFunc handler)
         {
             Handler = handler;
         }
