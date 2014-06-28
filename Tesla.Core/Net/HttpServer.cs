@@ -25,7 +25,7 @@ namespace Tesla.Net
         { }
 
         public HttpServer(HandlerFunc handlerFunc)
-            : this(handlerFunc, "http://*:80")
+            : this(handlerFunc, "http://*:80/")
         { }
 
         protected override void OnStart()
