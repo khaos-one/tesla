@@ -8,12 +8,8 @@ using System.Threading.Tasks;
 namespace Tesla.Net
 {
     public abstract class SocketServerBase<THandler>
-        : IServer
+        : ServerBase
     {
-        private readonly CancellationTokenSource _cts;
-        private int _started;
-        private int _stopped;
-
         protected Socket ListenerSocket;
         protected readonly THandler HandlerFunc;
 
@@ -23,7 +19,6 @@ namespace Tesla.Net
         {
             HandlerFunc = handlerFunc;
             LocalEndPoint = new IPEndPoint(ip, port);
-            _cts = new CancellationTokenSource();
         }
 
         protected SocketServerBase(THandler handlerFunc, int port)
@@ -40,66 +35,25 @@ namespace Tesla.Net
         }
 
         protected abstract void BindSocket();
-        protected abstract Task<Action> AcceptClient();
 
-        public void Start()
+        protected override void OnStart()
         {
-            if (Interlocked.CompareExchange(ref _started, 1, 0) != 0)
-            {
-                throw new InvalidOperationException("Server has already been started.");
-            }
-
             try
             {
                 BindSocket();
             }
             catch (SocketException) { /* TODO: Process exception. */ }
             catch (ObjectDisposedException) { /* TODO: Process exception. */ }
-
-            #pragma warning disable 4014
-            ListenAsync();
-            #pragma warning restore 4014
         }
 
-        protected async Task ListenAsync()
+        protected override void OnStop()
         {
-            if (_cts.Token.IsCancellationRequested)
-            {
-                return;
-            }
-
-            var accept = await AcceptClient();
-            ThreadPool.QueueUserWorkItem(_ => accept());
-
-            await ListenAsync();
+            ListenerSocket.Disconnect(true);
         }
 
-        public void Stop()
+        public new void Dispose()
         {
-            if (_started == 0)
-            {
-                return;
-            }
-
-            if (Interlocked.CompareExchange(ref _stopped, 1, 0) != 0)
-            {
-                return;
-            }
-
-            try
-            {
-                _cts.Cancel();
-                ListenerSocket.Disconnect(true);
-            }
-            catch (Exception e)
-            {
-                Trace.TraceWarning("TCP Server stop exception: {0}.", e.Message);
-            }
-        }
-
-        public void Dispose()
-        {
-            Stop();
+            base.Dispose();
 
             if (ListenerSocket != null)
             {

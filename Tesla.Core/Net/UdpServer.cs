@@ -42,7 +42,7 @@ namespace Tesla.Net
                 }
                 catch (Exception e)
                 {
-                    Trace.TraceWarning("UDP Handler exception: {0}.", e.Message);
+                    Trace.TraceWarning("UDP Handler exception: {0}.", e);
                 }
             };
         }

@@ -53,7 +53,7 @@ namespace Tesla.Net
                 }
                 catch (Exception e)
                 {
-                    Trace.TraceWarning("TCP Handler exception: {0}.", e.Message);
+                    Trace.TraceWarning("TCP Handler exception: {0}.", e);
                 }
 
                 Disconnect(socket);
