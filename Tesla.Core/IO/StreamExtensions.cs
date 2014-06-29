@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Tesla.IO
 {
@@ -33,13 +34,29 @@ namespace Tesla.IO
 
         public static void Write(this Stream stream, string str, Encoding encoding)
         {
-            var encoded = encoding.GetBytes(str);
+            var len = encoding.GetByteCount(str);
+            var encoded = ProgramBuffer.Manager.TakeBuffer(len);
+            Array.Clear(encoded, 0, encoded.Length);
+            encoding.GetBytes(str, 0, str.Length, encoded, 0);
             stream.Write(encoded, 0, encoded.Length);
+            ProgramBuffer.Manager.ReturnBuffer(encoded);
         }
 
         public static void Write(this Stream stream, string str)
         {
             Write(stream, str, Encoding.UTF8);
+        }
+
+        public static void WriteFile(this Stream stream, string filePath)
+        {
+            using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                fs.CopyTo(stream);
+        }
+
+        public static async void WriteFileAsync(this Stream stream, string filePath)
+        {
+            using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                await fs.CopyToAsync(stream);
         }
     }
 }

@@ -26,8 +26,7 @@ namespace Sandbox
                                 }
                             };
 
-                            var responseBytes = Encoding.UTF8.GetBytes(template.TransformText());
-                            context.Response.OutputStream.Write(responseBytes, 0, responseBytes.Length);
+                            context.Response.Write(template.TransformText());
                         }
                     }
                 }
