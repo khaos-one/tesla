@@ -58,9 +58,9 @@
     <Compile Include="Types\VarIntTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Tesla.Core\Tesla.Core.csproj">
+    <ProjectReference Include="..\Tesla\Tesla.csproj">
       <Project>{d27077ac-2e22-49ef-9498-f2f023412d2a}</Project>
-      <Name>Tesla.Core</Name>
+      <Name>Tesla</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
