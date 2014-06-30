@@ -12,22 +12,31 @@ namespace Tesla.Net
     {
         public static void Write(this HttpListenerResponse response, string str, Encoding encoding)
         {
-            response.OutputStream.Write(str, encoding);
+            var encoded = str.ToBytes(encoding);
+            response.ContentLength64 += encoded.Length;
+            response.OutputStream.Write(encoded, 0, encoded.Length);
         }
 
         public static async Task WriteAsync(this HttpListenerResponse response, string str, Encoding encoding)
         {
-            await response.OutputStream.WriteAsync(str, encoding);
+            var encoded = str.ToBytes(encoding);
+            response.ContentLength64 += encoded.Length;
+            await response.OutputStream.WriteAsync(encoded, 0, encoded.Length);
         }
 
         public static void Write(this HttpListenerResponse response, string str)
         {
-            response.OutputStream.Write(str);
+            Write(response, str, Encoding.UTF8);
         }
 
         public static async Task WriteAsync(this HttpListenerResponse response, string str)
         {
-            await response.OutputStream.WriteAsync(str);
+            await WriteAsync(response, str, Encoding.UTF8);
+        }
+
+        public static void RemoveCookie(this HttpListenerResponse response, string cookieName)
+        {
+            response.SetCookie(new Cookie(cookieName, string.Empty) { Expired = true });
         }
     }
 }

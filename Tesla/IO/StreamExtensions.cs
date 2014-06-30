@@ -34,22 +34,28 @@ namespace Tesla.IO
 
         public static void Write(this Stream stream, string str, Encoding encoding)
         {
-            var len = encoding.GetByteCount(str);
-            var encoded = ProgramBuffer.Manager.TakeBuffer(len);
-            Array.Clear(encoded, 0, encoded.Length);
-            encoding.GetBytes(str, 0, str.Length, encoded, 0);
+            //var len = encoding.GetByteCount(str);
+            //var encoded = ProgramBuffer.Manager.TakeBuffer(len);
+            //Array.Clear(encoded, 0, encoded.Length);
+            //encoding.GetBytes(str, 0, str.Length, encoded, 0);
+            //stream.Write(encoded, 0, encoded.Length);
+            //ProgramBuffer.Manager.ReturnBuffer(encoded);
+
+            var encoded = str.ToBytes(encoding);
             stream.Write(encoded, 0, encoded.Length);
-            ProgramBuffer.Manager.ReturnBuffer(encoded);
         }
 
         public static async Task WriteAsync(this Stream stream, string str, Encoding encoding)
         {
-            var len = encoding.GetByteCount(str);
-            var encoded = ProgramBuffer.Manager.TakeBuffer(len);
-            Array.Clear(encoded, 0, encoded.Length);
-            encoding.GetBytes(str, 0, str.Length, encoded, 0);
+            //var len = encoding.GetByteCount(str);
+            //var encoded = ProgramBuffer.Manager.TakeBuffer(len);
+            //Array.Clear(encoded, 0, encoded.Length);
+            //encoding.GetBytes(str, 0, str.Length, encoded, 0);
+            //await stream.WriteAsync(encoded, 0, encoded.Length);
+            //ProgramBuffer.Manager.ReturnBuffer(encoded);
+
+            var encoded = str.ToBytes(encoding);
             await stream.WriteAsync(encoded, 0, encoded.Length);
-            ProgramBuffer.Manager.ReturnBuffer(encoded);
         }
 
         public static void Write(this Stream stream, string str)
@@ -68,7 +74,7 @@ namespace Tesla.IO
                 fs.CopyTo(stream);
         }
 
-        public static async void WriteFileAsync(this Stream stream, string filePath)
+        public static async Task WriteFileAsync(this Stream stream, string filePath)
         {
             using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
                 await fs.CopyToAsync(stream);

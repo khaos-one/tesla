@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using Tesla.IO;
 
 namespace Tesla.Net.HttpHandlers
 {
@@ -52,11 +53,12 @@ namespace Tesla.Net.HttpHandlers
                         if (File.Exists(absolutePath))
                         {
                             context.Response.ContentType = MimeTypes[idx];
+                            await context.Response.OutputStream.WriteFileAsync(absolutePath);
 
-                            using (var fs = new FileStream(absolutePath, FileMode.Open, FileAccess.Read))
-                            {
-                                await fs.CopyToAsync(context.Response.OutputStream);
-                            }
+                            //using (var fs = new FileStream(absolutePath, FileMode.Open, FileAccess.Read))
+                            //{
+                            //    await fs.CopyToAsync(context.Response.OutputStream);
+                            //}
                         }
                         else
                         {

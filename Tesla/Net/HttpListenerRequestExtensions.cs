@@ -23,7 +23,7 @@ namespace Tesla.Net
             return request.HttpMethod == "POST";
         }
 
-        public static NameValueCollection PostData(this HttpListenerRequest request)
+        public static NameValueCollection FormData(this HttpListenerRequest request)
         {
             var result = new NameValueCollection();
 
@@ -44,7 +44,7 @@ namespace Tesla.Net
             return result;
         }
 
-        public static async Task<NameValueCollection> PostDataAsync(this HttpListenerRequest request)
+        public static async Task<NameValueCollection> FormDataAsync(this HttpListenerRequest request)
         {
             var result = new NameValueCollection();
 

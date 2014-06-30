@@ -60,12 +60,16 @@ namespace Tesla.Net
                 catch (HttpException e)
                 {
                     context.Response.StatusCode = (Int32) e.HttpCode;
-                    context.Response.OutputStream.Write(HttpException.FormatErrorCode(context.Response.StatusCode,
+                    context.Response.Write(HttpException.FormatErrorCode(context.Response.StatusCode,
                         context.Response.StatusDescription));
                 }
                 catch (Exception e)
                 {
                     Trace.TraceWarning("HTTP Handler exception: {0}.", e);
+
+                    context.Response.StatusCode = 500;
+                    context.Response.Write(HttpException.FormatErrorCode(context.Response.StatusCode,
+                        context.Response.StatusDescription));
                 }
 
                 context.Response.OutputStream.Close();
