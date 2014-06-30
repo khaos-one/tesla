@@ -10,13 +10,15 @@ namespace Tesla.Net.HttpHandlers
     {
         internal static string[] FileExtensions =
         {
-            ".html", ".htm", ".css", ".xml", ".gif", ".jpeg", ".jpg", 
-            ".js", ".txt", ".png", ".ico", ".pdf"
+            ".html", ".htm", ".css", ".xml", ".gif", ".jpeg", ".jpg", ".svg", 
+            ".js", ".txt", ".png", ".ico", ".pdf",
+            ".zip", ".woff", ".ttf"
         };
         internal static string[] MimeTypes =
         {
-            "text/html", "text/html", "text/css", "text/xml", "image/gif", "image/jpeg", "image/jpeg",
-            "application/x-javascript", "text/plain", "image/png", "image/x-icon", "application/pdf"
+            "text/html", "text/html", "text/css", "text/xml", "image/gif", "image/jpeg", "image/jpeg", "image/svg+xml",
+            "application/x-javascript", "text/plain", "image/png", "image/x-icon", "application/pdf",
+            "application/zip", "application/x-woff", "application/x-font-ttf"
         };
 
         protected string BasePath;
@@ -45,7 +47,7 @@ namespace Tesla.Net.HttpHandlers
                 {
                     var absolutePath = Path.Combine(BasePath, path.TrimStart('/', '\\'));
 
-                    if (BasePath.IndexOf(absolutePath, StringComparison.OrdinalIgnoreCase) != -1)
+                    if (absolutePath.IndexOf(BasePath, StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         if (File.Exists(absolutePath))
                         {

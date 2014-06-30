@@ -51,6 +51,8 @@ namespace Tesla.Net
             var context = await Listener.GetContextAsync();
             return async () =>
             {
+                context.Response.Headers.Add(HttpResponseHeader.Server, "Tesla/1.0");
+
                 try
                 {
                     await Handler(context);
