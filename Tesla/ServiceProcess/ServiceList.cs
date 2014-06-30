@@ -41,8 +41,8 @@ namespace Tesla.ServiceProcess
             });
 
             Console.WriteLine("All services stopped.");
-            Console.Write("Press any key to continue...");
-            Console.ReadKey();
+            Console.Write("Press <return> key to continue...");
+            Console.ReadLine();
         }
     }
 }
