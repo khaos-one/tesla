@@ -17,12 +17,12 @@ namespace Tesla.Security
 
         public static byte[] ComputeSha256Hash(string target, Encoding encoding)
         {
-            return ComputeSha256Hash(encoding.GetBytes(target));
+            return ComputeSha256Hash(target.ToBytes(encoding));
         }
 
         public static byte[] ComputeSha256Hash(string target)
         {
-            return ComputeSha256Hash(Encoding.UTF8.GetBytes(target));
+            return ComputeSha256Hash(target.ToBytes());
         }
     }
 }
