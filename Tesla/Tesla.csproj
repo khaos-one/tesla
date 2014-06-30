@@ -49,6 +49,7 @@
     <Compile Include="Net\HttpHandlers\HttpHandlerWrapper.cs" />
     <Compile Include="Net\HttpHandlers\PathActivatorHttpHandler.cs" />
     <Compile Include="Net\HttpHandlers\StaticServeHttpHandler.cs" />
+    <Compile Include="Net\HttpListenerRequestExtensions.cs" />
     <Compile Include="Net\HttpListenerResponseExtensions.cs" />
     <Compile Include="Net\HttpServer.cs" />
     <Compile Include="Net\IHttpHandler.cs" />
