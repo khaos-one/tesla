@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\NameValueCollectionExtensions.cs" />
     <Compile Include="IO\StreamExtensions.cs" />
     <Compile Include="Net\HttpException.cs" />
     <Compile Include="Net\HttpHandlerBase.cs" />
