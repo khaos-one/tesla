@@ -12,7 +12,7 @@ namespace Sandbox
         {
             var handler = new StaticServeHttpHandler(Directory.GetCurrentDirectory())
             {
-                NextHandler = new PathActivatorHttpHandler()
+                NextHandler = new PathActivatorHttpHandler
                 {
                     {
                         "/home",

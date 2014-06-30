@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Tesla.Core")]
+[assembly: AssemblyTitle("Tesla")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Tesla.Core")]
-[assembly: AssemblyCopyright("Copyright © Егор 'kha0s' Зеленский, 2014")]
+[assembly: AssemblyCopyright("© Егор 'kha0s' Зеленский, 2014.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

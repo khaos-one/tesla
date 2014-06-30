@@ -45,18 +45,25 @@ namespace Tesla.Net.HttpHandlers
                 {
                     var absolutePath = Path.Combine(BasePath, path.TrimStart('/', '\\'));
 
-                    if (File.Exists(absolutePath))
+                    if (BasePath.IndexOf(absolutePath, StringComparison.OrdinalIgnoreCase) != -1)
                     {
-                        context.Response.ContentType = MimeTypes[idx];
-
-                        using (var fs = new FileStream(absolutePath, FileMode.Open, FileAccess.Read))
+                        if (File.Exists(absolutePath))
                         {
-                            await fs.CopyToAsync(context.Response.OutputStream);
+                            context.Response.ContentType = MimeTypes[idx];
+
+                            using (var fs = new FileStream(absolutePath, FileMode.Open, FileAccess.Read))
+                            {
+                                await fs.CopyToAsync(context.Response.OutputStream);
+                            }
+                        }
+                        else
+                        {
+                            throw new HttpException(HttpStatusCode.NotFound);
                         }
                     }
                     else
                     {
-                        throw new HttpException(HttpStatusCode.NotFound);
+                        throw new HttpException(HttpStatusCode.Forbidden);
                     }
                 }
             }
