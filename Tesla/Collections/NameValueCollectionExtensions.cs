@@ -16,7 +16,7 @@ namespace Tesla.Collections
                 return false;
 
             var result = collection.Get(key);
-            return string.IsNullOrWhiteSpace(result);
+            return !string.IsNullOrWhiteSpace(result);
         }
     }
 }
