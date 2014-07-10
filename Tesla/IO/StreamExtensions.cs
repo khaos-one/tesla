@@ -32,6 +32,32 @@ namespace Tesla.IO
             return bytes.ToArray();
         }
 
+        public static byte[] ReadToTimeout(this Stream stream, int maxCount)
+        {
+            var bytes = new List<byte>();
+            var count = 0;
+
+            try
+            {
+                do
+                {
+                    var read = stream.ReadByte();
+
+                    if (read == -1)
+                    {
+                        break;
+                    }
+
+                    bytes.Add((byte) read);
+                    count++;
+                } while (count < maxCount);
+            }
+            catch (TimeoutException) { }
+            catch (IOException) { }
+
+            return bytes.ToArray();
+        }
+
         public static void Write(this Stream stream, string str, Encoding encoding)
         {
             //var len = encoding.GetByteCount(str);

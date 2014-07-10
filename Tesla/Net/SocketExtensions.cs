@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using Tesla.IO;
 
 namespace Tesla.Net
 {
@@ -78,6 +79,14 @@ namespace Tesla.Net
         public static NetworkStream GetStream(this Socket socket)
         {
             return new NetworkStream(socket);
+        }
+
+        public static byte[] ReadToTimeout(this Socket socket)
+        {
+            using (var ns = socket.GetStream())
+            {
+                return ns.ReadToTimeout();
+            }
         }
     }
 }
