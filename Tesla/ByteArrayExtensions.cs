@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Tesla
@@ -54,6 +55,17 @@ namespace Tesla
 
                 return new string(c, 0, l - 1);
             }
+        }
+
+        public static void BlockCopyTo(this byte[] array, [In, Out] byte[] target, int sourceOffset = 0, int targetOffset = 0)
+        {
+            Buffer.BlockCopy(array, sourceOffset, target, targetOffset, array.Length);
+        }
+
+        public static void BlockCopyFrom(this byte[] array, [In, Out] byte[] target, int sourceOffset = 0,
+            int targetOffset = 0)
+        {
+            Buffer.BlockCopy(target, targetOffset, array, sourceOffset, target.Length);
         }
     }
 }

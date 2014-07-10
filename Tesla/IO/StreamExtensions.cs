@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,7 +35,7 @@ namespace Tesla.IO
 
         public static byte[] ReadToTimeout(this Stream stream, int maxCount)
         {
-            var bytes = new List<byte>();
+            var bytes = new List<byte>(maxCount);
             var count = 0;
 
             try
@@ -124,6 +125,30 @@ namespace Tesla.IO
                 result = await sr.ReadToEndAsync();
 
             return result;
+        }
+
+        public static int Read(this Stream stream, [In, Out] byte[] buffer, int offset = 0)
+        {
+            return stream.Read(buffer, offset, buffer.Length);
+        }
+
+        public static async Task<int> ReadAsync(this Stream stream, [In, Out] byte[] buffer, int offset = 0)
+        {
+            return await stream.ReadAsync(buffer, offset, buffer.Length);
+        }
+
+        public static byte[] ReadBytes(this Stream stream, int count, int offset = 0)
+        {
+            var buffer = new byte[count];
+            stream.Read(buffer, offset);
+            return buffer;
+        }
+
+        public static async Task<byte[]> ReadBytesAsync(this Stream stream, int count, int offset = 0)
+        {
+            var buffer = new byte[count];
+            await stream.ReadAsync(buffer, offset);
+            return buffer;
         }
     }
 }
