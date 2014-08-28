@@ -8,17 +8,22 @@ using System.Threading.Tasks;
 namespace Tesla.Net
 {
     using HandlerFunc = Func<Socket, Task>;
+    using ErrorFunc = Func<Socket, Exception, bool>;
 
     public sealed class TcpSocketServer
-        : SocketServerBase<HandlerFunc>
+        : SocketServerBase<HandlerFunc, ErrorFunc>
     {
-        public TcpSocketServer(HandlerFunc handlerFunc, IPAddress ip, int port)
-            : base(handlerFunc, ip, port)
+        public TcpSocketServer(HandlerFunc handlerFunc, IPAddress ip, int port, ErrorFunc errorFunc)
+            : base(handlerFunc, ip, port, errorFunc)
         {
             ListenerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             ListenerSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
             ListenerSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
         }
+
+        public TcpSocketServer(HandlerFunc handlerFunc, IPAddress ip, int port)
+            : this(handlerFunc, ip, port, null)
+        { }
 
         public TcpSocketServer(HandlerFunc handlerFunc, int port) 
             : this(handlerFunc, IPAddress.Any, port)
@@ -54,6 +59,11 @@ namespace Tesla.Net
                 catch (Exception e)
                 {
                     Trace.TraceWarning("TCP Handler exception: {0}.", e);
+
+                    if (ExceptionHandlerFunc != null)
+                    {
+                        ExceptionHandlerFunc(socket, e);
+                    }
                 }
 
                 Disconnect(socket);

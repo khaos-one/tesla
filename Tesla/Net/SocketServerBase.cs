@@ -1,25 +1,29 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Tesla.Net
 {
-    public abstract class SocketServerBase<THandler>
+    public abstract class SocketServerBase<THandler, TExceptionHandler>
         : ServerBase
+        where TExceptionHandler : class
     {
         protected Socket ListenerSocket;
         protected readonly THandler HandlerFunc;
+        protected readonly TExceptionHandler ExceptionHandlerFunc;
 
         public IPEndPoint LocalEndPoint { get; protected set; }
 
-        protected SocketServerBase(THandler handlerFunc, IPAddress ip, int port)
+        protected SocketServerBase(THandler handlerFunc, IPAddress ip, int port, TExceptionHandler exceptionHandlerFunc)
         {
             HandlerFunc = handlerFunc;
             LocalEndPoint = new IPEndPoint(ip, port);
+            ExceptionHandlerFunc = exceptionHandlerFunc;
         }
+
+        protected SocketServerBase(THandler handlerFunc, IPAddress ip, int port)
+            : this(handlerFunc, ip, port, null)
+        { }
 
         protected SocketServerBase(THandler handlerFunc, int port)
             : this(handlerFunc, IPAddress.Any, port)

@@ -59,6 +59,29 @@ namespace Tesla.IO
             return bytes.ToArray();
         }
 
+        public static int ReadToTimeout(this Stream stream, [In, Out] byte[] buffer, int offset = 0)
+        {
+            var count = 0;
+
+            try
+            {
+                while (count + offset < buffer.Length)
+                {
+                    var read = stream.ReadByte();
+
+                    if (read == -1)
+                        break;
+
+                    buffer[count + offset] = (byte) read;
+                    count++;
+                }
+            }
+            catch (TimeoutException) { }
+            catch (IOException) { }
+
+            return count;
+        }
+
         public static void Write(this Stream stream, string str, Encoding encoding)
         {
             //var len = encoding.GetByteCount(str);
@@ -129,12 +152,12 @@ namespace Tesla.IO
 
         public static int Read(this Stream stream, [In, Out] byte[] buffer, int offset = 0)
         {
-            return stream.Read(buffer, offset, buffer.Length);
+            return stream.Read(buffer, offset, buffer.Length - offset);
         }
 
         public static async Task<int> ReadAsync(this Stream stream, [In, Out] byte[] buffer, int offset = 0)
         {
-            return await stream.ReadAsync(buffer, offset, buffer.Length);
+            return await stream.ReadAsync(buffer, offset, buffer.Length - offset);
         }
 
         public static byte[] ReadBytes(this Stream stream, int count, int offset = 0)

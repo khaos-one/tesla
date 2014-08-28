@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -23,6 +24,44 @@ namespace Tesla.Security
         public static byte[] ComputeSha256Hash(string target)
         {
             return ComputeSha256Hash(target.ToBytes());
+        }
+
+        public static byte[] DiffieHellmanNegotiate(Stream s)
+        {
+            using (var dh = new ECDiffieHellmanCng())
+            {
+                dh.KeySize = 256;
+                dh.KeyDerivationFunction = ECDiffieHellmanKeyDerivationFunction.Hash;
+                dh.HashAlgorithm = CngAlgorithm.Sha256;
+
+                var publicKeyEccBlob = dh.PublicKey.ToByteArray();
+                var otherPublicKeyEccBlob = new byte[publicKeyEccBlob.Length];
+
+                s.Write(publicKeyEccBlob, 0, publicKeyEccBlob.Length);
+                s.Read(otherPublicKeyEccBlob, 0, otherPublicKeyEccBlob.Length);
+
+                var key = CngKey.Import(otherPublicKeyEccBlob, CngKeyBlobFormat.EccPublicBlob);
+                return dh.DeriveKeyMaterial(key);
+            }
+        }
+
+        public static async Task<byte[]> DiffieHellmanNegotiateAsync(Stream s)
+        {
+            using (var dh = new ECDiffieHellmanCng())
+            {
+                dh.KeySize = 256;
+                dh.KeyDerivationFunction = ECDiffieHellmanKeyDerivationFunction.Hash;
+                dh.HashAlgorithm = CngAlgorithm.Sha256;
+
+                var publicKeyEccBlob = dh.PublicKey.ToByteArray();
+                var otherPublicKeyEccBlob = new byte[publicKeyEccBlob.Length];
+
+                await s.WriteAsync(publicKeyEccBlob, 0, publicKeyEccBlob.Length);
+                await s.ReadAsync(otherPublicKeyEccBlob, 0, otherPublicKeyEccBlob.Length);
+
+                var key = CngKey.Import(otherPublicKeyEccBlob, CngKeyBlobFormat.EccPublicBlob);
+                return dh.DeriveKeyMaterial(key);
+            }
         }
     }
 }

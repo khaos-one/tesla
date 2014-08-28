@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 namespace Tesla.Net
 {
     using HandlerFunc = Func<byte[], IPEndPoint, Task>;
+    using ErrorFunc = Func<byte[], IPEndPoint, Exception, bool>;
 
     public sealed class UdpSocketServer
-        : SocketServerBase<HandlerFunc>
+        : SocketServerBase<HandlerFunc, ErrorFunc>
     {
         public UdpSocketServer(HandlerFunc handlerFunc, IPAddress ip, int port)
             : base(handlerFunc, ip, port)
@@ -43,6 +44,11 @@ namespace Tesla.Net
                 catch (Exception e)
                 {
                     Trace.TraceWarning("UDP Handler exception: {0}.", e);
+
+                    if (ExceptionHandlerFunc != null)
+                    {
+                        ExceptionHandlerFunc(packet.Item1, packet.Item2, e);
+                    }
                 }
             };
         }
