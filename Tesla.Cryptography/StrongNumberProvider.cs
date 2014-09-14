@@ -9,14 +9,14 @@ namespace Tesla.Cryptography
 
         public uint NextUInt32()
         {
-            byte[] res = new byte[4];
+            var res = new byte[4];
             csp.GetBytes(res);
             return BitConverter.ToUInt32(res, 0);
         }
 
         public int NextInt()
         {
-            byte[] res = new byte[4];
+            var res = new byte[4];
             csp.GetBytes(res);
             return BitConverter.ToInt32(res, 0);
         }

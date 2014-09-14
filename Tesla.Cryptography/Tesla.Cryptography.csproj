@@ -40,6 +40,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BigInt.cs" />
+    <Compile Include="DiffieHellman.cs" />
+    <Compile Include="GOSTStribog.cs" />
+    <Compile Include="GOSTStribog512.cs" />
+    <Compile Include="GOSTStribog512Managed.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StrongNumberProvider.cs" />
   </ItemGroup>
