@@ -8,7 +8,10 @@ namespace Tesla.Cryptography
     {
         protected GOSTStribog()
             : base()
-        { }
+        {
+            // ReSharper disable once DoNotCallOverridableMethodsInConstructor
+            Initialize();
+        }
 
         new public static GOSTStribog Create()
         {
