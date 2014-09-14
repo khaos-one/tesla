@@ -173,5 +173,15 @@ namespace Tesla.IO
             await stream.ReadAsync(buffer, offset);
             return buffer;
         }
+
+        public static int ReadInt32(this Stream stream)
+        {
+            return BitConverter.ToInt32(stream.ReadBytes(sizeof(Int32)), 0);
+        }
+
+        public static async Task<int> ReadInt32Async(this Stream stream)
+        {
+            return BitConverter.ToInt32(await stream.ReadBytesAsync(sizeof (Int32)), 0);
+        }
     }
 }

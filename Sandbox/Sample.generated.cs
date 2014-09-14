@@ -11,11 +11,6 @@
 
 namespace Sandbox
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "2.0.0.0")]
     internal partial class Sample : RazorGenerator.Templating.RazorTemplateBase
     {

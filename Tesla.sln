@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tesla", "Tesla\Tesla.csproj", "{D27077AC-2E22-49EF-9498-F2F023412D2A}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "Sandbox\Sandbox.csproj", "{377D9AE0-251A-4774-B932-4E74E037B391}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tesla.Tests", "Tesla.Tests\Tesla.Tests.csproj", "{43DE055F-DA1A-4C83-A9DC-D265D3610695}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tesla.Cryptography", "Tesla.Cryptography\Tesla.Cryptography.csproj", "{A336D892-5080-4689-B3BD-13AE76339886}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{43DE055F-DA1A-4C83-A9DC-D265D3610695}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43DE055F-DA1A-4C83-A9DC-D265D3610695}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43DE055F-DA1A-4C83-A9DC-D265D3610695}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A336D892-5080-4689-B3BD-13AE76339886}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A336D892-5080-4689-B3BD-13AE76339886}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A336D892-5080-4689-B3BD-13AE76339886}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A336D892-5080-4689-B3BD-13AE76339886}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

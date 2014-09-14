@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using Tesla.Net;
 using Tesla.Net.HttpHandlers;
 

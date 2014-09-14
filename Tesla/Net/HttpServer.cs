@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Net;
 using System.Threading.Tasks;
-using Tesla.IO;
 
 namespace Tesla.Net
 {
