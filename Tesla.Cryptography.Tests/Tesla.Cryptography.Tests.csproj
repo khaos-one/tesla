@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="GOSTStribog512ManagedTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="GOSTStribog256ManagedTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Tesla.Cryptography\Tesla.Cryptography.csproj">

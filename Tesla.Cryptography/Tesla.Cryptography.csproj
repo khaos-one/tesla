@@ -42,6 +42,8 @@
     <Compile Include="BigInt.cs" />
     <Compile Include="DiffieHellman.cs" />
     <Compile Include="GOSTStribog.cs" />
+    <Compile Include="GOSTStribog256.cs" />
+    <Compile Include="GOSTStribog256Managed.cs" />
     <Compile Include="GOSTStribog512.cs" />
     <Compile Include="GOSTStribog512Managed.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

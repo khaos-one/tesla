@@ -4,8 +4,8 @@ using System.Linq;
 
 namespace Tesla.Cryptography
 {
-    public sealed class GOSTStribog512Managed
-        : GOSTStribog512
+    public sealed class GOSTStribog256Managed
+        : GOSTStribog256
     {
         #region Static Data Tables
         // Matrix A for MixColumns (L) function
@@ -172,7 +172,7 @@ namespace Tesla.Cryptography
                 for (i = 63; i >= 0; i--)
                 {
                     t = tempA[i] + tempB[i] + (t >> 8);
-                    temp[i] = (byte) (t & 0xFF);
+                    temp[i] = (byte)(t & 0xFF);
                 }
 
                 return temp;
@@ -186,7 +186,7 @@ namespace Tesla.Cryptography
                 var c = new byte[64];
 
                 for (var i = 0; i < 64; i++)
-                    c[i] = (byte) (a[i] ^ b[i]);
+                    c[i] = (byte)(a[i] ^ b[i]);
 
                 return c;
             }
@@ -231,7 +231,7 @@ namespace Tesla.Cryptography
                     ulong t = 0;
                     var tempArray = new byte[8];
 
-                    Buffer.BlockCopy(state, i*8, tempArray, 0, 8);
+                    Buffer.BlockCopy(state, i * 8, tempArray, 0, 8);
 
                     tempArray = tempArray.Reverse().ToArray();
                     var tempBits1 = new BitArray(tempArray);
@@ -247,7 +247,7 @@ namespace Tesla.Cryptography
                     }
 
                     var resPart = BitConverter.GetBytes(t).Reverse().ToArray();
-                    Buffer.BlockCopy(resPart, 0, result, i*8, 8);
+                    Buffer.BlockCopy(resPart, 0, result, i * 8, 8);
                 }
 
                 return result;
@@ -320,7 +320,7 @@ namespace Tesla.Cryptography
 
                 var paddedMessage = new byte[64];
                 var h = new byte[64];
-                var len = message.Length*8;
+                var len = message.Length * 8;
 
                 Buffer.BlockCopy(_iv, 0, h, 0, 64);
 
@@ -341,7 +341,7 @@ namespace Tesla.Cryptography
                 {
                     inc++;
                     var tempMessage = new byte[64];
-                    Buffer.BlockCopy(message, message.Length - inc*64, tempMessage, 0, 64);
+                    Buffer.BlockCopy(message, message.Length - inc * 64, tempMessage, 0, 64);
 
                     h = G_n(_n, h, tempMessage);
                     _n = AddModulo512(_n, n512.Reverse().ToArray());
@@ -349,8 +349,8 @@ namespace Tesla.Cryptography
                     len -= 512;
                 }
 
-                var message1 = new byte[message.Length - inc*64];
-                Buffer.BlockCopy(message, 0, message1, 0, message.Length - inc*64);
+                var message1 = new byte[message.Length - inc * 64];
+                Buffer.BlockCopy(message, 0, message1, 0, message.Length - inc * 64);
 
                 if (message1.Length < 64)
                 {
@@ -364,13 +364,16 @@ namespace Tesla.Cryptography
                 }
 
                 h = G_n(_n, h, paddedMessage);
-                var messageLen = BitConverter.GetBytes(message1.Length*8);
+                var messageLen = BitConverter.GetBytes(message1.Length * 8);
                 _n = AddModulo512(_n, messageLen.Reverse().ToArray());
                 _sigma = AddModulo512(_sigma, paddedMessage);
                 h = G_n(n0, h, _n);
                 h = G_n(n0, h, _sigma);
 
-                HashBytes = h;
+                var h256 = new byte[32];
+                Buffer.BlockCopy(h, 0, h256, 0, 32);
+
+                HashBytes = h256;
             }
 
             GC.Collect();
@@ -389,7 +392,7 @@ namespace Tesla.Cryptography
                 {
                     _n[i] = 0x00;
                     _sigma[i] = 0x00;
-                    _iv[i] = 0x00;
+                    _iv[i] = 0x01;
                 }
             }
         }
