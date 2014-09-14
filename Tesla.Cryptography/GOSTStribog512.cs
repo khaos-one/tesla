@@ -11,12 +11,12 @@ namespace Tesla.Cryptography
     {
         new public static GOSTStribog512 Create()
         {
-            throw new NotImplementedException();
+            return new GOSTStribog512Managed();
         }
 
         new public static GOSTStribog512 Create(string name)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }

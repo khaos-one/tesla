@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tesla.Tests", "Tesla.Tests\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tesla.Cryptography", "Tesla.Cryptography\Tesla.Cryptography.csproj", "{A336D892-5080-4689-B3BD-13AE76339886}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tesla.Cryptography.Tests", "Tesla.Cryptography.Tests\Tesla.Cryptography.Tests.csproj", "{9913B878-C01A-4AB0-968B-14FB80199442}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{A336D892-5080-4689-B3BD-13AE76339886}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A336D892-5080-4689-B3BD-13AE76339886}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A336D892-5080-4689-B3BD-13AE76339886}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9913B878-C01A-4AB0-968B-14FB80199442}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9913B878-C01A-4AB0-968B-14FB80199442}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9913B878-C01A-4AB0-968B-14FB80199442}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9913B878-C01A-4AB0-968B-14FB80199442}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,5 +54,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{377D9AE0-251A-4774-B932-4E74E037B391} = {34EE7C49-BF0C-4AC4-99FC-AA36888A263E}
 		{43DE055F-DA1A-4C83-A9DC-D265D3610695} = {34EE7C49-BF0C-4AC4-99FC-AA36888A263E}
+		{9913B878-C01A-4AB0-968B-14FB80199442} = {34EE7C49-BF0C-4AC4-99FC-AA36888A263E}
 	EndGlobalSection
 EndGlobal
