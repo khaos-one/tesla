@@ -39,5 +39,10 @@ namespace Tesla.Tests
 
             return timings;
         }
+
+        public static double Mean(IList<double> data)
+        {
+            return data.Mean();
+        }
     }
 }

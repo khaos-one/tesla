@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Security.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Tesla.Tests;
 
 namespace Tesla.Cryptography.Tests
 {
     [TestClass]
     public class GOSTStribog512ManagedTests
     {
+        public TestContext TestContext { get; set; }
+
         [TestMethod]
         public void PredefinedDataTest()
         {
@@ -35,7 +40,22 @@ namespace Tesla.Cryptography.Tests
         [TestMethod]
         public void RelativePerformanceTest()
         {
-            
+            var sampleData = new byte[]
+            {
+                0x32, 0x31, 0x30, 0x39, 0x38, 0x37, 0x36, 0x35, 0x34, 0x33, 0x32, 0x31, 0x30, 0x39, 0x38, 0x37, 0x36, 0x35,
+                0x34, 0x33, 0x32, 0x31, 0x30, 0x39, 0x38, 0x37, 0x36, 0x35, 0x34, 0x33, 0x32, 0x31, 0x30, 0x39, 0x38,
+                0x37, 0x36, 0x35, 0x34, 0x33, 0x32, 0x31, 0x30, 0x39, 0x38, 0x37, 0x36, 0x35, 0x34, 0x33, 0x32, 0x31,
+                0x30, 0x39, 0x38, 0x37, 0x36, 0x35, 0x34, 0x33, 0x32, 0x31, 0x30
+            };
+
+            var gost = new GOSTStribog512Managed();
+            var sha512 = new SHA512Managed();
+
+            var gostResult = Benchmark.Run<Timewatch>(() => gost.ComputeHash(sampleData), 1000);
+            var shaResult = Benchmark.Run<Timewatch>(() => sha512.ComputeHash(sampleData), 1000);
+
+            TestContext.WriteLine("GOST 34.11-2012 (Stribog) 512-bit managed test (1000 iterations, 5 runs): {0}.", gostResult.Mean());
+            TestContext.WriteLine("SHA-2 512-bit managed test (1000 iterations, 5 runs): {0}.", shaResult.Mean());
         }
     }
 }

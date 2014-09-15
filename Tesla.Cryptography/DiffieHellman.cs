@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Dynamic;
 using System.IO;
 using System.Security.Cryptography;
 
@@ -15,7 +16,8 @@ namespace Tesla.Cryptography
 
         protected BigInt PublicPrime;
         protected BigInt PublicBase;
-        protected BigInt PrivatePrime;
+        protected BigInt PrivateKey;
+        protected BigInt PublicKey;
 
         protected HashAlgorithm HashAlgorithm;
 
@@ -67,16 +69,98 @@ namespace Tesla.Cryptography
                 HashAlgorithm = hashAlgorithm;
             }
 
-            PublicPrime = BigInt.GenPseudoPrime(numberOfBits, 30, StrongRng);
-            PrivatePrime = BigInt.GenPseudoPrime(numberOfBits, 30, StrongRng);
-            PublicBase = 5;
+            PrivateKey = BigInt.GenPseudoPrime(NumberOfBits, 30, StrongRng);
         }
 
+        ~DiffieHellman()
+        {
+            Dispose();
+        }
 
+        protected void Write(BigInt value)
+        {
+            var buffer = value.GetBytes();
+            var lengthBuffer = BitConverter.GetBytes(buffer.Length);
+
+            InnerStream.Write(lengthBuffer, 0, lengthBuffer.Length);
+            InnerStream.Write(buffer, 0, buffer.Length);
+        }
+
+        protected BigInt Read()
+        {
+            var lengthBuffer = new byte[sizeof (Int32)];
+            InnerStream.Read(lengthBuffer, 0, lengthBuffer.Length);
+            var length = BitConverter.ToUInt32(lengthBuffer, 0);
+            var buffer = new byte[length];
+            InnerStream.Read(buffer, 0, buffer.Length);
+
+            return new BigInt(buffer);
+        }
+
+        protected void SendRequest()
+        {
+            PublicPrime = BigInt.GenPseudoPrime(NumberOfBits, 30, StrongRng);
+            PublicBase = 5;
+            PublicKey = PublicBase.ModPow(PrivateKey, PublicPrime);
+
+            Write(PublicPrime);
+            Write(PublicBase);
+            Write(PublicKey);
+        }
+
+        protected void HandleRequest()
+        {
+            PublicPrime = Read();
+            PublicBase = Read();
+
+            using (var otherPublicKey = Read())
+            {
+                using (var key = otherPublicKey.ModPow(PrivateKey, PublicPrime))
+                {
+                    Key = HashAlgorithm.ComputeHash(key.GetBytes());
+                }
+            }
+        }
+
+        protected void HandleResponse()
+        {
+            using (var otherPublicKey = Read())
+            {
+                using (var key = otherPublicKey.ModPow(PrivateKey, PublicPrime))
+                {
+                    Key = HashAlgorithm.ComputeHash(key.GetBytes());
+                }
+            }
+        }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            if (!ReferenceEquals(PublicPrime, null))
+            {
+                PublicPrime.Dispose();
+                PublicPrime = null;
+            }
+
+            if (!ReferenceEquals(PublicBase, null))
+            {
+                PublicBase.Dispose();
+                PublicBase = null;
+            }
+
+            if (!ReferenceEquals(PrivateKey, null))
+            {
+                PrivateKey.Dispose();
+                PrivateKey = null;
+            }
+
+            if (!ReferenceEquals(HashAlgorithm, null))
+            {
+                HashAlgorithm.Dispose();
+                HashAlgorithm = null;
+            }
+
+            GC.Collect();
+            GC.Collect();
         }
     }
 }
