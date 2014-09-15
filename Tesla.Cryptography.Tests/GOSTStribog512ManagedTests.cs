@@ -31,5 +31,11 @@ namespace Tesla.Cryptography.Tests
                 CollectionAssert.AreEqual(originalHash, computedHash);
             }
         }
+
+        [TestMethod]
+        public void RelativePerformanceTest()
+        {
+            
+        }
     }
 }

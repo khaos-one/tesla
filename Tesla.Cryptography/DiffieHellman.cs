@@ -46,11 +46,11 @@ namespace Tesla.Cryptography
                 }
                 else if (numberOfBits <= 256)
                 {
-                    HashAlgorithm = HashAlgorithm.Create("SHA256");
+                    HashAlgorithm = GOSTStribog.Create("GOST256");
                 }
                 else if (numberOfBits <= 512)
                 {
-                    HashAlgorithm = HashAlgorithm.Create("SHA512");
+                    HashAlgorithm = GOSTStribog.Create("GOST512");
                 }
                 else
                 {
