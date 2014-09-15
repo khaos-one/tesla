@@ -112,9 +112,12 @@ namespace Tesla.Cryptography
         {
             PublicPrime = Read();
             PublicBase = Read();
+            PublicKey = PublicBase.ModPow(PrivateKey, PublicPrime);
 
             using (var otherPublicKey = Read())
             {
+                Write(PublicKey);
+
                 using (var key = otherPublicKey.ModPow(PrivateKey, PublicPrime))
                 {
                     Key = HashAlgorithm.ComputeHash(key.GetBytes());
