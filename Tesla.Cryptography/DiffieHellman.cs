@@ -133,6 +133,17 @@ namespace Tesla.Cryptography
             }
         }
 
+        public void NegotiateAsClient()
+        {
+            SendRequest();
+            HandleResponse();
+        }
+
+        public void NegotiateAsServer()
+        {
+            HandleRequest();
+        }
+
         public void Dispose()
         {
             if (!ReferenceEquals(PublicPrime, null))
