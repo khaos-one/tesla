@@ -5,9 +5,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Tesla.Cryptography")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Most common cryptographic routines for general usage.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Егор 'khaos' Зеленский")]
 [assembly: AssemblyProduct("Tesla.Core")]
 [assembly: AssemblyCopyright("© Егор 'khaos' Зеленский, 2014.")]
 [assembly: AssemblyTrademark("")]

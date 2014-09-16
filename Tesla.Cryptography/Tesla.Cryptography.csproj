@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="BigInt.cs" />
     <Compile Include="DiffieHellman.cs" />
+    <Compile Include="GOST28147.cs" />
     <Compile Include="GOSTStribog.cs" />
     <Compile Include="GOSTStribog256.cs" />
     <Compile Include="GOSTStribog256Managed.cs" />
