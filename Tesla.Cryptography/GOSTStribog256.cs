@@ -14,5 +14,21 @@ namespace Tesla.Cryptography
         {
             throw new NotSupportedException();
         }
+
+        public static byte[] Compute(byte[] data)
+        {
+            using (var h = Create())
+            {
+                return h.ComputeHash(data);
+            }
+        }
+
+        public static byte[] Compute(byte[] data, int offset, int count)
+        {
+            using (var h = Create())
+            {
+                return h.ComputeHash(data, offset, count);
+            }
+        }
     }
 }
