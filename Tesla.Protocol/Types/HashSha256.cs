@@ -5,6 +5,10 @@ namespace Tesla.Protocol.Types
     public sealed class HashSha256
         : AbstractHash
     {
+        public HashSha256()
+            : base(32)
+        { }
+
         public HashSha256(IEnumerable<byte> hash)
             : base(hash, 32)
         { }

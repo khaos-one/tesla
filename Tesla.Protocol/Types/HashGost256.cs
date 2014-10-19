@@ -5,6 +5,10 @@ namespace Tesla.Protocol.Types
     public sealed class HashGost256
         : AbstractHash
     {
+        public HashGost256()
+            : base(32)
+        { }
+
         public HashGost256(IEnumerable<byte> hash)
             : base(hash, 32)
         { }

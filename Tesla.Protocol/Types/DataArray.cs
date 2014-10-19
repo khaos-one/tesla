@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
+using System.Xml.Linq;
 
 namespace Tesla.Protocol.Types
 {
@@ -28,6 +29,8 @@ namespace Tesla.Protocol.Types
             Data = data;
         }
 
+        // Note: В итоге в качестве решения эти методы были написаны явно для
+        // каждого подкласса. В будущем решение можно универсализировать.
         //public void SerializeToWriter(BinaryWriter writer)
         //{
         //    var id = ObjectMarshal.BytesFromStructure(Id);
@@ -134,61 +137,241 @@ namespace Tesla.Protocol.Types
 
     [ProtocolType(0x14)]
     public class DataArrayI2L1
-        : DataArray<System.UInt16, byte>
-    { }
+        : DataArray<System.UInt16, byte>,
+          IBinarySerializable
+    {
+        public void SerializeToWriter(BinaryWriter writer)
+        {
+            writer.Write(Id);
+            writer.Write(Length);
+            writer.Write(Data);
+        }
+
+        public void DeserializeFromReader(BinaryReader reader)
+        {
+            Id = reader.ReadUInt16();
+            Length = reader.ReadByte();
+            Data = reader.ReadBytes(Length);
+        }
+    }
 
     [ProtocolType(0x15)]
     public class DataArrayI2L2
-        : DataArray<System.UInt16, System.UInt16>
-    { }
+        : DataArray<System.UInt16, System.UInt16>,
+          IBinarySerializable
+    {
+        public void SerializeToWriter(BinaryWriter writer)
+        {
+            writer.Write(Id);
+            writer.Write(Length);
+            writer.Write(Data);
+        }
+
+        public void DeserializeFromReader(BinaryReader reader)
+        {
+            Id = reader.ReadUInt16();
+            Length = reader.ReadUInt16();
+            Data = reader.ReadBytes(Length);
+        }
+    }
 
     [ProtocolType(0x16)]
     public class DataArrayI2L4
-        : DataArray<System.UInt16, System.UInt32>
-    { }
+        : DataArray<System.UInt16, System.UInt32>,
+          IBinarySerializable
+    {
+        public void SerializeToWriter(BinaryWriter writer)
+        {
+            writer.Write(Id);
+            writer.Write(Length);
+            writer.Write(Data);
+        }
+
+        public void DeserializeFromReader(BinaryReader reader)
+        {
+            Id = reader.ReadUInt16();
+            Length = reader.ReadUInt32();
+            Data = reader.ReadBytes((int) Length);
+        }
+    }
 
     [ProtocolType(0x17)]
     public class DataArrayI2L8
-        : DataArray<System.UInt16, System.UInt64>
-    { }
+        : DataArray<System.UInt16, System.UInt64>,
+          IBinarySerializable
+    {
+        public void SerializeToWriter(BinaryWriter writer)
+        {
+            writer.Write(Id);
+            writer.Write(Length);
+            writer.Write(Data);
+        }
+
+        public void DeserializeFromReader(BinaryReader reader)
+        {
+            Id = reader.ReadUInt16();
+            Length = reader.ReadUInt64();
+            Data = reader.ReadBytes((int) Length);
+        }
+    }
 
     [ProtocolType(0x18)]
     public class DataArrayI4L1
-        : DataArray<System.UInt32, byte>
-    { }
+        : DataArray<System.UInt32, byte>,
+          IBinarySerializable
+    {
+        public void SerializeToWriter(BinaryWriter writer)
+        {
+            writer.Write(Id);
+            writer.Write(Length);
+            writer.Write(Data);
+        }
+
+        public void DeserializeFromReader(BinaryReader reader)
+        {
+            Id = reader.ReadUInt32();
+            Length = reader.ReadByte();
+            Data = reader.ReadBytes(Length);
+        }
+    }
 
     [ProtocolType(0x19)]
     public class DataArrayI4L2
-        : DataArray<System.UInt32, System.UInt16>
-    { }
+        : DataArray<System.UInt32, System.UInt16>,
+          IBinarySerializable
+    {
+        public void SerializeToWriter(BinaryWriter writer)
+        {
+            writer.Write(Id);
+            writer.Write(Length);
+            writer.Write(Data);
+        }
+
+        public void DeserializeFromReader(BinaryReader reader)
+        {
+            Id = reader.ReadUInt32();
+            Length = reader.ReadUInt16();
+            Data = reader.ReadBytes(Length);
+        }
+    }
 
     [ProtocolType(0x1A)]
     public class DataArrayI4L4
-        : DataArray<System.UInt32, System.UInt32>
-    { }
+        : DataArray<System.UInt32, System.UInt32>,
+          IBinarySerializable
+    {
+        public void SerializeToWriter(BinaryWriter writer)
+        {
+            writer.Write(Id);
+            writer.Write(Length);
+            writer.Write(Data);
+        }
+
+        public void DeserializeFromReader(BinaryReader reader)
+        {
+            Id = reader.ReadUInt32();
+            Length = reader.ReadUInt32();
+            Data = reader.ReadBytes((int) Length);
+        }
+    }
 
     [ProtocolType(0x1B)]
     public class DataArrayI4L8
-        : DataArray<System.UInt32, System.UInt64>
-    { }
+        : DataArray<System.UInt32, System.UInt64>,
+            IBinarySerializable
+    {
+        public void SerializeToWriter(BinaryWriter writer)
+        {
+            writer.Write(Id);
+            writer.Write(Length);
+            writer.Write(Data);
+        }
+
+        public void DeserializeFromReader(BinaryReader reader)
+        {
+            Id = reader.ReadUInt32();
+            Length = reader.ReadUInt64();
+            Data = reader.ReadBytes((int) Length);
+        }
+    }
 
     [ProtocolType(0x1C)]
     public class DataArrayI8L1
-        : DataArray<System.UInt64, byte>
-    { }
+        : DataArray<System.UInt64, byte>,
+          IBinarySerializable
+    {
+        public void SerializeToWriter(BinaryWriter writer)
+        {
+            writer.Write(Id);
+            writer.Write(Length);
+            writer.Write(Data);
+        }
+
+        public void DeserializeFromReader(BinaryReader reader)
+        {
+            Id = reader.ReadUInt64();
+            Length = reader.ReadByte();
+            Data = reader.ReadBytes(Length);
+        }
+    }
 
     [ProtocolType(0x1D)]
     public class DataArrayI8L2
-        : DataArray<System.UInt64, System.UInt16>
-    { }
+        : DataArray<System.UInt64, System.UInt16>,
+            IBinarySerializable
+    {
+        public void SerializeToWriter(BinaryWriter writer)
+        {
+            writer.Write(Id);
+            writer.Write(Length);
+            writer.Write(Data);
+        }
+
+        public void DeserializeFromReader(BinaryReader reader)
+        {
+            Id = reader.ReadUInt64();
+            Length = reader.ReadUInt16();
+            Data = reader.ReadBytes(Length);
+        }
+    }
 
     [ProtocolType(0x1E)]
     public class DataArrayI8L4
-        : DataArray<System.UInt64, System.UInt32>
-    { }
+        : DataArray<System.UInt64, System.UInt32>,
+            IBinarySerializable
+    {
+        public void SerializeToWriter(BinaryWriter writer)
+        {
+            writer.Write(Id);
+            writer.Write(Length);
+            writer.Write(Data);
+        }
+
+        public void DeserializeFromReader(BinaryReader reader)
+        {
+            Id = reader.ReadUInt64();
+            Length = reader.ReadUInt32();
+            Data = reader.ReadBytes((int) Length);
+        }
+    }
 
     [ProtocolType(0x1F)]
     public class DataArrayI8L8
-        : DataArray<System.UInt64, System.UInt64>
-    { }
+        : DataArray<System.UInt64, System.UInt64>,
+            IBinarySerializable
+    {
+        public void SerializeToWriter(BinaryWriter writer)
+        {
+            writer.Write(Id);
+            writer.Write(Length);
+            writer.Write(Data);
+        }
+
+        public void DeserializeFromReader(BinaryReader reader)
+        {
+            Id = reader.ReadUInt64();
+            Length = reader.ReadUInt64();
+            Data = reader.ReadBytes((int)Length);
+        }
+    }
 }
