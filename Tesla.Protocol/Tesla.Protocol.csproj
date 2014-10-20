@@ -59,6 +59,7 @@
     <Compile Include="Types\Int16.cs" />
     <Compile Include="Types\Int32.cs" />
     <Compile Include="Types\Int64.cs" />
+    <Compile Include="Types\RcsDateTime.cs" />
     <Compile Include="Types\UInt64.cs" />
     <Compile Include="Types\UInt32.cs" />
     <Compile Include="Types\UInt16.cs" />
