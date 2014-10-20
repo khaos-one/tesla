@@ -58,8 +58,10 @@ namespace Tesla.Protocol.Types
     [ProtocolType(0x10)]
     public class DataArrayI1L1
         : DataArray<byte, byte>,
-          IBinarySerializable
+          IRecord
     {
+        public byte RecordId { get { return 0x10; } }
+
         public void SerializeToWriter(BinaryWriter writer)
         {
             writer.Write(Id);
@@ -78,8 +80,10 @@ namespace Tesla.Protocol.Types
     [ProtocolType(0x11)]
     public class DataArrayI1L2
         : DataArray<byte, System.UInt16>,
-          IBinarySerializable
+          IRecord
     {
+        public byte RecordId { get { return 0x11; } }
+
         public void SerializeToWriter(BinaryWriter writer)
         {
             writer.Write(Id);
@@ -98,8 +102,10 @@ namespace Tesla.Protocol.Types
     [ProtocolType(0x12)]
     public class DataArrayI1L4
         : DataArray<byte, System.UInt32>,
-          IBinarySerializable
+          IRecord
     {
+        public byte RecordId { get { return 0x12; } }
+
         public void SerializeToWriter(BinaryWriter writer)
         {
             writer.Write(Id);
@@ -118,8 +124,10 @@ namespace Tesla.Protocol.Types
     [ProtocolType(0x13)]
     public class DataArrayI1L8
         : DataArray<byte, System.UInt64>,
-            IBinarySerializable
+            IRecord
     {
+        public byte RecordId { get { return 0x13; } }
+
         public void SerializeToWriter(BinaryWriter writer)
         {
             writer.Write(Id);
@@ -138,8 +146,10 @@ namespace Tesla.Protocol.Types
     [ProtocolType(0x14)]
     public class DataArrayI2L1
         : DataArray<System.UInt16, byte>,
-          IBinarySerializable
+          IRecord
     {
+        public byte RecordId { get { return 0x14; } }
+
         public void SerializeToWriter(BinaryWriter writer)
         {
             writer.Write(Id);
@@ -158,8 +168,10 @@ namespace Tesla.Protocol.Types
     [ProtocolType(0x15)]
     public class DataArrayI2L2
         : DataArray<System.UInt16, System.UInt16>,
-          IBinarySerializable
+          IRecord
     {
+        public byte RecordId { get { return 0x15; } }
+
         public void SerializeToWriter(BinaryWriter writer)
         {
             writer.Write(Id);
@@ -178,8 +190,10 @@ namespace Tesla.Protocol.Types
     [ProtocolType(0x16)]
     public class DataArrayI2L4
         : DataArray<System.UInt16, System.UInt32>,
-          IBinarySerializable
+          IRecord
     {
+        public byte RecordId { get { return 0x16; } }
+
         public void SerializeToWriter(BinaryWriter writer)
         {
             writer.Write(Id);
@@ -198,8 +212,10 @@ namespace Tesla.Protocol.Types
     [ProtocolType(0x17)]
     public class DataArrayI2L8
         : DataArray<System.UInt16, System.UInt64>,
-          IBinarySerializable
+          IRecord
     {
+        public byte RecordId { get { return 0x17; } }
+
         public void SerializeToWriter(BinaryWriter writer)
         {
             writer.Write(Id);
@@ -218,8 +234,10 @@ namespace Tesla.Protocol.Types
     [ProtocolType(0x18)]
     public class DataArrayI4L1
         : DataArray<System.UInt32, byte>,
-          IBinarySerializable
+          IRecord
     {
+        public byte RecordId { get { return 0x18; } }
+
         public void SerializeToWriter(BinaryWriter writer)
         {
             writer.Write(Id);
@@ -238,8 +256,10 @@ namespace Tesla.Protocol.Types
     [ProtocolType(0x19)]
     public class DataArrayI4L2
         : DataArray<System.UInt32, System.UInt16>,
-          IBinarySerializable
+          IRecord
     {
+        public byte RecordId { get { return 0x19; } }
+
         public void SerializeToWriter(BinaryWriter writer)
         {
             writer.Write(Id);
@@ -258,8 +278,10 @@ namespace Tesla.Protocol.Types
     [ProtocolType(0x1A)]
     public class DataArrayI4L4
         : DataArray<System.UInt32, System.UInt32>,
-          IBinarySerializable
+          IRecord
     {
+        public byte RecordId { get { return 0x1A; } }
+
         public void SerializeToWriter(BinaryWriter writer)
         {
             writer.Write(Id);
@@ -278,8 +300,10 @@ namespace Tesla.Protocol.Types
     [ProtocolType(0x1B)]
     public class DataArrayI4L8
         : DataArray<System.UInt32, System.UInt64>,
-            IBinarySerializable
+            IRecord
     {
+        public byte RecordId { get { return 0x1B; } }
+
         public void SerializeToWriter(BinaryWriter writer)
         {
             writer.Write(Id);
@@ -298,8 +322,10 @@ namespace Tesla.Protocol.Types
     [ProtocolType(0x1C)]
     public class DataArrayI8L1
         : DataArray<System.UInt64, byte>,
-          IBinarySerializable
+          IRecord
     {
+        public byte RecordId { get { return 0x1C; }}
+
         public void SerializeToWriter(BinaryWriter writer)
         {
             writer.Write(Id);
@@ -318,8 +344,10 @@ namespace Tesla.Protocol.Types
     [ProtocolType(0x1D)]
     public class DataArrayI8L2
         : DataArray<System.UInt64, System.UInt16>,
-            IBinarySerializable
+            IRecord
     {
+        public byte RecordId { get { return 0x1D; } }
+
         public void SerializeToWriter(BinaryWriter writer)
         {
             writer.Write(Id);
@@ -338,8 +366,10 @@ namespace Tesla.Protocol.Types
     [ProtocolType(0x1E)]
     public class DataArrayI8L4
         : DataArray<System.UInt64, System.UInt32>,
-            IBinarySerializable
+            IRecord
     {
+        public byte RecordId { get { return 0x1E; } }
+
         public void SerializeToWriter(BinaryWriter writer)
         {
             writer.Write(Id);
@@ -358,8 +388,10 @@ namespace Tesla.Protocol.Types
     [ProtocolType(0x1F)]
     public class DataArrayI8L8
         : DataArray<System.UInt64, System.UInt64>,
-            IBinarySerializable
+            IRecord
     {
+        public byte RecordId { get { return 0x1F; } }
+
         public void SerializeToWriter(BinaryWriter writer)
         {
             writer.Write(Id);

@@ -5,7 +5,7 @@ namespace Tesla.Protocol.Types
     [ProtocolType(0x0A)]
     public struct Int32
         : IEquatable<System.Int32>,
-          IBinarySerializable
+          IRecord
     {
         private System.Int32 _value;
 
@@ -30,6 +30,8 @@ namespace Tesla.Protocol.Types
         {
             return _value.Equals(other);
         }
+
+        public byte RecordId { get { return 0x0A; } }
 
         public void SerializeToWriter(System.IO.BinaryWriter writer)
         {

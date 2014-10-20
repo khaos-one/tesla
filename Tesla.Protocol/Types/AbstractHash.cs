@@ -7,7 +7,7 @@ namespace Tesla.Protocol.Types
 {
     public abstract class AbstractHash
         : WriteProtectedList<byte>,
-          IBinarySerializable
+          IRecord
     {
         protected AbstractHash(int length)
             : base(length)
@@ -16,6 +16,8 @@ namespace Tesla.Protocol.Types
         protected AbstractHash(IEnumerable<byte> list, int length)
             : base(list.Take(length).ToList())
         { }
+
+        public abstract byte RecordId { get; }
 
         public void SerializeToWriter(BinaryWriter writer)
         {

@@ -2,6 +2,7 @@
 
 namespace Tesla.Protocol.Types
 {
+    [ProtocolType(0x26)]
     public sealed class HashMD5
         : AbstractHash
     {
@@ -12,5 +13,10 @@ namespace Tesla.Protocol.Types
         public HashMD5(IEnumerable<byte> hash)
             : base(hash, 16)
         { }
+
+        public override byte RecordId
+        {
+            get { return 0x26; }
+        }
     }
 }
