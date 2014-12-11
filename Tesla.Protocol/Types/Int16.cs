@@ -4,7 +4,7 @@ using System.IO;
 namespace Tesla.Protocol.Types
 {
     [ProtocolType(0x09)]
-    public struct Int16
+    public class Int16
         : IEquatable<System.Int16>,
           IRecord
     {

@@ -3,7 +3,7 @@
 namespace Tesla.Protocol.Types
 {
     [ProtocolType(0x0B)]
-    public struct Int64
+    public class Int64
         : IEquatable<System.Int64>,
           IRecord
     {

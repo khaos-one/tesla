@@ -4,7 +4,7 @@ using System.IO;
 namespace Tesla.Protocol.Types
 {
     [ProtocolType(0x33)]
-    public struct UnixTimestamp
+    public class UnixTimestamp
         : IEquatable<DateTime>,
           IEquatable<ulong>,
           IRecord

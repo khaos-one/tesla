@@ -4,7 +4,7 @@ using System.IO;
 namespace Tesla.Protocol.Types
 {
     [ProtocolType(0x00)]
-    public struct UInt8
+    public class UInt8
         : IEquatable<byte>,
           IRecord
     {

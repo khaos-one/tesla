@@ -3,7 +3,7 @@
 namespace Tesla.Protocol.Types
 {
     [ProtocolType(0x01)]
-    public struct UInt16
+    public class UInt16
         : IEquatable<System.UInt16>,
           IRecord
     {

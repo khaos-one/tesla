@@ -3,7 +3,7 @@
 namespace Tesla.Protocol.Types
 {
     [ProtocolType(0x02)]
-    public struct UInt32
+    public class UInt32
         : IEquatable<System.UInt32>,
           IRecord
     {

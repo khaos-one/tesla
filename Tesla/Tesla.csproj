@@ -50,6 +50,7 @@
     <Compile Include="Collections\NameValueCollectionExtensions.cs" />
     <Compile Include="DoubleExtensions.cs" />
     <Compile Include="IO\StreamExtensions.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="Net\HttpException.cs" />
     <Compile Include="Net\HttpHandlerBase.cs" />
     <Compile Include="Net\HttpHandlerFunc.cs" />

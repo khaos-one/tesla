@@ -3,7 +3,7 @@
 namespace Tesla.Protocol.Types
 {
     [ProtocolType(0x08)]
-    public struct Int8
+    public class Int8
         : IEquatable<sbyte>,
           IRecord
     {

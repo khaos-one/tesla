@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 namespace Tesla.Protocol.Types
 {
     [ProtocolType(0x30)]
-    public struct RcsDateTime
+    public class RcsDateTime
         : IEquatable<DateTime>,
           IRecord
     {

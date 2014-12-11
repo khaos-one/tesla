@@ -1,12 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Net.Sockets;
-using System.Runtime.InteropServices;
-using System.Xml.Linq;
+﻿using System.IO;
 
 namespace Tesla.Protocol.Types
 {
     public class DataArray<TI, TL>
+        : AbstractRecord
         where TI : struct
         where TL : struct
     {
