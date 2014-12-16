@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 
-namespace Tesla.Log
+namespace Tesla
 {
     public enum Priority
     {
@@ -25,6 +25,7 @@ namespace Tesla.Log
         private Stream _stream;
         private bool _dontClose;
         private readonly StringBuilder _builder;
+        private readonly bool _printThreadId;
 
         private static readonly Dictionary<Priority, string> _priorities = new Dictionary<Priority, string>
         {
@@ -40,8 +41,17 @@ namespace Tesla.Log
 
         public static Encoding Encoding { get; set; }
 
-        public Log(string logName, Stream logStream = null)
+        public Log(string logName = null, Stream logStream = null, bool printThreadId = false)
         {
+            if (logName == null)
+            {
+                logName = "log";
+            }
+            else
+            {
+                _logName = logName;
+            }
+
             if (logStream == null)
             {
                 var assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -69,7 +79,7 @@ namespace Tesla.Log
                 _dontClose = true;
             }
 
-            _logName = logName;
+            _printThreadId = printThreadId;
             Encoding = Encoding.UTF8;
             _builder = new StringBuilder();
         }
@@ -87,13 +97,25 @@ namespace Tesla.Log
             }
 
             _builder.Append(DateTime.Now);
+
+            if (_logName != null)
+            {
+                _builder.Append(" [");
+                _builder.Append(_logName);
+                _builder.Append("]");
+            }
+
             _builder.Append(" [");
-            _builder.Append(_logName);
-            _builder.Append("] [");
             _builder.Append(_priorities[priority]);
-            _builder.Append("] [");
-            _builder.Append(Thread.CurrentThread.ManagedThreadId);
             _builder.Append("] ");
+
+            if (_printThreadId)
+            {
+                _builder.Append("[");
+                _builder.Append(Thread.CurrentThread.ManagedThreadId);
+                _builder.Append("] ");
+            }
+
             _builder.AppendFormat(message, args);
             _builder.Append("\n");
             var buffer = Encoding.GetBytes(_builder.ToString());

@@ -65,8 +65,10 @@ namespace Tesla.Net
                         ExceptionHandlerFunc(socket, e);
                     }
                 }
-
-                Disconnect(socket);
+                finally
+                {
+                    Disconnect(socket);
+                }
             };
         }
 

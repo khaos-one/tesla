@@ -48,6 +48,7 @@
     <Compile Include="GOSTStribog512.cs" />
     <Compile Include="GOSTStribog512Managed.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RC4Managed.cs" />
     <Compile Include="StrongNumberProvider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
