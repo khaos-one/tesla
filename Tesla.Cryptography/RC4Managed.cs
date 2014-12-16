@@ -9,26 +9,16 @@ using System.Text;
 namespace Tesla.Cryptography
 {
     public sealed class RC4Managed
-        : HashAlgorithm
     {
-        private byte[] _originalKey;
-        private byte[] _key;
+        private readonly byte[] _originalKey;
+        private readonly byte[] _s;
         private byte[] _encoded;
 
         public RC4Managed(byte[] key)
         {
             _originalKey = key;
+            _s = new byte[256];
             _encoded = null;
-        }
-
-        public override bool CanReuseTransform
-        {
-            get { return true; }
-        }
-
-        public override bool CanTransformMultipleBlocks
-        {
-            get { return false; }
         }
 
         private void Swap(IList<byte> array, int idx1, int idx2)
@@ -38,46 +28,50 @@ namespace Tesla.Cryptography
             array[idx2] = t;
         }
 
-        private byte PseudorandomByte()
+        private byte PseudorandomWord()
         {
             int i = 0, j = 0;
 
             i = (i + 1)%256;
-            j = (j + _key[i])%256;
+            j = (j + _s[i])%256;
 
-            Swap(_key, i, j);
+            Swap(_s, i, j);
 
-            return _key[(_key[i] + _key[j])%256];
+            return _s[(_s[i] + _s[j])%256];
         }
 
-        protected override void HashCore(byte[] array, int ibStart, int cbSize)
+        public byte[] Transform(IList<byte> array)
         {
-            _encoded = new byte[cbSize];
+            return Transform(array, 0, array.Count);
+        }
+
+        public byte[] Transform(IList<byte> array, int ibStart, int cbSize)
+        {
+            Initialize();
+
+            var ciphertext = new byte[cbSize];
 
             for (var i = ibStart; i < ibStart + cbSize; i++)
             {
-                _encoded[i] = (byte) (_encoded[i] ^ PseudorandomByte());
+                ciphertext[i] = (byte) (array[i] ^ PseudorandomWord());
             }
+
+            return ciphertext;
         }
 
-        protected override byte[] HashFinal()
-        {
-            return _encoded;
-        }
-
-        public override void Initialize()
+        private void Initialize()
         {
             for (var i = 0; i < 256; i++)
             {
-                _key[i] = (byte) i;
+                _s[i] = (byte) i;
             }
 
             var j = 0;
 
             for (var i = 0; i < 256; i++)
             {
-                j = (j + _key[i] + _originalKey[i%_originalKey.Length])%256;
-                Swap(_key, i, j);
+                j = (j + _s[i] + _originalKey[i%_originalKey.Length])%256;
+                Swap(_s, i, j);
             }
         }
     }
