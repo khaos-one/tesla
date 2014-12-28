@@ -154,3 +154,9 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+
+# Packages folder
+[Pp]ackages/
+
+# Resharper dotsettings
+*\.dotSettings
