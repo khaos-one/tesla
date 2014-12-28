@@ -26,11 +26,14 @@ namespace Tesla.Cryptography.Tests
                 0x6d, 0x3f, 0x57, 0xd7, 0x23, 0x36, 0xe6, 0x32, 0x3f, 0xbe, 0xca, 0x88
             };
 
-            var cipher = new RC4Managed(key);
-            var encrypted = cipher.TransformFull(sampleData);
-            var decrypted = cipher.TransformFull(encrypted);
+            using (var cipher = new RC4Managed())
+            using (var transform = cipher.CreateEncryptor(key, null))
+            {
+                var encrypted = transform.TransformFinalBlock(sampleData, 0, sampleData.Length);
+                var decrypted = transform.TransformFinalBlock(encrypted, 0, encrypted.Length);
 
-            CollectionAssert.AreEqual(sampleData, decrypted);
+                CollectionAssert.AreEqual(sampleData, decrypted);
+            }
         }
     }
 }

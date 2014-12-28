@@ -27,7 +27,7 @@ namespace Tesla
         private readonly StringBuilder _builder;
         private readonly bool _printThreadId;
 
-        private static readonly Dictionary<Priority, string> _priorities = new Dictionary<Priority, string>
+        private static readonly Dictionary<Priority, string> Priorities = new Dictionary<Priority, string>
         {
             {Priority.Emergency, "emergency"},
             {Priority.Alert, "alert"},
@@ -106,7 +106,7 @@ namespace Tesla
             }
 
             _builder.Append(" [");
-            _builder.Append(_priorities[priority]);
+            _builder.Append(Priorities[priority]);
             _builder.Append("] ");
 
             if (_printThreadId)
