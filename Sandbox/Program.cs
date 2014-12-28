@@ -9,6 +9,8 @@ namespace Sandbox
     {
         static void Main(string[] args)
         {
+            Main2();
+
             var handler = new StaticServeHttpHandler(Directory.GetCurrentDirectory())
             {
                 NextHandler = new PathActivatorHttpHandler
@@ -37,6 +39,11 @@ namespace Sandbox
             Console.WriteLine("Http server started.");
             Console.ReadLine();
             httpServer.Stop();
+        }
+
+        static void Main2()
+        {
+            
         }
     }
 }

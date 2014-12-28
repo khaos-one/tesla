@@ -19,6 +19,8 @@ namespace Tesla.Cryptography
             _originalKey = key;
             _s = new byte[256];
             _encoded = null;
+
+            Reset();
         }
 
         private void Swap(IList<byte> array, int idx1, int idx2)
@@ -28,10 +30,8 @@ namespace Tesla.Cryptography
             array[idx2] = t;
         }
 
-        private byte PseudorandomWord()
+        private byte KeyWord(int i, int j)
         {
-            int i = 0, j = 0;
-
             i = (i + 1)%256;
             j = (j + _s[i])%256;
 
@@ -40,26 +40,43 @@ namespace Tesla.Cryptography
             return _s[(_s[i] + _s[j])%256];
         }
 
-        public byte[] Transform(IList<byte> array)
+        public byte[] TransformFull(IList<byte> array)
         {
-            return Transform(array, 0, array.Count);
+            return TransformFull(array, 0, array.Count);
         }
 
-        public byte[] Transform(IList<byte> array, int ibStart, int cbSize)
+        public byte[] TransformFull(IList<byte> array, int ibStart, int cbSize)
         {
-            Initialize();
+            Reset();
 
             var ciphertext = new byte[cbSize];
 
-            for (var i = ibStart; i < ibStart + cbSize; i++)
+            for (int i = ibStart, j = 0; i < ibStart + cbSize; i++)
             {
-                ciphertext[i] = (byte) (array[i] ^ PseudorandomWord());
+                ciphertext[i] = (byte) (array[i] ^ KeyWord(i, j));
             }
 
             return ciphertext;
         }
 
-        private void Initialize()
+        public byte[] TransformBlock(IList<byte> array)
+        {
+            return TransformBlock(array, 0, array.Count);
+        }
+
+        public byte[] TransformBlock(IList<byte> array, int ibStart, int cbSize)
+        {
+            var ciphertext = new byte[cbSize];
+
+            for (int i = ibStart, j = 0; i < ibStart + cbSize; i++)
+            {
+                ciphertext[i] = (byte)(array[i] ^ KeyWord(i, j));
+            }
+
+            return ciphertext;
+        }
+
+        public void Reset()
         {
             for (var i = 0; i < 256; i++)
             {

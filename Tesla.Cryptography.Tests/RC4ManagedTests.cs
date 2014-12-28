@@ -27,8 +27,8 @@ namespace Tesla.Cryptography.Tests
             };
 
             var cipher = new RC4Managed(key);
-            var encrypted = cipher.Transform(sampleData);
-            var decrypted = cipher.Transform(encrypted);
+            var encrypted = cipher.TransformFull(sampleData);
+            var decrypted = cipher.TransformFull(encrypted);
 
             CollectionAssert.AreEqual(sampleData, decrypted);
         }
