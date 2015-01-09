@@ -1,9 +1,11 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Tesla.Net
 {
+    [Obsolete]
     public abstract class HttpHandlerBase
         : IHttpHandler
     {

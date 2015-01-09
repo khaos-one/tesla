@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace Tesla.Net.HttpHandlers
 {
+    [Obsolete]
     public class PathActivatorHttpHandler
         : HttpHandlerBase,
           IDictionary<string, HttpHandlerFunc>

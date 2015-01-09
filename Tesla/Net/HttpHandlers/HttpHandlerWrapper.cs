@@ -1,8 +1,10 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Tesla.Net.HttpHandlers
 {
+    [Obsolete]
     public class HttpHandlerWrapper
         : HttpHandlerBase
     {

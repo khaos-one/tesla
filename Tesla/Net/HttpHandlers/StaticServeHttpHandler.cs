@@ -6,6 +6,7 @@ using Tesla.IO;
 
 namespace Tesla.Net.HttpHandlers
 {
+    [Obsolete]
     public class StaticServeHttpHandler
         : HttpHandlerBase
     {
