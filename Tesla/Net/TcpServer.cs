@@ -10,7 +10,7 @@ namespace Tesla.Net
     using HandlerFunc = Func<Socket, Task>;
     using ErrorFunc = Func<Socket, Exception, bool>;
 
-    public sealed class TcpSocketServer
+    public class TcpSocketServer
         : SocketServerBase<HandlerFunc, ErrorFunc>
     {
         public TcpSocketServer(HandlerFunc handlerFunc, IPAddress ip, int port, ErrorFunc errorFunc)

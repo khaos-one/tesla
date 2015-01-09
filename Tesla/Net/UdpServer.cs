@@ -9,7 +9,7 @@ namespace Tesla.Net
     using HandlerFunc = Func<byte[], IPEndPoint, Task>;
     using ErrorFunc = Func<byte[], IPEndPoint, Exception, bool>;
 
-    public sealed class UdpSocketServer
+    public class UdpSocketServer
         : SocketServerBase<HandlerFunc, ErrorFunc>
     {
         public UdpSocketServer(HandlerFunc handlerFunc, IPAddress ip, int port)

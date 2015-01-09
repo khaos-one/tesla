@@ -33,6 +33,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
@@ -56,6 +57,7 @@
     <Compile Include="Net\HttpHandlerFunc.cs" />
     <Compile Include="Net\HttpHandlers\HttpHandlerWrapper.cs" />
     <Compile Include="Net\HttpHandlers\PathActivatorHttpHandler.cs" />
+    <Compile Include="Net\HttpHandlers\RoutedHttpHandler.cs" />
     <Compile Include="Net\HttpHandlers\StaticServeHttpHandler.cs" />
     <Compile Include="Net\HttpListenerRequestExtensions.cs" />
     <Compile Include="Net\HttpListenerResponseExtensions.cs" />
