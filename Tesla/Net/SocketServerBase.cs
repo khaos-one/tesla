@@ -4,16 +4,32 @@ using System.Net.Sockets;
 
 namespace Tesla.Net
 {
+    /// <summary>
+    /// Абстрактный базовый класс для реализации сокет-серверов.
+    /// </summary>
+    /// <typeparam name="THandler">Тип обработчика входящих соединений.</typeparam>
+    /// <typeparam name="TExceptionHandler">Тип обработчика ошибок.</typeparam>
     public abstract class SocketServerBase<THandler, TExceptionHandler>
         : ServerBase
         where TExceptionHandler : class
     {
+        /// <summary>Сокет, принимающий новые подключения.</summary>
         protected Socket ListenerSocket;
+        /// <summary>Обработчик входящих соединений.</summary>
         protected readonly THandler HandlerFunc;
+        /// <summary>Обработчик ошибок.</summary>
         protected readonly TExceptionHandler ExceptionHandlerFunc;
 
+        /// <summary>Локальная конечная точка (IP-адрес и порт), на которой в данный момент работает сервер.</summary>
         public IPEndPoint LocalEndPoint { get; protected set; }
 
+        /// <summary>
+        /// Создаёт новый экземпляр класса сервера с указанными параметрами.
+        /// </summary>
+        /// <param name="handlerFunc">Обработчик входящих соединений.</param>
+        /// <param name="ip">IP-адрес сервера (если на целевой машине больше одного сетевого интерфейса).</param>
+        /// <param name="port">Порт сервера.</param>
+        /// <param name="exceptionHandlerFunc">Обработчик ошибок.</param>
         protected SocketServerBase(THandler handlerFunc, IPAddress ip, int port, TExceptionHandler exceptionHandlerFunc)
         {
             HandlerFunc = handlerFunc;
@@ -21,25 +37,50 @@ namespace Tesla.Net
             ExceptionHandlerFunc = exceptionHandlerFunc;
         }
 
+        /// <summary>
+        /// Создаёт новый экземпляр класса сервера с указанными параметрами.
+        /// </summary>
+        /// <param name="handlerFunc">Обработчик входящих соединений.</param>
+        /// <param name="ip">IP-адрес сервера (если на целевой машине больше одного сетевого интерфейса).</param>
+        /// <param name="port">Порт сервера.</param>
         protected SocketServerBase(THandler handlerFunc, IPAddress ip, int port)
             : this(handlerFunc, ip, port, null)
         { }
 
+        /// <summary>
+        /// Создаёт новый экземпляр класса сервера с указанными параметрами.
+        /// </summary>
+        /// <param name="handlerFunc">Обработчик входящих соединений.</param>
+        /// <param name="port">Порт сервера.</param>
         protected SocketServerBase(THandler handlerFunc, int port)
             : this(handlerFunc, IPAddress.Any, port)
         { }
 
+        /// <summary>
+        /// Создаёт новый экземпляр класса сервера с указанными параметрами.
+        /// </summary>
+        /// <param name="handlerFunc">Обработчик входящих соединений.</param>
         protected SocketServerBase(THandler handlerFunc)
             : this(handlerFunc, 0)
         { }
 
+        /// <summary>
+        /// Порт, на котором в данный момент работает сервер.
+        /// Свойство доступно только для чтения.
+        /// </summary>
         public int Port
         {
             get { return LocalEndPoint.Port; }
         }
 
+        /// <summary>
+        /// Абстрактный метод, реализующий процедуру связывания для сокета сервера.
+        /// </summary>
         protected abstract void BindSocket();
 
+        /// <summary>
+        /// Метод, выполняющийся во время запуска сервера.
+        /// </summary>
         protected override void OnStart()
         {
             try
@@ -50,11 +91,17 @@ namespace Tesla.Net
             catch (ObjectDisposedException) { /* TODO: Process exception. */ }
         }
 
+        /// <summary>
+        /// Метод, выполняющийся во время остановки сервера.
+        /// </summary>
         protected override void OnStop()
         {
             ListenerSocket.Disconnect(true);
         }
 
+        /// <summary>
+        /// Останавливает сервер и освобождает задействованные ресурсы.
+        /// </summary>
         public new void Dispose()
         {
             base.Dispose();

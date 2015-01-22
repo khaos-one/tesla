@@ -5,17 +5,39 @@ using System.Threading.Tasks;
 
 namespace Tesla.Net
 {
+    /// <summary>
+    /// Абстрактный базовый класс для реализации параллельных серверов.
+    /// </summary>
     public abstract class ServerBase 
         : IServer
     {
+        /// <summary>Объект синхронизации потоков обработчиков при необходимости остановки сервера.</summary>
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
+        /// <summary>Флаг, показывающий включен ли в данный момент сервер. Используется для многопоточной синхронизации.</summary>
         private int _started;
+        /// <summary>Флаг, показывающий выключен ли в данный момент сервер. Используется для многопоточной синхронизации.</summary>
         private int _stopped;
 
+        /// <summary>
+        /// Абстрактный метод, реализующий действия при запуске сервера.
+        /// </summary>
         protected abstract void OnStart();
+
+        /// <summary>
+        /// Абстрактный метод, реализующий действия при останове сервера.
+        /// </summary>
         protected abstract void OnStop();
+
+        /// <summary>
+        /// Абстрактный класс, реализующий процедуру ожидания и обработки подключения нового соединения с сервером.
+        /// Возвращает анонимную функцию-обработчик, которая затем будет выполнена в пуле потоков.
+        /// </summary>
+        /// <returns>Анонимная функция-обработчик данного соединения.</returns>
         protected abstract Task<Action> AcceptClient();
 
+        /// <summary>
+        /// Запускает сервер.
+        /// </summary>
         public void Start()
         {
             if (Interlocked.CompareExchange(ref _started, 1, 0) != 0)
@@ -30,6 +52,10 @@ namespace Tesla.Net
             #pragma warning restore 4014
         }
 
+        /// <summary>
+        /// Асинхронный метод, выполняющий ожидание новых соединений и запуск функций-обработчиков.
+        /// Вызывается рекурсивно внутри себя.
+        /// </summary>
         protected async Task ListenAsync()
         {
             if (_cts.Token.IsCancellationRequested)
@@ -43,6 +69,9 @@ namespace Tesla.Net
             await ListenAsync();
         }
 
+        /// <summary>
+        /// Останавливает сервер.
+        /// </summary>
         public void Stop()
         {
             if (_started == 0)
@@ -66,6 +95,9 @@ namespace Tesla.Net
             }
         }
 
+        /// <summary>
+        /// Останавливает сервер и освобождает задействованные ресурсы.
+        /// </summary>
         public void Dispose()
         {
             Stop();

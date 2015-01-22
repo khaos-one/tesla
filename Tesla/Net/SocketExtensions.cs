@@ -6,15 +6,30 @@ using Tesla.IO;
 
 namespace Tesla.Net
 {
+    /// <summary>
+    /// Расширения класса <see cref="Socket"/>.
+    /// </summary>
     public static class SocketExtensions
     {
+        /// <summary>Максимальный разрешённый размер UDP-датаграммы.</summary>
         internal const int MaxUdpDatagramSize = 0x10000;
 
+        /// <summary>
+        /// Производит асинхронное соединение с указанной конечной точкой.
+        /// </summary>
+        /// <param name="socket">Экземпляр класса сокета для которого производится соединение.</param>
+        /// <param name="endPoint">Конечная точка для соединения.</param>
+        /// <returns>Запускаемая асинхронная задача (<see cref="Task"/>).</returns>
         public static Task ConnectAsync(this Socket socket, EndPoint endPoint)
         {
             return Task.Factory.FromAsync(socket.BeginConnect, socket.EndConnect, endPoint, null);
         }
 
+        /// <summary>
+        /// Осуществляет асинхронный приём нового соединения.
+        /// </summary>
+        /// <param name="socket">Экземпляр сокета, для которого производится приём соединения.</param>
+        /// <returns>Запускаемая асинхронная задача (<see cref="Task"/>), возвращающая новый сокет для обмена с удалённой стороной.</returns>
         public static Task<Socket> AcceptAsync(this Socket socket)
         {
             return Task<Socket>.Factory.FromAsync(socket.BeginAccept, socket.EndAccept, null);
@@ -64,6 +79,11 @@ namespace Tesla.Net
             return returnBuffer;
         }
 
+        /// <summary>
+        /// Производит асинхронный приём UDP-датаграммы.
+        /// </summary>
+        /// <param name="socket">Сокет, через который производится приём датаграммы.</param>
+        /// <returns>Запускаемая асинхронная задача (<see cref="Task"/>), возвращающая кортеж из содержимого датаграммы и удалённой конечной точки для связи.</returns>
         public static Task<Tuple<byte[], IPEndPoint>> ReceiveAsync(this Socket socket)
         {
             return Task<Tuple<byte[], IPEndPoint>>.Factory.FromAsync(
@@ -76,11 +96,21 @@ namespace Tesla.Net
                 }, null);
         }
 
+        /// <summary>
+        /// Получает сетевой поток из сокета.
+        /// </summary>
+        /// <param name="socket">Сокет, для которого получается поток.</param>
+        /// <returns>Сетевой поток для обмена.</returns>
         public static NetworkStream GetStream(this Socket socket)
         {
             return new NetworkStream(socket);
         }
 
+        /// <summary>
+        /// Считывает из сокета текущие данные побайтно, возвращая результат при превышении лимита ожидания.
+        /// </summary>
+        /// <param name="socket">Сокет, для которого производится чтение.</param>
+        /// <returns>Массив данных, считаных из сокета.</returns>
         public static byte[] ReadToTimeout(this Socket socket)
         {
             using (var ns = socket.GetStream())
