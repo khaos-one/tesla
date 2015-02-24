@@ -75,6 +75,7 @@ namespace Tesla.Net
         /// <returns>Анонимная функция-обработчик принятого соединения.</returns>
         protected override async Task<Action> AcceptClient()
         {
+            // Try to use less async
             var socket = await ListenerSocket.AcceptAsync();
             return async () =>
             {
@@ -108,21 +109,33 @@ namespace Tesla.Net
         /// Отсоединяет и закрывает указанный сокет и поток.
         /// </summary>
         /// <param name="socket">Сокет по которому разрывается соединение.</param>
-        /// <param name="stream">Поток этого сокета (если есть).</param>
-        private static void Disconnect(Socket socket, Stream stream = null)
+        private static void Disconnect(Socket socket)
         {
+            //try
+            //{
+            //    if (stream != null)
+            //    {
+            //        stream.Close();
+            //    }
+
+            //    if (socket != null)
+            //    {
+            //        socket.Shutdown(SocketShutdown.Both);
+            //        socket.Close();
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+            //    Trace.TraceWarning("TCP closure exception: {0}.", e.Message);
+            //}
+
+            // Other logic was added.
+            socket.Shutdown(SocketShutdown.Both);
+
             try
             {
-                if (stream != null)
-                {
-                    stream.Close();
-                }
-
-                if (socket != null)
-                {
-                    socket.Shutdown(SocketShutdown.Both);
-                    socket.Close();
-                }
+                socket.Close(1000);
+                socket.Dispose();
             }
             catch (Exception e)
             {

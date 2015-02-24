@@ -58,15 +58,16 @@ namespace Tesla.Net
         /// </summary>
         protected async Task ListenAsync()
         {
-            if (_cts.Token.IsCancellationRequested)
+            while (true)
             {
-                return;
+                if (_cts.Token.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                var accept = await AcceptClient();
+                ThreadPool.QueueUserWorkItem(_ => accept());
             }
-
-            var accept = await AcceptClient();
-            ThreadPool.QueueUserWorkItem(_ => accept());
-
-            await ListenAsync();
         }
 
         /// <summary>
