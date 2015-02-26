@@ -1,14 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Tesla.Net
 {
     /// <summary>
     /// Абстрактный базовый класс для реализации параллельных серверов.
     /// </summary>
-    public abstract class ServerBase 
+    public abstract class ServerBase
         : IServer
     {
         /// <summary>Объект синхронизации потоков обработчиков при необходимости остановки сервера.</summary>
@@ -17,6 +17,12 @@ namespace Tesla.Net
         private int _started;
         /// <summary>Флаг, показывающий выключен ли в данный момент сервер. Используется для многопоточной синхронизации.</summary>
         private int _stopped;
+        /// <summary>Обработчики ожидания для всех потоков обработчиков.</summary>
+        private List<WaitHandle> _threadPoolHandles;
+        /// <summary>Счётчик запущенных в данный момент потоков.</summary>
+        private int _runningThreadsCount = 0;
+
+        private Thread _listenerThread;
 
         /// <summary>
         /// Абстрактный метод, реализующий действия при запуске сервера.
@@ -33,7 +39,12 @@ namespace Tesla.Net
         /// Возвращает анонимную функцию-обработчик, которая затем будет выполнена в пуле потоков.
         /// </summary>
         /// <returns>Анонимная функция-обработчик данного соединения.</returns>
-        protected abstract Task<Action> AcceptClient();
+        protected abstract Action AcceptClient();
+
+        /// <summary>
+        /// Имя сервера.
+        /// </summary>
+        public string ServerName { get; set; }
 
         /// <summary>
         /// Запускает сервер.
@@ -47,16 +58,15 @@ namespace Tesla.Net
 
             OnStart();
 
-            #pragma warning disable 4014
-            ListenAsync();
-            #pragma warning restore 4014
+            _listenerThread = new Thread(ListenAsync) { IsBackground = true };
+            _listenerThread.Start();
         }
 
         /// <summary>
-        /// Асинхронный метод, выполняющий ожидание новых соединений и запуск функций-обработчиков.
+        /// Метод, выполняющий ожидание новых соединений и запуск функций-обработчиков.
         /// Вызывается рекурсивно внутри себя.
         /// </summary>
-        protected async Task ListenAsync()
+        protected void ListenAsync()
         {
             while (true)
             {
@@ -65,8 +75,26 @@ namespace Tesla.Net
                     return;
                 }
 
-                var accept = await AcceptClient();
-                ThreadPool.QueueUserWorkItem(_ => accept());
+                var accept = AcceptClient();
+
+                // Temporal; to detect server thread hangs.
+                if (_runningThreadsCount > 20)
+                {
+                    Trace.TraceWarning("[ServerBase] [{0}] Currently running {1} threads. Possible thread hang slam.", ServerName, _runningThreadsCount);
+                }
+
+                ThreadPool.QueueUserWorkItem(_ =>
+                {
+                    try
+                    {
+                        Interlocked.Increment(ref _runningThreadsCount);
+                        accept();
+                    }
+                    finally
+                    {
+                        Interlocked.Decrement(ref _runningThreadsCount);
+                    }
+                });
             }
         }
 
@@ -92,7 +120,7 @@ namespace Tesla.Net
             }
             catch (Exception e)
             {
-                Trace.TraceWarning("Server stop exception: {0}.", e);
+                Trace.TraceWarning("[ServerBase] [{1}] Server stop exception: {0}.", ServerName, e);
             }
         }
 

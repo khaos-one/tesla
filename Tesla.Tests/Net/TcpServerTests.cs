@@ -15,7 +15,7 @@ namespace Tesla.Core.Tests.Net
         public void TcpServerGenericTest()
         {
             var sample = new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
-            var handler = new Func<Socket, Task>(async sock =>
+            var handler = new Action<Socket>(sock =>
             {
                 var stream = sock.GetStream();
                 var bytes = new byte[sample.Length];
@@ -23,7 +23,7 @@ namespace Tesla.Core.Tests.Net
                 stream.Write(bytes, 0, bytes.Length);
             });
 
-            var server = new TcpSocketServer(handler, 0);
+            var server = new TcpServer(handler, 0);
             server.Start();
 
             var client = new TcpClient();
@@ -50,7 +50,7 @@ namespace Tesla.Core.Tests.Net
             0x0C, 0x0D, 0x0E, 0x0F
         };
 
-        private static async Task LoadTestHandler(Socket sock)
+        private static void LoadTestHandler(Socket sock)
         {
             var stream = sock.GetStream();
             var bytes = new byte[LoadTestSampleBytes.Length];
@@ -58,14 +58,14 @@ namespace Tesla.Core.Tests.Net
             stream.Write(bytes, 0, bytes.Length);
         }
 
-        private static TcpSocketServer _loadTestSocketServer;
+        private static TcpServer _loadTestSocketServer;
             
         [TestMethod]
         public void TcpServerGenericLoadTest()
         {
             if (_loadTestSocketServer == null)
             {
-                _loadTestSocketServer = new TcpSocketServer(LoadTestHandler, 0);
+                _loadTestSocketServer = new TcpServer(LoadTestHandler, 0);
                 _loadTestSocketServer.Start();
             }
 

@@ -45,9 +45,9 @@ namespace Tesla.Net
             Listener.Start();
         }
 
-        protected override async Task<Action> AcceptClient()
+        protected override Action AcceptClient()
         {
-            var context = await Listener.GetContextAsync();
+            var context = Listener.GetContext();
             return async () =>
             {
                 //context.Response.Headers.Add(HttpResponseHeader.Server, "Tesla/1.0");

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 
@@ -89,6 +90,9 @@ namespace Tesla.Net
             }
             catch (SocketException) { /* TODO: Process exception. */ }
             catch (ObjectDisposedException) { /* TODO: Process exception. */ }
+
+            // Inform log that we have started.
+            Trace.TraceInformation("[TcpServer] [{0}] Server started on port {1}.", ServerName, Port);
         }
 
         /// <summary>
@@ -96,7 +100,11 @@ namespace Tesla.Net
         /// </summary>
         protected override void OnStop()
         {
-            ListenerSocket.Disconnect(true);
+            ListenerSocket.Close();
+            //ListenerSocket.Disconnect(true);
+
+            // Inform log that we have stopped.
+            Trace.TraceInformation("[TcpServer] [{0}] Server stopped on port {1}.", ServerName, Port);
         }
 
         /// <summary>
