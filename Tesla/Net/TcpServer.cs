@@ -1,31 +1,48 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace Tesla.Net
 {
-    /// <summary>
-    /// Представляет TCP-сервер.
-    /// </summary>
-    public class TcpServer
-        : SocketServerBase<Action<Socket>, Func<Socket, Exception, bool>>
+    public abstract class TcpServer
+        : IServer
     {
+        /// <summary>Объект синхронизации потоков обработчиков при необходимости остановки сервера.</summary>
+        private readonly CancellationTokenSource _cts = new CancellationTokenSource();
+        /// <summary>Флаг, показывающий включен ли в данный момент сервер. Используется для многопоточной синхронизации.</summary>
+        private int _started;
+        /// <summary>Флаг, показывающий выключен ли в данный момент сервер. Используется для многопоточной синхронизации.</summary>
+        private int _stopped;
+        /// <summary>Обработчики ожидания для всех потоков обработчиков.</summary>
+        private List<WaitHandle> _threadPoolHandles;
+        /// <summary>Счётчик запущенных в данный момент потоков.</summary>
+        private int _runningThreadsCount = 0;
+
+        private Thread _listenerThread;
+
+        /// <summary>Сокет, принимающий новые подключения.</summary>
+        protected Socket ListenerSocket;
+        /// <summary>Обработчик входящих соединений.</summary>
+
+        /// <summary>Локальная конечная точка (IP-адрес и порт), на которой в данный момент работает сервер.</summary>
+        public IPEndPoint LocalEndPoint { get; protected set; }
+
         /// <summary>Таймаут операции записи для подключений.</summary>
         public int? ClientSocketSendTimeout { get; set; }
         /// <summary>Таймаут операции чтения для подключений.</summary>
         public int? ClientSocketReceiveTimeout { get; set; }
 
         /// <summary>
-        /// Создаёт новый экземпляр класса TCP-сервера с указанными параметрами.
+        /// Создаёт новый экземпляр класса сервера с указанными параметрами.
         /// </summary>
-        /// <param name="handlerFunc">Функция-обработчик входящих соединений.</param>
         /// <param name="ip">IP-адрес сервера (если на целевой машине больше одного сетевого интерфейса).</param>
-        /// <param name="port">Порт TCP-сервера.</param>
-        /// <param name="errorFunc">Функция-обработчик ошибок.</param>
-        public TcpServer(Action<Socket> handlerFunc, IPAddress ip, int port, Func<Socket, Exception, bool> errorFunc)
-            : base(handlerFunc, ip, port, errorFunc)
+        /// <param name="port">Порт сервера.</param>
+        protected TcpServer(IPAddress ip, int port)
         {
+            LocalEndPoint = new IPEndPoint(ip, port);
             ListenerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             // Trying to avoid sporadic connection resets.
@@ -34,94 +51,130 @@ namespace Tesla.Net
         }
 
         /// <summary>
-        /// Создаёт новый экземпляр класса TCP-сервера с указанными параметрами.
+        /// Создаёт новый экземпляр класса сервера с указанными параметрами.
         /// </summary>
-        /// <param name="handlerFunc">Функция-обработчик входящих соединений.</param>
-        /// <param name="ip">IP-адрес сервера (если на целевой машине больше одного сетевого интерфейса).</param>
-        /// <param name="port">Порт TCP-сервера.</param>
-        public TcpServer(Action<Socket> handlerFunc, IPAddress ip, int port)
-            : this(handlerFunc, ip, port, null)
+        /// <param name="port">Порт сервера.</param>
+        protected TcpServer(int port)
+            : this(IPAddress.Any, port)
         { }
 
         /// <summary>
-        /// Создаёт новый экземпляр класса TCP-сервера с указанными параметрами.
+        /// Порт, на котором в данный момент работает сервер.
+        /// Свойство доступно только для чтения.
         /// </summary>
-        /// <param name="handlerFunc">Функция-обработчик входящих соединений.</param>
-        /// <param name="port">Порт TCP-сервера.</param>
-        public TcpServer(Action<Socket> handlerFunc, int port)
-            : this(handlerFunc, IPAddress.Any, port)
-        { }
-
-        /// <summary>
-        /// Создаёт новый экземпляр класса TCP-сервера с указанными параметрами.
-        /// </summary>
-        /// <param name="handlerFunc">Функция-обработчик входящих соединений.</param>
-        public TcpServer(Action<Socket> handlerFunc)
-            : this(handlerFunc, 0)
-        { }
-
-        /// <summary>
-        /// Связывает сокет сервера.
-        /// </summary>
-        protected override void BindSocket()
+        public int Port
         {
-            ListenerSocket.Bind(LocalEndPoint);
-            ListenerSocket.Listen(500);
-
-            LocalEndPoint = (IPEndPoint)ListenerSocket.LocalEndPoint;
+            get { return LocalEndPoint.Port; }
         }
 
         /// <summary>
-        /// Слушает сокет сервера на наличие новых соединений, принимает их по мере поступления.
+        /// Абстрактный метод, реализующий действия при запуске сервера.
         /// </summary>
-        /// <returns>Анонимная функция-обработчик принятого соединения.</returns>
-        protected override Action AcceptClient()
+        protected void OnStart()
         {
-            // Accept incoming connection.
-            var socket = ListenerSocket.Accept();
-
-            // Set new socket options.
-            // Trying to avoid sporadic connection resets with KeepAlive=false and disabling Nagle algorithm (DontLinger=true).
-            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, false);
-            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
-
-            // Set client socket timeouts.
-            if (ClientSocketSendTimeout != null)
+            try
             {
-                socket.SendTimeout = ClientSocketSendTimeout.Value;
+                ListenerSocket.Bind(LocalEndPoint);
+                ListenerSocket.Listen(500);
+
+                LocalEndPoint = (IPEndPoint)ListenerSocket.LocalEndPoint;
+            }
+            catch (SocketException) { /* TODO: Process exception. */ }
+            catch (ObjectDisposedException) { /* TODO: Process exception. */ }
+
+            // Inform log that we have started.
+            Trace.TraceInformation("[TcpServer] [{0}] Server started on port {1}.", ServerName, Port);
+        }
+
+        /// <summary>
+        /// Абстрактный метод, реализующий действия при останове сервера.
+        /// </summary>
+        protected void OnStop()
+        {
+            ListenerSocket.Close();
+            //ListenerSocket.Disconnect(true);
+
+            // Inform log that we have stopped.
+            Trace.TraceInformation("[TcpServer] [{0}] Server stopped on port {1}.", ServerName, Port);
+        }
+
+        protected abstract void HandleRequest(Socket socket);
+        protected abstract void HandleException(Socket socket, Exception e);
+
+        /// <summary>
+        /// Абстрактный класс, реализующий процедуру ожидания и обработки подключения нового соединения с сервером.
+        /// Возвращает анонимную функцию-обработчик, которая затем будет выполнена в пуле потоков.
+        /// </summary>
+        /// <returns>Анонимная функция-обработчик данного соединения.</returns>
+        protected void AcceptClient(object state)
+        {
+            var socket = (Socket)state;
+
+            if (!socket.Connected)
+            {
+                Disconnect(socket);
+                return;
             }
 
-            if (ClientSocketReceiveTimeout != null)
+            try
             {
-                socket.ReceiveTimeout = ClientSocketReceiveTimeout.Value;
+                HandleRequest(socket);
+            }
+            catch (Exception e)
+            {
+                Trace.TraceWarning("[TcpServer] [{0}] TCP Handler exception: {1}.", ServerName, e);
+                HandleException(socket, e);
+            }
+            finally
+            {
+                Disconnect(socket);
+            }
+        }
+
+        /// <summary>
+        /// Имя сервера.
+        /// </summary>
+        public string ServerName { get; set; }
+
+        /// <summary>
+        /// Запускает сервер.
+        /// </summary>
+        public void Start()
+        {
+            if (Interlocked.CompareExchange(ref _started, 1, 0) != 0)
+            {
+                throw new InvalidOperationException("Server has already been started.");
             }
 
-            return () =>
+            OnStart();
+
+            _listenerThread = new Thread(Listen) { IsBackground = true };
+            _listenerThread.Start();
+        }
+
+        /// <summary>
+        /// Метод, выполняющий ожидание новых соединений и запуск функций-обработчиков.
+        /// Вызывается рекурсивно внутри себя.
+        /// </summary>
+        protected void Listen()
+        {
+            while (true)
             {
-                if (!socket.Connected)
+                if (_cts.Token.IsCancellationRequested)
                 {
-                    Disconnect(socket);
                     return;
                 }
 
-                try
-                {
-                    HandlerFunc(socket);
-                }
-                catch (Exception e)
-                {
-                    Trace.TraceWarning("[TcpServer] [{0}] TCP Handler exception: {1}.", ServerName, e);
+                var socket = ListenerSocket.Accept();
 
-                    if (ExceptionHandlerFunc != null)
-                    {
-                        ExceptionHandlerFunc(socket, e);
-                    }
-                }
-                finally
+                // Temporal; to detect server thread hangs.
+                if (_runningThreadsCount > 20)
                 {
-                    Disconnect(socket);
+                    Trace.TraceWarning("[ServerBase] [{0}] Currently running {1} threads. Possible thread hang slam.", ServerName, _runningThreadsCount);
                 }
-            };
+
+                ThreadPool.QueueUserWorkItem(AcceptClient, socket);
+            }
         }
 
         /// <summary>
@@ -143,6 +196,53 @@ namespace Tesla.Net
             {
                 Trace.TraceWarning("[TcpServer] TCP closure exception: {0}.", e.Message);
             }
+
+            // Other logic was added.
+            //socket.Shutdown(SocketShutdown.Both);
+
+            //try
+            //{
+            //    socket.Close(1000);
+            //    socket.Dispose();
+            //}
+            //catch (Exception e)
+            //{
+            //    Trace.TraceWarning("TCP closure exception: {0}.", e.Message);
+            //}
+        }
+
+        /// <summary>
+        /// Останавливает сервер.
+        /// </summary>
+        public void Stop()
+        {
+            if (_started == 0)
+            {
+                return;
+            }
+
+            if (Interlocked.CompareExchange(ref _stopped, 1, 0) != 0)
+            {
+                return;
+            }
+
+            try
+            {
+                _cts.Cancel();
+                OnStop();
+            }
+            catch (Exception e)
+            {
+                Trace.TraceWarning("[ServerBase] [{1}] Server stop exception: {0}.", ServerName, e);
+            }
+        }
+
+        /// <summary>
+        /// Останавливает сервер и освобождает задействованные ресурсы.
+        /// </summary>
+        public void Dispose()
+        {
+            Stop();
         }
     }
 }
