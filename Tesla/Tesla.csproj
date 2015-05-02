@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="BitArrayExtensions.cs" />
     <Compile Include="ByteArrayExtensions.cs" />
+    <Compile Include="Collections\ListExtensions.cs" />
     <Compile Include="Collections\NameValueCollectionExtensions.cs" />
     <Compile Include="DoubleExtensions.cs" />
     <Compile Include="IO\StreamExtensions.cs" />
