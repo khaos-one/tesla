@@ -7,7 +7,7 @@ namespace Tesla.Net
     //using HandlerFunc = Func<HttpListenerContext, Task>;
     
     public class HttpServer
-        : ServerBase
+        : ThreadedServerBase
     {
         protected HttpListener Listener;
         protected HttpHandlerFunc Handler;

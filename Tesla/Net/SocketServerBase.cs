@@ -11,7 +11,7 @@ namespace Tesla.Net
     /// <typeparam name="THandler">Тип обработчика входящих соединений.</typeparam>
     /// <typeparam name="TExceptionHandler">Тип обработчика ошибок.</typeparam>
     public abstract class SocketServerBase<THandler, TExceptionHandler>
-        : ServerBase
+        : ThreadedServerBase
         where TExceptionHandler : class
     {
         /// <summary>Сокет, принимающий новые подключения.</summary>

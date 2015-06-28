@@ -8,7 +8,7 @@ namespace Tesla.Net
     /// <summary>
     /// Абстрактный базовый класс для реализации параллельных серверов.
     /// </summary>
-    public abstract class ServerBase
+    public abstract class ThreadedServerBase
         : IServer
     {
         /// <summary>Объект синхронизации потоков обработчиков при необходимости остановки сервера.</summary>
@@ -35,11 +35,17 @@ namespace Tesla.Net
         protected abstract void OnStop();
 
         /// <summary>
-        /// Абстрактный класс, реализующий процедуру ожидания и обработки подключения нового соединения с сервером.
+        /// Абстрактный метод, реализующий процедуру ожидания и обработки подключения нового соединения с сервером.
         /// Возвращает анонимную функцию-обработчик, которая затем будет выполнена в пуле потоков.
         /// </summary>
-        /// <returns>Анонимная функция-обработчик данного соединения.</returns>
-        protected abstract Action AcceptClient();
+        /// <returns>Объект состояния, который может быть передан в обработчик клиента.</returns>
+        protected abstract object AcceptClient();
+
+        /// <summary>
+        /// Абстрактный метод, реализующий процедуру обработки клиента.
+        /// </summary>
+        /// <param name="obj">Объект состояния, передаваемый из обработчика нового соединения.</param>
+        protected abstract void HandleClient(object obj);
 
         /// <summary>
         /// Имя сервера.
@@ -58,7 +64,7 @@ namespace Tesla.Net
 
             OnStart();
 
-            _listenerThread = new Thread(ListenAsync) { IsBackground = true };
+            _listenerThread = new Thread(Listen) { IsBackground = true };
             _listenerThread.Start();
         }
 
@@ -66,7 +72,7 @@ namespace Tesla.Net
         /// Метод, выполняющий ожидание новых соединений и запуск функций-обработчиков.
         /// Вызывается рекурсивно внутри себя.
         /// </summary>
-        protected void ListenAsync()
+        protected void Listen()
         {
             while (true)
             {
@@ -75,7 +81,7 @@ namespace Tesla.Net
                     return;
                 }
 
-                var accept = AcceptClient();
+                var obj = AcceptClient();
 
                 // Temporal; to detect server thread hangs.
                 if (_runningThreadsCount > 20)
@@ -88,7 +94,7 @@ namespace Tesla.Net
                     try
                     {
                         Interlocked.Increment(ref _runningThreadsCount);
-                        accept();
+                        HandleClient(obj);
                     }
                     finally
                     {

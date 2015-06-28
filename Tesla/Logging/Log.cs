@@ -93,12 +93,22 @@ namespace Tesla.Logging
             _builder = new StringBuilder();
         }
 
-        public void Entry(string message, params object[] args)
+        public static void Entry(string message, params object[] args)
         {
             Entry(Priority.Info, message, args);
         }
 
-        public void Entry(Priority priority, string message, params object[] args)
+        public static void Entry(Priority priority, string message, params object[] args)
+        {
+            Default.Write(priority, message, args);
+        }
+
+        public void Write(string message, params object[] args)
+        {
+            Write(Priority.Info, message, args);
+        }
+
+        public void Write(Priority priority, string message, params object[] args)
         {
             if (_stream == null)
             {
