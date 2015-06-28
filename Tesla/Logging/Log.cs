@@ -52,11 +52,7 @@ namespace Tesla.Logging
 
         public Log(string logName = null, Stream logStream = null, bool printThreadId = false)
         {
-            if (logName == null)
-            {
-                logName = "log";
-            }
-            else
+            if (!string.IsNullOrEmpty(logName))
             {
                 _logName = logName;
             }
@@ -126,10 +122,10 @@ namespace Tesla.Logging
             {
                 _builder.Append(" [");
                 _builder.Append(_logName);
-                _builder.Append("]");
+                _builder.Append("] ");
             }
 
-            _builder.Append(" [");
+            _builder.Append("[");
             _builder.Append(Priorities[priority]);
             _builder.Append("] ");
 
@@ -141,7 +137,7 @@ namespace Tesla.Logging
             }
 
             _builder.AppendFormat(message, args);
-            _builder.Append("\n");
+            _builder.Append('\n');
             var buffer = Encoding.GetBytes(_builder.ToString());
             _stream.Write(buffer, 0, buffer.Length);
             _builder.Clear();
