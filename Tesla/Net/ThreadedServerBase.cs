@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using Tesla.Logging;
 
 namespace Tesla.Net
 {
@@ -21,8 +22,13 @@ namespace Tesla.Net
         private List<WaitHandle> _threadPoolHandles;
         /// <summary>Счётчик запущенных в данный момент потоков.</summary>
         private int _runningThreadsCount = 0;
-
+        /// <summary>Поток, "слушающий" входящие соединения.</summary>
         private Thread _listenerThread;
+
+        protected bool IsCancellationRequested
+        {
+            get { return _cts.Token.IsCancellationRequested; }
+        }
 
         /// <summary>
         /// Абстрактный метод, реализующий действия при запуске сервера.
@@ -33,19 +39,6 @@ namespace Tesla.Net
         /// Абстрактный метод, реализующий действия при останове сервера.
         /// </summary>
         protected abstract void OnStop();
-
-        /// <summary>
-        /// Абстрактный метод, реализующий процедуру ожидания и обработки подключения нового соединения с сервером.
-        /// Возвращает анонимную функцию-обработчик, которая затем будет выполнена в пуле потоков.
-        /// </summary>
-        /// <returns>Объект состояния, который может быть передан в обработчик клиента.</returns>
-        protected abstract object AcceptClient();
-
-        /// <summary>
-        /// Абстрактный метод, реализующий процедуру обработки клиента.
-        /// </summary>
-        /// <param name="obj">Объект состояния, передаваемый из обработчика нового соединения.</param>
-        protected abstract void HandleClient(object obj);
 
         /// <summary>
         /// Имя сервера.
@@ -69,40 +62,10 @@ namespace Tesla.Net
         }
 
         /// <summary>
-        /// Метод, выполняющий ожидание новых соединений и запуск функций-обработчиков.
+        /// Абстрактный метод, выполняющий ожидание новых соединений и запуск функций-обработчиков.
         /// Вызывается рекурсивно внутри себя.
         /// </summary>
-        protected void Listen()
-        {
-            while (true)
-            {
-                if (_cts.Token.IsCancellationRequested)
-                {
-                    return;
-                }
-
-                var obj = AcceptClient();
-
-                // Temporal; to detect server thread hangs.
-                if (_runningThreadsCount > 20)
-                {
-                    Trace.TraceWarning("[ServerBase] [{0}] Currently running {1} threads. Possible thread hang slam.", ServerName, _runningThreadsCount);
-                }
-
-                ThreadPool.QueueUserWorkItem(_ =>
-                {
-                    try
-                    {
-                        Interlocked.Increment(ref _runningThreadsCount);
-                        HandleClient(obj);
-                    }
-                    finally
-                    {
-                        Interlocked.Decrement(ref _runningThreadsCount);
-                    }
-                });
-            }
-        }
+        protected abstract void Listen();
 
         /// <summary>
         /// Останавливает сервер.
@@ -126,7 +89,7 @@ namespace Tesla.Net
             }
             catch (Exception e)
             {
-                Trace.TraceWarning("[ServerBase] [{1}] Server stop exception: {0}.", ServerName, e);
+                Log.Entry(Priority.Warning, "[ServerBase] [{1}] Server stop exception: {0}.", ServerName, e);
             }
         }
 
