@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 
-namespace Tesla
+namespace Tesla.Logging
 {
     public enum Priority
     {
@@ -19,11 +19,12 @@ namespace Tesla
         Debug = 7
     }
 
-    public sealed class Log : IDisposable
+    public sealed class Log 
+        : IDisposable
     {
         private readonly string _logName;
         private Stream _stream;
-        private bool _dontClose;
+        private readonly bool _dontClose;
         private readonly StringBuilder _builder;
         private readonly bool _printThreadId;
 
@@ -40,6 +41,14 @@ namespace Tesla
         };
 
         public static Encoding Encoding { get; set; }
+        public static string DefaultLogDirectory { get; set; }
+
+        private static Log _defaultLog;
+
+        public static Log Default
+        {
+            get { return _defaultLog ?? (_defaultLog = new Log(DefaultLogDirectory, printThreadId: true)); }
+        }
 
         public Log(string logName = null, Stream logStream = null, bool printThreadId = false)
         {
@@ -82,6 +91,11 @@ namespace Tesla
             _printThreadId = printThreadId;
             Encoding = Encoding.UTF8;
             _builder = new StringBuilder();
+        }
+
+        public void Entry(string message, params object[] args)
+        {
+            Entry(Priority.Info, message, args);
         }
 
         public void Entry(Priority priority, string message, params object[] args)
