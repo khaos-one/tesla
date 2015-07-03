@@ -44,34 +44,35 @@ namespace Tesla.Net
             Listener.Start();
         }
 
-        protected override Action AcceptClient()
+        protected override object AcceptClient()
         {
-            var context = Listener.GetContext();
-            return async () =>
+            return Listener.GetContext();
+        }
+
+        protected override void HandleClient(object state)
+        {
+            var context = (HttpListenerContext) state;
+
+            try
             {
-                //context.Response.Headers.Add(HttpResponseHeader.Server, "Tesla/1.0");
+                Handler(context);
+            }
+            catch (HttpException e)
+            {
+                context.Response.StatusCode = (Int32) e.HttpCode;
+                context.Response.Write(HttpException.FormatErrorCode(context.Response.StatusCode,
+                    context.Response.StatusDescription));
+            }
+            catch (Exception e)
+            {
+                Trace.TraceWarning("HTTP Handler exception: {0}.", e);
 
-                try
-                {
-                    await Handler(context);
-                }
-                catch (HttpException e)
-                {
-                    context.Response.StatusCode = (Int32) e.HttpCode;
-                    context.Response.Write(HttpException.FormatErrorCode(context.Response.StatusCode,
-                        context.Response.StatusDescription));
-                }
-                catch (Exception e)
-                {
-                    Trace.TraceWarning("HTTP Handler exception: {0}.", e);
+                context.Response.StatusCode = 500;
+                context.Response.Write(HttpException.FormatErrorCode(context.Response.StatusCode,
+                    context.Response.StatusDescription));
+            }
 
-                    context.Response.StatusCode = 500;
-                    context.Response.Write(HttpException.FormatErrorCode(context.Response.StatusCode,
-                        context.Response.StatusDescription));
-                }
-
-                context.Response.OutputStream.Close();
-            };
+            context.Response.OutputStream.Close();
         }
 
         protected override void OnStop()

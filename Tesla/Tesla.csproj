@@ -70,10 +70,8 @@
     <Compile Include="Net\IPEndPointExtensions.cs" />
     <Compile Include="Net\IServer.cs" />
     <Compile Include="Net\ThreadedServerBase.cs" />
-    <Compile Include="Net\SocketServerBase.cs" />
     <Compile Include="Net\SocketExtensions.cs" />
     <Compile Include="Net\TcpClientExtensions.cs" />
-    <Compile Include="Net\TcpServer.cs" />
     <Compile Include="Net\ThreadedTcpServer.cs" />
     <Compile Include="ProgramBuffer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

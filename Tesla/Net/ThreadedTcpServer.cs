@@ -119,12 +119,17 @@ namespace Tesla.Net
             }
         }
 
+        protected override object AcceptClient()
+        {
+            return ListenerSocket.Accept();
+        }
+
         /// <summary>
         /// Метод, реализующий процедуру ожидания и обработки подключения нового соединения с сервером.
         /// Возвращает анонимную функцию-обработчик, которая затем будет выполнена в пуле потоков.
         /// </summary>
         /// <returns>Анонимная функция-обработчик данного соединения.</returns>
-        protected void AcceptClient(object state)
+        protected override void HandleClient(object state)
         {
             var socket = (Socket) state;
 
@@ -146,34 +151,6 @@ namespace Tesla.Net
             finally
             {
                 Disconnect(socket);
-            }
-        }
-
-        /// <summary>
-        /// Метод, выполняющий ожидание новых соединений и запуск функций-обработчиков.
-        /// </summary>
-        protected override void Listen()
-        {
-            while (true)
-            {
-                if (IsCancellationRequested)
-                {
-                    return;
-                }
-
-                try
-                {
-                    var socket = ListenerSocket.Accept();
-                    ThreadPool.QueueUserWorkItem(AcceptClient, socket);
-                }
-                catch (ObjectDisposedException e)
-                {
-                    return;
-                }
-                catch (SocketException e)
-                {
-                    Log.Entry(Priority.Warning, "[ThreadedTcpServer] [{0}] Listener socket exception: {1}", ServerName, e);
-                }
             }
         }
     }

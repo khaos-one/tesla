@@ -61,11 +61,37 @@ namespace Tesla.Net
             _listenerThread.Start();
         }
 
+        protected abstract object AcceptClient();
+        protected abstract void HandleClient(object obj);
+
         /// <summary>
         /// Абстрактный метод, выполняющий ожидание новых соединений и запуск функций-обработчиков.
         /// Вызывается рекурсивно внутри себя.
         /// </summary>
-        protected abstract void Listen();
+        protected void Listen()
+        {
+            while (true)
+            {
+                if (IsCancellationRequested)
+                {
+                    return;
+                }
+
+                try
+                {
+                    var obj = AcceptClient();
+                    ThreadPool.QueueUserWorkItem(HandleClient, obj);
+                }
+                catch (ObjectDisposedException e)
+                {
+                    return;
+                }
+                catch (Exception e)
+                {
+                    Log.Entry(Priority.Warning, "[ThreadedServerBase] [{0}] Listener exception: {1}", ServerName, e);
+                }
+            }
+        }
 
         /// <summary>
         /// Останавливает сервер.
