@@ -1,43 +1,32 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Net;
+using Tesla.Logging;
 
 namespace Tesla.Net
 {
     //using HandlerFunc = Func<HttpListenerContext, Task>;
     
-    public class HttpServer
+    public abstract class HttpServerBase
         : ThreadedServerBase
     {
         protected HttpListener Listener;
-        protected HttpHandlerFunc Handler;
 
-        public HttpServer(HttpHandlerFunc handlerFunc, string[] uriPrefixes)
+        protected HttpServerBase(string[] uriPrefixes)
         {
-            Handler = handlerFunc;
             Listener = new HttpListener();
             Array.ForEach(uriPrefixes, x => Listener.Prefixes.Add(x));
         }
 
-        public HttpServer(HttpHandlerFunc handlerFunc, string uriPrefix)
-            : this(handlerFunc, new[] {uriPrefix})
+        protected HttpServerBase(string uriPrefix)
+            : this(new[] {uriPrefix})
         { }
 
-        public HttpServer(HttpHandlerFunc handlerFunc)
-            : this(handlerFunc, "http://*:80/")
+        protected HttpServerBase()
+            : this("http://localhost:8080/")
         { }
 
-        public HttpServer(IHttpHandler handler, string[] uriPrefixes)
-            : this(handler.Handle, uriPrefixes)
-        { }
-
-        public HttpServer(IHttpHandler handler, string uriPrefix)
-            : this(handler.Handle, new[] { uriPrefix })
-        { }
-
-        public HttpServer(IHttpHandler handler)
-            : this(handler.Handle, "http://*:80/")
-        { }
+        protected abstract void HandleRequest(HttpListenerContext context);
 
         protected override void OnStart()
         {
@@ -55,7 +44,7 @@ namespace Tesla.Net
 
             try
             {
-                Handler(context);
+                HandleRequest(context);
             }
             catch (HttpException e)
             {
@@ -65,7 +54,7 @@ namespace Tesla.Net
             }
             catch (Exception e)
             {
-                Trace.TraceWarning("HTTP Handler exception: {0}.", e);
+                Log.Entry(Priority.Warning, "HTTP handler exception: {0}.", e);
 
                 context.Response.StatusCode = 500;
                 context.Response.Write(HttpException.FormatErrorCode(context.Response.StatusCode,

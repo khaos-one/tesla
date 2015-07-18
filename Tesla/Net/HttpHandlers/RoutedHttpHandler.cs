@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.VisualBasic;
@@ -6,6 +7,7 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace Tesla.Net.HttpHandlers
 {
+    [Obsolete]
     public class RoutedHttpHandler
         : IHttpHandler
     {

@@ -52,10 +52,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Net\TcpServerTests.cs" />
-    <Compile Include="Net\HttpServerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types\VarIntTests.cs" />
+    <Compile Include="StringExtensionsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Tesla\Tesla.csproj">
@@ -64,9 +63,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Net\TcpServerLoadTests.loadtest">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <Folder Include="Net\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

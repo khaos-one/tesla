@@ -3,8 +3,10 @@ using System.Threading.Tasks;
 
 namespace Tesla.Net
 {
+    public delegate void HttpHandlerFunc(HttpListenerContext context, string[] param = null);
+
     public interface IHttpHandler
     {
-        Task Handle(HttpListenerContext context);
+        void Handle(HttpListenerContext context);
     }
 }

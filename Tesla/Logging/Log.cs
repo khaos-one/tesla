@@ -22,7 +22,7 @@ namespace Tesla.Logging
     public sealed class Log 
         : IDisposable
     {
-        private readonly string _logName;
+        private readonly string _logName = "Log";
         private Stream _stream;
         private readonly bool _dontClose;
         private readonly StringBuilder _builder;
@@ -66,7 +66,7 @@ namespace Tesla.Logging
                     throw new ArgumentException("Cannot find executing assembly path.");
                 }
 
-                var path = Path.Combine(assemblyDir, logName + ".log");
+                var path = Path.Combine(assemblyDir, _logName + ".log");
 
                 try
                 {

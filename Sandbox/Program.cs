@@ -1,47 +1,25 @@
 ﻿using System;
 using System.Collections;
-using System.IO;
+using System.Net;
 using Tesla;
 using Tesla.Net;
-using Tesla.Net.HttpHandlers;
-using Tesla.Types;
 
 namespace Sandbox
 {
     class Program
     {
+        static void HandlerFunc(HttpListenerContext context, string[] param)
+        {
+            context.Response.Write(string.Format("I see {0} too!", param[0]));
+        }
+
         static void Main(string[] args)
         {
-            Main2();
-
-            var handler = new StaticServeHttpHandler(Directory.GetCurrentDirectory())
-            {
-                NextHandler = new PathActivatorHttpHandler
-                {
-                    {
-                        "/home",
-                        async context =>
-                        {
-                            var template = new Sample
-                            {
-                                Model = new
-                                {
-                                    hello = "This is a string from the code!"
-                                }
-                            };
-
-                            context.Response.Write(template.TransformText());
-                        }
-                    }
-                }
-            };
-
-            var httpServer = new HttpServer(handler, "http://*:8080/");
-
-            httpServer.Start();
-            Console.WriteLine("Http server started.");
+            var server = new RoutedHttpServer();
+            server.AddRoute("/isee/*", HandlerFunc);
+            server.Start();
+            Console.WriteLine("Server started...");
             Console.ReadLine();
-            httpServer.Stop();
         }
 
         static void Main2()
