@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Tesla.Core")]
-[assembly: AssemblyCopyright("© Егор 'khaos' Зеленский, 2014.")]
+[assembly: AssemblyCopyright("© Егор 'khaos' Зеленский, 2014-2015.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
