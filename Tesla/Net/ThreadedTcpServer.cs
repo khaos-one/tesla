@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using Tesla.Logging;
 
 namespace Tesla.Net
