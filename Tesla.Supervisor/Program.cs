@@ -1,4 +1,4 @@
-﻿using System.ServiceProcess;
+﻿using Tesla.ServiceProcess;
 
 namespace Tesla.Supervisor
 {
@@ -9,12 +9,11 @@ namespace Tesla.Supervisor
         /// </summary>
         static void Main()
         {
-            ServiceBase[] ServicesToRun;
-            ServicesToRun = new ServiceBase[] 
-            { 
-                new SupervisorService() 
+            var list = new ServiceList
+            {
+                new SupervisorService()
             };
-            ServiceBase.Run(ServicesToRun);
+            list.RunInteractive();
         }
     }
 }
