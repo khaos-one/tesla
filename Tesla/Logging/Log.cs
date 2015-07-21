@@ -41,13 +41,19 @@ namespace Tesla.Logging
         };
 
         public static Encoding Encoding { get; set; }
-        public static string DefaultLogDirectory { get; set; }
+        public static string DefaultLogFile { get; set; }
+        public static Stream DefaultLogStream { get; set; }
 
         private static Log _defaultLog;
 
         public static Log Default
         {
-            get { return _defaultLog ?? (_defaultLog = new Log(DefaultLogDirectory, printThreadId: true)); }
+            get
+            {
+                return _defaultLog ?? (_defaultLog = DefaultLogStream != null
+                    ? new Log(logStream: DefaultLogStream, printThreadId: true)
+                    : new Log(logName: DefaultLogFile, printThreadId: true));
+            }
         }
 
         public Log(string logName = null, Stream logStream = null, bool printThreadId = false)

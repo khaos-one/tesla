@@ -8,12 +8,19 @@ namespace Tesla.Supervisor.Configuration
         public string User { get; set; }
         public string WorkingDirectory { get; set; }
         public uint StartupTime { get; set; }
+        public string ErrorFile { get; set; }
+        public string OutputFile { get; set; }
+        public bool UseHangDetection { get; set; }
         public uint RecheckInterval { get; set; }
+        public uint RecheckCount { get; set; }
+        public string WebCheckRequestUri { get; set; }
+        public uint WebCheckRequestTimeout { get; set; }
     }
 
     public sealed class SupervisorConfig
     {
         public List<SupervisorAppConfig> Apps;
+        public string LogFile { get; set; }
 
         public SupervisorConfig()
         {

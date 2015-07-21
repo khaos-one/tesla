@@ -4,6 +4,7 @@ using System.Configuration;
 using System.IO;
 using System.ServiceProcess;
 using Newtonsoft.Json;
+using Tesla.Logging;
 using Tesla.Supervisor.Configuration;
 
 namespace Tesla.Supervisor
@@ -12,6 +13,7 @@ namespace Tesla.Supervisor
     {
         public SupervisorConfig Configuration;
         public List<Application> Applications = new List<Application>();
+        public Stream LogStream;
 
         public SupervisorService()
         {
@@ -32,8 +34,15 @@ namespace Tesla.Supervisor
                 Configuration = (SupervisorConfig) serializer.Deserialize(fs, typeof(SupervisorConfig));
             }
 
+            LogStream = !string.IsNullOrEmpty(Configuration.LogFile)
+                ? File.Open(Configuration.LogFile, FileMode.Append)
+                : File.Create("Supervisor.log");
+            Log.DefaultLogStream = LogStream;
+
             Configuration.Apps.ForEach(x => Applications.Add(new Application(x)));
             Applications.ForEach(x => x.Start());
+
+            Log.Entry(Priority.Info, "Supervisor applications started.");
         }
 
         protected override void OnStop()
