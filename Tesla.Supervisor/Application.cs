@@ -15,17 +15,16 @@ namespace Tesla.Supervisor
         private readonly ProcessStartInfo _startInfo;
         private Timer _timer;
         private bool _stopping;
-        private uint _startupTime;
-        private uint _interval;
+        private readonly uint _startupTime;
+        private readonly uint _interval;
         private StreamWriter _stdErr;
         private StreamWriter _stdOut;
         private byte _hangCount;
-        private string _webCheckRequestUri;
-        private uint _recheckCount;
-        private uint _webCheckRequestTimeout;
-        private bool _rechecking;
+        private readonly string _webCheckRequestUri;
+        private readonly uint _recheckCount;
+        private readonly uint _webCheckRequestTimeout;
         private bool _plannedStop;
-        private bool _hangDetection;
+        private readonly bool _hangDetection;
 
         public Application(SupervisorAppConfig app)
         {
@@ -87,7 +86,6 @@ namespace Tesla.Supervisor
             }
             catch (WebException)
             {
-                _rechecking = true;
                 _hangCount++;
 
                 if (_hangCount >= _recheckCount)
@@ -169,11 +167,8 @@ namespace Tesla.Supervisor
             if (!_process.HasExited)
             {
                 _process.Kill();
-
-                //if (!_process.HasExited)
-                //{
-                //    _process.Kill();
-                //}
+                _process.WaitForExit(500);
+                _plannedStop = false;
             }
 
             _process = null;
@@ -196,7 +191,6 @@ namespace Tesla.Supervisor
         public void Restart()
         {
             Stop();
-            _rechecking = false;
             _hangCount = 0;
             Start();
         }
