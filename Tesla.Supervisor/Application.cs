@@ -8,24 +8,45 @@ using Tesla.Supervisor.Configuration;
 
 namespace Tesla.Supervisor
 {
+    /// <summary>
+    /// Represents service application that needs to be maintained online.
+    /// </summary>
     public sealed class Application
         : IDisposable
     {
+        /// <summary>Actual process of the application.</summary>
         private Process _process;
+        /// <summary>Process startup information.</summary>
         private readonly ProcessStartInfo _startInfo;
+        /// <summary>Hang detection timer.</summary>
         private Timer _timer;
+        /// <summary>Whether the stop was initiated.</summary>
         private bool _stopping;
+        /// <summary>Hang detection due period (application's warmup).</summary>
         private readonly uint _startupTime;
+        /// <summary>Hang detection check interval.</summary>
         private readonly uint _interval;
+        /// <summary>Standard error output stream (if any).</summary>
         private StreamWriter _stdErr;
+        /// <summary>Standard output stream (if any).</summary>
         private StreamWriter _stdOut;
+        /// <summary>Current hang count.</summary>
         private byte _hangCount;
+        /// <summary>URI for hang detection checking.</summary>
         private readonly string _webCheckRequestUri;
+        /// <summary>Maximum number of subsequent hangs to restart the process.</summary>
         private readonly uint _recheckCount;
+        /// <summary>Web request timeout to diagnose a hang.</summary>
         private readonly uint _webCheckRequestTimeout;
+        /// <summary>Wether current stop is planned.</summary>
         private bool _plannedStop;
+        /// <summary>Whether to use hang detection.</summary>
         private readonly bool _hangDetection;
 
+        /// <summary>
+        /// Creates new instance of service application with provided configuration.
+        /// </summary>
+        /// <param name="app">Configuration of a service app.</param>
         public Application(SupervisorAppConfig app)
         {
             _startInfo = new ProcessStartInfo
@@ -66,6 +87,10 @@ namespace Tesla.Supervisor
             _hangDetection = app.UseHangDetection;
         }
 
+        /// <summary>
+        /// Hang detection timer callback.
+        /// </summary>
+        /// <param name="state">The state.</param>
         private void TimerCallback(object state)
         {
             if (_stopping)
@@ -95,6 +120,11 @@ namespace Tesla.Supervisor
             }
         }
 
+        /// <summary>
+        /// Service process exit event handler.
+        /// </summary>
+        /// <param name="sender">Sender info.</param>
+        /// <param name="e">Event arguments.</param>
         private void Process_Exited(object sender, EventArgs e)
         {
             if (_stopping)
@@ -107,6 +137,11 @@ namespace Tesla.Supervisor
             Start();
         }
 
+        /// <summary>
+        /// Service process error data (STDERR) received event handler.
+        /// </summary>
+        /// <param name="sender">Sender info.</param>
+        /// <param name="e">Data event arguments.</param>
         private void Process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (_stopping)
@@ -116,6 +151,11 @@ namespace Tesla.Supervisor
                 _stdErr.WriteLine(e.Data);
         }
 
+        /// <summary>
+        /// Service process output data (STDOUT) received event handler.
+        /// </summary>
+        /// <param name="sender">Sender info.</param>
+        /// <param name="e">Data event arguments.</param>
         private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (_stopping)
@@ -125,6 +165,9 @@ namespace Tesla.Supervisor
                 _stdErr.WriteLine(e.Data);
         }
 
+        /// <summary>
+        /// Start service application.
+        /// </summary>
         public void Start()
         {
             _stopping = false;
@@ -149,6 +192,10 @@ namespace Tesla.Supervisor
                 _timer = new Timer(TimerCallback, null, _startupTime, _interval);
         }
 
+        /// <summary>
+        /// Stop service application.
+        /// <remarks>Method is blocking.</remarks>
+        /// </summary>
         public void Stop()
         {
             _stopping = true;
@@ -167,7 +214,7 @@ namespace Tesla.Supervisor
             if (!_process.HasExited)
             {
                 _process.Kill();
-                _process.WaitForExit(500);
+                _process.WaitForExit();
                 _plannedStop = false;
             }
 
@@ -188,6 +235,9 @@ namespace Tesla.Supervisor
             }
         }
 
+        /// <summary>
+        /// Restart service application.
+        /// </summary>
         public void Restart()
         {
             Stop();
@@ -195,6 +245,9 @@ namespace Tesla.Supervisor
             Start();
         }
 
+        /// <summary>
+        /// Dispose resources.
+        /// </summary>
         public void Dispose()
         {
             Stop();

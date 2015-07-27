@@ -5,7 +5,7 @@ namespace Tesla.Supervisor
     static class Program
     {
         /// <summary>
-        /// Главная точка входа для приложения.
+        /// Main application entry point.
         /// </summary>
         static void Main()
         {
