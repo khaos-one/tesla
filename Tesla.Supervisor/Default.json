@@ -1,1 +1,15 @@
-﻿{"Apps":[{"Arguments":"some args","Executable":"..\\..\\..\\Sandbox\\bin\\Debug\\Sandbox.exe","RecheckInterval":1000,"UseHangDetection":true,"StartupTime":5000,"RecheckCount":3,"WebCheckRequestUri":"http://localhost:8080/index","WebCheckRequestTimeout":1000}]}
+﻿{
+  "Apps": [
+    {
+      "Arguments": "some args",
+      "Executable": "..\\..\\..\\Sandbox\\bin\\Debug\\Sandbox.exe",
+      "RecheckInterval": 1000,
+      "UseHangDetection": true,
+      "StartupTime": 5000,
+      "RecheckCount": 3,
+      "WebCheckRequestUri": "http:\/\/localhost:8080\/index",
+      "WebCheckRequestTimeout": 1000
+    }
+  ]
+}
+
