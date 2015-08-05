@@ -7,7 +7,7 @@
       "UseHangDetection": true,
       "StartupTime": 5000,
       "RecheckCount": 3,
-      "WebCheckRequestUri": "http:\/\/localhost:8080\/index",
+      "WebCheckRequestUri": "http:\/\/localhost:8080\/isee/dead",
       "WebCheckRequestTimeout": 1000
     }
   ]

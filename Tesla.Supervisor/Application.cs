@@ -213,6 +213,7 @@ namespace Tesla.Supervisor
 
             if (!_process.HasExited)
             {
+                // TODO: Implement graceful stop if possible.
                 _process.Kill();
                 _process.WaitForExit();
                 _plannedStop = false;
