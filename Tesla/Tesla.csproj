@@ -57,6 +57,8 @@
     <Compile Include="DoubleExtensions.cs" />
     <Compile Include="IO\StreamExtensions.cs" />
     <Compile Include="Logging\Log.cs" />
+    <Compile Include="Net\FastCgi\FastCgiParameters.cs" />
+    <Compile Include="Net\FastCgi\FastCgiRecord.cs" />
     <Compile Include="Net\HttpException.cs" />
     <Compile Include="Net\HttpListenerRequestExtensions.cs" />
     <Compile Include="Net\HttpListenerResponseExtensions.cs" />
