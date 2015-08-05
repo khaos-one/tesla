@@ -39,37 +39,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base0\BaseRequest.cs" />
     <Compile Include="IRecord.cs" />
     <Compile Include="ObjectMarshal.cs" />
     <Compile Include="ProtocolTypeAttribute.cs" />
     <Compile Include="TypeDiscovery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Types\AbstractHash.cs" />
-    <Compile Include="Types\AbstractRecord.cs" />
-    <Compile Include="Types\CompressedRcsDateTime.cs" />
-    <Compile Include="Types\DataArray.cs" />
-    <Compile Include="Types\HashCrc16.cs" />
-    <Compile Include="Types\HashCrc32.cs" />
-    <Compile Include="Types\HashCrc64.cs" />
-    <Compile Include="Types\HashCrc8.cs" />
-    <Compile Include="Types\HashGost256.cs" />
-    <Compile Include="Types\HashGost512.cs" />
-    <Compile Include="Types\HashMD5.cs" />
-    <Compile Include="Types\HashSha1.cs" />
-    <Compile Include="Types\HashSha256.cs" />
-    <Compile Include="Types\HashSha512.cs" />
-    <Compile Include="Types\Int16.cs" />
-    <Compile Include="Types\Int32.cs" />
-    <Compile Include="Types\Int64.cs" />
-    <Compile Include="Types\RcsDateTime.cs" />
-    <Compile Include="Types\RecordList.cs" />
-    <Compile Include="Types\UInt64.cs" />
-    <Compile Include="Types\UInt32.cs" />
-    <Compile Include="Types\UInt16.cs" />
-    <Compile Include="Types\Int8.cs" />
-    <Compile Include="Types\UInt8.cs" />
-    <Compile Include="Types\UnixTimestamp.cs" />
-    <Compile Include="Types\WriteProtectedList.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Base0\ReadMe.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
