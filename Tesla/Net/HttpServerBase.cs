@@ -47,7 +47,7 @@ namespace Tesla.Net
             }
             catch (HttpException e)
             {
-                context.Response.StatusCode = (Int32) e.HttpCode;
+                context.Response.StatusCode = (Int32)e.HttpCode;
                 context.Response.Write(HttpException.FormatErrorCode(context.Response.StatusCode,
                     context.Response.StatusDescription));
             }
@@ -59,8 +59,10 @@ namespace Tesla.Net
                 context.Response.Write(HttpException.FormatErrorCode(context.Response.StatusCode,
                     context.Response.StatusDescription));
             }
-
-            context.Response.OutputStream.Close();
+            finally
+            {
+                context.Response.OutputStream.Close();
+            }
         }
 
         protected override void OnStop()

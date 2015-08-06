@@ -15,7 +15,7 @@ namespace Sandbox
         static void Main(string[] args)
         {
             var server = new RoutedHttpServer();
-            server.AddRoute("/isee/*", HandlerFunc);
+            server.AddRoute("*/isee/*", HandlerFunc);
             server.Start();
             var fastcgi = new FastCgiServer(9000);
             fastcgi.Start();
