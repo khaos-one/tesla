@@ -57,6 +57,7 @@
     <Compile Include="DoubleExtensions.cs" />
     <Compile Include="IO\StreamExtensions.cs" />
     <Compile Include="Logging\Log.cs" />
+    <Compile Include="Net\FastCgi\FastCgiBeginRequest.cs" />
     <Compile Include="Net\FastCgi\FastCgiNameValuePair.cs" />
     <Compile Include="Net\FastCgi\FastCgiRecord.cs" />
     <Compile Include="Net\FastCgi\FastCgiRole.cs" />

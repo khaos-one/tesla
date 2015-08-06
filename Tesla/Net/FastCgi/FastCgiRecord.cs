@@ -35,6 +35,8 @@ namespace Tesla.Net.FastCgi
         public byte[] ContentData;
         public byte[] PaddingData;
 
+        public FastCgiNameValuePair BlankRecordBody;
+
         public FastCgiRecord()
         {
             throw new NotImplementedException();
