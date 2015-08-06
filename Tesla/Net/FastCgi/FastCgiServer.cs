@@ -28,7 +28,49 @@ namespace Tesla.Net.FastCgi
 
         protected override void HandleRequest(Socket socket)
         {
-            throw new NotImplementedException();
+            using (var stream = socket.GetStream())
+            {
+                FastCgiRecord record;
+
+                if (FastCgiRecord.TryParse(stream, out record))
+                    return;
+
+                switch (record.Type)
+                {
+                    case FastCgiRecord.RecordType.BeginRequest:
+                        throw new NotImplementedException();
+                        break;
+
+                    case FastCgiRecord.RecordType.AbortRequest:
+                        throw new NotImplementedException();
+                        break;
+
+                    case FastCgiRecord.RecordType.EndRequest:
+                        // This record should only be sent from an app
+                        // to webserver
+                        throw new InvalidOperationException();
+
+                    case FastCgiRecord.RecordType.Params:
+                        throw new NotImplementedException();
+                        break;
+
+                    case FastCgiRecord.RecordType.Data:
+                        // This record type is not used for responder apps
+                        throw new InvalidOperationException();
+                        break;
+
+                    case FastCgiRecord.RecordType.StdIn:
+                        throw new NotImplementedException();
+                        break;
+
+                    case FastCgiRecord.RecordType.GetValues:
+                        throw new NotImplementedException();
+                        break;
+
+                    default:
+                        break;
+                }
+            }
         }
     }
 }
