@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace Tesla.Net.FastCgi
 {
@@ -6,7 +7,7 @@ namespace Tesla.Net.FastCgi
     /// Base record structure.
     /// <see cref="!:http://www.fastcgi.com/devkit/doc/fcgi-spec.html#S3.3"/>
     /// </summary>
-    public class FastCgiRecord
+    public sealed class FastCgiRecord
     {
         public enum RecordType
         {
@@ -37,9 +38,42 @@ namespace Tesla.Net.FastCgi
 
         public FastCgiNameValuePair BlankRecordBody;
 
-        public FastCgiRecord()
+        public static bool TryParse(Stream stream, out FastCgiRecord record)
         {
-            throw new NotImplementedException();
+            var result = new FastCgiRecord();
+
+            using (var r = new BinaryReader(stream))
+            {
+                result.Version = r.ReadByte();
+
+                if (result.Version > 0)
+                {
+                    result.Type = (RecordType)r.ReadByte();
+                    // Ensuring endianness
+                    ushort a, b;
+                    a = r.ReadByte();
+                    b = r.ReadByte();
+                    result.RequestId = (ushort)(((a << 8) & 0xFF00) | b);
+                    a = r.ReadByte();
+                    b = r.ReadByte();
+                    result.ContentLength = (ushort)(((a << 8) & (0xFF00)) | b);
+                    result.PaddingLength = r.ReadByte();
+                    result.Reserved = r.ReadByte();
+
+                    // Read the data
+                    result.ContentData = r.ReadBytes(result.ContentLength);
+                    result.PaddingData = r.ReadBytes(result.PaddingLength);
+
+                    record = result;
+                    return true;
+                }
+                else
+                {
+                    // Ignore other unsupported record versions
+                    record = null;
+                    return false;
+                }
+            }
         }
     }
 }
