@@ -1,4 +1,6 @@
-﻿namespace Tesla.Net.FastCgi
+﻿using System;
+
+namespace Tesla.Net.FastCgi
 {
     /// <summary>
     /// Base record structure.
@@ -32,5 +34,10 @@
         public byte Reserved;
         public byte[] ContentData;
         public byte[] PaddingData;
+
+        public FastCgiRecord()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
