@@ -25,7 +25,7 @@ namespace Tesla.Net.FastCgi
 
         protected override void HandleException(Socket socket, Exception e)
         {
-            throw new NotImplementedException();
+            Log.Entry(Priority.Warning, "FastCgiServer: Unhandler exception: {0}", e);
         }
 
         protected override void HandleRequest(Socket socket)
