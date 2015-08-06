@@ -65,7 +65,7 @@
     <Compile Include="Net\HttpException.cs" />
     <Compile Include="Net\HttpListenerRequestExtensions.cs" />
     <Compile Include="Net\HttpListenerResponseExtensions.cs" />
-    <Compile Include="Net\HttpServer.cs" />
+    <Compile Include="Net\HttpServerBase.cs" />
     <Compile Include="Net\IHttpHandler.cs" />
     <Compile Include="Net\IPEndPointExtensions.cs" />
     <Compile Include="Net\IServer.cs" />
