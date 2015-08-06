@@ -59,6 +59,7 @@ namespace Tesla.Net.FastCgi
                                 // TODO: Make use of async 
                                 //socket.BeginSend(endRequest, 0, endRequest.Length, SocketFlags.None, Socket_DataSent, new Tuple<Socket, bool>(socket, closeSocket));
                                 stream.Write(endRequest, 0, endRequest.Length);
+                                stream.Flush();
 
                                 if (closeSocket)
                                     return;
@@ -114,6 +115,7 @@ namespace Tesla.Net.FastCgi
                                         // TODO: Make use of async 
                                         //socket.BeginSend(endRequest, 0, endRequest.Length, SocketFlags.None, Socket_DataSent, new Tuple<Socket, bool>(socket, closeSocket));
                                         stream.Write(endRequest, 0, endRequest.Length);
+                                        stream.Flush();
 
                                         if (closeSocket)
                                             return;
@@ -146,6 +148,7 @@ namespace Tesla.Net.FastCgi
                                     // TODO: Make use of async 
                                     //socket.BeginSend(endRequest, 0, endRequest.Length, SocketFlags.None, Socket_DataSent, new Tuple<Socket, bool>(socket, closeSocket));
                                     stream.Write(endRequest, 0, endRequest.Length);
+                                    stream.Flush();
 
                                     if (closeSocket)
                                         return;
