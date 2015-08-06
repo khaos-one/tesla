@@ -13,6 +13,17 @@ namespace Tesla.Net.FastCgi
         public string Value;
         public bool IsEnd;
 
+        /// <summary>
+        /// Creates an empty instance of FastCGI name-value pair class.
+        /// </summary>
+        public FastCgiNameValuePair()
+        { }
+        
+        /// <summary>
+        /// Creates new instance of FastCGI name-value pair class reading
+        /// data from provided <see cref="FastCgiRecord"/>.
+        /// </summary>
+        /// <param name="record">Record to read.</param>
         public FastCgiNameValuePair(FastCgiRecord record)
         {
             if (record.Type != FastCgiRecord.RecordType.Params)
@@ -36,6 +47,11 @@ namespace Tesla.Net.FastCgi
             }
         }
 
+        /// <summary>
+        /// Reads variable length value.
+        /// </summary>
+        /// <param name="r">Reader to read from.</param>
+        /// <returns>Read length.</returns>
         private static uint ReadLengthBytes(BinaryReader r)
         {
             byte first = r.ReadByte();
