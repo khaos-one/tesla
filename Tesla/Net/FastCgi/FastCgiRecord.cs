@@ -36,7 +36,28 @@ namespace Tesla.Net.FastCgi
         public byte[] ContentData;
         public byte[] PaddingData;
 
-        public FastCgiNameValuePair BlankRecordBody;
+        public byte[] GetEndRequestRecord()
+        {
+            return new byte[] {
+                0x01,
+                (byte) RecordType.EndRequest,
+                (byte) ((RequestId & 0xFF00) >> 8),
+                (byte) ((RequestId & 0xFF)),
+                (byte) (( /* Data Length */ 8 & 0xFF00) << 8),
+                (byte) (( /* Data Length */ 8 & 0xFF)),
+                0x00,
+                0x00,
+                /* Data */
+                0x00,
+                0x00,
+                0x00,
+                0x00,
+                0x00, /* Request Complete */
+                0x00, /* Reserved */
+                0x00, /* Reserved */
+                0x00  /* Reserved */
+            };
+        }
 
         public static bool TryParse(Stream stream, out FastCgiRecord record)
         {

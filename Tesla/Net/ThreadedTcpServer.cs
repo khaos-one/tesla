@@ -104,7 +104,7 @@ namespace Tesla.Net
         {
             try
             {
-                if (socket != null)
+                if (socket != null && socket.Connected)
                 {
                     //socket.Shutdown(SocketShutdown.Both);
                     socket.Close();

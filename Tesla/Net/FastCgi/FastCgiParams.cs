@@ -1,37 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Tesla.Net.FastCgi
 {
-    /// <summary>
-    /// Basic FastCGI protocol's name-value pair.
-    /// </summary>
-    public sealed class FastCgiNameValuePair
+    public sealed class FastCgiParams
+        : Dictionary<string, string>
     {
-        public string Name;
-        public string Value;
-        public bool IsEnd;
+        public bool EndReached { get; set; }
 
-        /// <summary>
-        /// Creates an empty instance of FastCGI name-value pair class.
-        /// </summary>
-        public FastCgiNameValuePair()
+        public FastCgiParams()
         { }
-        
-        /// <summary>
-        /// Creates new instance of FastCGI name-value pair class reading
-        /// data from provided <see cref="FastCgiRecord"/>.
-        /// </summary>
-        /// <param name="record">Record to read.</param>
-        public FastCgiNameValuePair(FastCgiRecord record)
+
+        public void AddRecord(FastCgiRecord record)
         {
             if (record.Type != FastCgiRecord.RecordType.Params)
                 throw new ArgumentException("record");
 
             if (record.ContentLength == 0)
             {
-                IsEnd = true;
+                EndReached = true;
                 return;
             }
 
@@ -42,8 +33,7 @@ namespace Tesla.Net.FastCgi
                 var valueLength = ReadLengthBytes(r);
                 var nameBytes = r.ReadBytes((int)nameLength);
                 var valueBytes = r.ReadBytes((int)valueLength);
-                Name = Encoding.ASCII.GetString(nameBytes);
-                Value = Encoding.ASCII.GetString(valueBytes);
+                Add(Encoding.ASCII.GetString(nameBytes), Encoding.ASCII.GetString(valueBytes));
             }
         }
 
