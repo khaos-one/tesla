@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using Tesla.Net;
+using Tesla.Net.FastCgi;
 
 namespace Sandbox
 {
@@ -16,6 +17,8 @@ namespace Sandbox
             var server = new RoutedHttpServer();
             server.AddRoute("/isee/*", HandlerFunc);
             server.Start();
+            var fastcgi = new FastCgiServer(9000);
+            fastcgi.Start();
             Console.WriteLine("Server started...");
             Console.ReadLine();
         }

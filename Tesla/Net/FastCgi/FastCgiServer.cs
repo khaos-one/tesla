@@ -9,8 +9,6 @@ namespace Tesla.Net.FastCgi
     public class FastCgiServer
         : ThreadedTcpServer
     {
-        protected const int MaxResponseSize = 30000;
-
         public FastCgiServer(IPAddress ip, int port)
             : base(ip, port)
         { }
@@ -55,7 +53,7 @@ namespace Tesla.Net.FastCgi
                             if (!responseSent)
                             {
                                 responseSent = true;
-                                var endRequest = record.GetEndRequestRecord();
+                                var endRequest = record.GetEndRequestPacket();
                                 var closeSocket = (requestInfo.Flags & 0x1) > 0;
 
                                 // TODO: Make use of async 
@@ -104,13 +102,13 @@ namespace Tesla.Net.FastCgi
                                     int.TryParse(parameters["CONTENT_LENGTH"], out claimedLength);
                                 }
 
-                                if (input.Length < claimedLength)
+                                if (input != null && input.Length < claimedLength)
                                 {
                                     // End the request
                                     if (!responseSent)
                                     {
                                         responseSent = true;
-                                        var endRequest = record.GetEndRequestRecord();
+                                        var endRequest = record.GetEndRequestPacket();
                                         var closeSocket = (requestInfo.Flags & 0x1) > 0;
 
                                         // TODO: Make use of async 
@@ -123,12 +121,17 @@ namespace Tesla.Net.FastCgi
                                 }
                                 else
                                 {
+                                    string result = string.Empty;
+
                                     try
                                     {
-                                        input.Position = 0;
-                                        input.SetLength(claimedLength);
+                                        if (input != null)
+                                        {
+                                            input.Position = 0;
+                                            input.SetLength(claimedLength);
+                                        }
 
-                                        // TODO: INVOKE HANDLER
+                                        result = "Content-Type: text/html; charset=utf8\n\n<html><body>It fuckking works</body></html>";
                                     }
                                     catch (Exception e)
                                     {
@@ -137,7 +140,7 @@ namespace Tesla.Net.FastCgi
 
                                     // Send the result back.
                                     responseSent = true;
-                                    var endRequest = record.GetEndRequestRecord();
+                                    var endRequest = record.GetResultPackets(result);
                                     var closeSocket = (requestInfo.Flags & 0x1) > 0;
 
                                     // TODO: Make use of async 

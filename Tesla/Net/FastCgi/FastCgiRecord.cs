@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace Tesla.Net.FastCgi
 {
@@ -26,7 +27,9 @@ namespace Tesla.Net.FastCgi
             BlankRecord = 99
         }
 
-        public const int HeaderLength = 8;
+        private const int HeaderLength = 8;
+        private const int MaxDataSize = 30000;
+
         public byte Version;
         public RecordType Type;
         public ushort RequestId;
@@ -36,7 +39,7 @@ namespace Tesla.Net.FastCgi
         public byte[] ContentData;
         public byte[] PaddingData;
 
-        public byte[] GetEndRequestRecord()
+        public byte[] GetEndRequestPacket()
         {
             return new byte[] {
                 0x01,
@@ -59,11 +62,58 @@ namespace Tesla.Net.FastCgi
             };
         }
 
+        public byte[] GetResultPackets(string data, Encoding encoding = null)
+        {
+            if (encoding == null)
+                encoding = Encoding.ASCII;
+
+            using (var ms = new MemoryStream())
+            using (var w = new BinaryWriter(ms, encoding))
+            {
+                var dataBytes = encoding.GetBytes(data);
+                var totalLen = dataBytes.Length;
+                ushort length;
+                var dataBytesCursor = 0;
+
+                // Write packets
+                for (var i = 0; i < totalLen; i += MaxDataSize)
+                {
+                    length = (ushort) (totalLen - i);
+
+                    if (length > MaxDataSize)
+                        length = MaxDataSize;
+                    
+                    w.Write((byte)0x01);
+                    w.Write((byte)RecordType.StdOut);
+                    w.Write((byte)((RequestId & 0xFF00) >> 8));
+                    w.Write((byte)(RequestId & 0x00FF));
+                    w.Write((byte)((length & 0xFF00) >> 8));
+                    w.Write((byte)(length & 0x00FF));
+                    w.Write((ushort)0x0000);
+                    w.Write(dataBytes, dataBytesCursor, length);
+                }
+
+                // Write stream EOF
+                w.Write(new byte[] {
+                    0x01,
+                    (byte)RecordType.StdOut,
+                    (byte)((RequestId & 0xFF00) >> 8),
+                    (byte)(RequestId & 0x00FF),
+                    0x00, 0x00, 0x00, 0x00
+                });
+
+                // Write END_REQUEST record
+                w.Write(GetEndRequestPacket());
+
+                return ms.ToArray();
+            }
+        }
+
         public static bool TryParse(Stream stream, out FastCgiRecord record)
         {
             var result = new FastCgiRecord();
 
-            using (var r = new BinaryReader(stream))
+            using (var r = new BinaryReader(stream, Encoding.ASCII, true))
             {
                 result.Version = r.ReadByte();
 
