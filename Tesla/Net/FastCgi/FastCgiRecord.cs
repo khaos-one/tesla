@@ -30,6 +30,8 @@ namespace Tesla.Net.FastCgi
         private const int HeaderLength = 8;
         private const int MaxDataSize = 30000;
 
+        // TODO: Split header from data. Can use direct object marshal.
+
         public byte Version;
         public RecordType Type;
         public ushort RequestId;

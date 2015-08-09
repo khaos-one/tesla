@@ -22,7 +22,7 @@ namespace Tesla.Net.FastCgi
             Log.Entry(Priority.Warning, "FastCgiServer: Unhandler exception: {0}", e);
         }
 
-        protected override void HandleRequest(Socket socket)
+        protected override void HandleConnection(Socket socket)
         {
             FastCgiRecord record = null;
             FastCgiBeginRequest requestInfo = null;

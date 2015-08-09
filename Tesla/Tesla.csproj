@@ -74,6 +74,7 @@
     <Compile Include="Net\SocketExtensions.cs" />
     <Compile Include="Net\TcpClientExtensions.cs" />
     <Compile Include="Net\ThreadedTcpServer.cs" />
+    <Compile Include="Net\ThreadedUdpServer.cs" />
     <Compile Include="ProgramBuffer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegexExtensions.cs" />

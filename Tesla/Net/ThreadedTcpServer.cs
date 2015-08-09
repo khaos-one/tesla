@@ -5,12 +5,14 @@ using Tesla.Logging;
 
 namespace Tesla.Net
 {
+    /// <summary>
+    /// Абстрактный класс, реализующий потоковый TCP-сервер.
+    /// </summary>
     public abstract class ThreadedTcpServer
         : ThreadedServerBase
     {
         /// <summary>Сокет, принимающий новые подключения.</summary>
         protected Socket ListenerSocket;
-        /// <summary>Обработчик входящих соединений.</summary>
 
         /// <summary>Локальная конечная точка (IP-адрес и порт), на которой в данный момент работает сервер.</summary>
         public IPEndPoint LocalEndPoint { get; protected set; }
@@ -87,7 +89,7 @@ namespace Tesla.Net
         /// Абстрактный метод, реализующий функционал обработки запроса клиента.
         /// </summary>
         /// <param name="socket">Сокет клиента.</param>
-        protected abstract void HandleRequest(Socket socket);
+        protected abstract void HandleConnection(Socket socket);
 
         /// <summary>
         /// Абстрактный метод, реализующий функционал обработки ошибки при обработке запроса от клиента.
@@ -139,7 +141,7 @@ namespace Tesla.Net
 
             try
             {
-                HandleRequest(socket);
+                HandleConnection(socket);
             }
             catch (Exception e)
             {
