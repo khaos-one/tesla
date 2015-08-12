@@ -130,6 +130,8 @@ namespace Tesla.Net
 
                 if (ClientSocketSendTimeout != null)
                     socket.SendTimeout = ClientSocketSendTimeout.Value;
+
+                return socket;
             }
             catch (SocketException e)
             {
