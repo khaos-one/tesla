@@ -127,9 +127,10 @@ namespace Tesla.Net
 
                 if (ClientSocketReceiveTimeout != null)
                     socket.ReceiveTimeout = ClientSocketReceiveTimeout.Value;
-
                 if (ClientSocketSendTimeout != null)
                     socket.SendTimeout = ClientSocketSendTimeout.Value;
+                socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, false);
+                socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
 
                 return socket;
             }
