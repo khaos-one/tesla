@@ -59,24 +59,24 @@ namespace Tesla.Logging
         public Log(string logName = null, Stream logStream = null, bool printThreadId = false)
         {
             if (!string.IsNullOrEmpty(logName))
-            {
                 _logName = logName;
-            }
 
             if (logStream == null)
             {
                 var assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
                 if (assemblyDir == null)
-                {
                     throw new ArgumentException("Cannot find executing assembly path.");
-                }
 
                 var path = Path.Combine(assemblyDir, _logName + ".log");
 
                 try
                 {
-                    _stream = File.Create(path);
+                    if (File.Exists(path))
+                        _stream = File.Open(path, FileMode.Append, FileAccess.Write);
+                    else
+                        _stream = File.Create(path);
+
                     _dontClose = false;
                 }
                 catch (Exception e)
@@ -113,14 +113,10 @@ namespace Tesla.Logging
         public void Write(Priority priority, string message, params object[] args)
         {
             if (_stream == null)
-            {
                 throw new InvalidOperationException("There is no stream to write.");
-            }
 
             if (Encoding == null)
-            {
                 Encoding = Encoding.UTF8;
-            }
 
             _builder.Append(DateTime.Now);
 
