@@ -6,6 +6,16 @@ namespace SlashCube.Server
     public class TypeDispatcher<TIn, TOut>
         : Dictionary<Type, Func<TIn, TOut>>
     {
+        public Func<TIn, TOut> Default { get; protected set; }
+
+        public TypeDispatcher()
+        { }
+
+        public TypeDispatcher(Func<TIn, TOut> defaultFunc)
+        {
+            Default = defaultFunc;
+        }
+
         public TOut Dispatch(object entity)
         {
             var type = entity.GetType();
@@ -18,7 +28,10 @@ namespace SlashCube.Server
                 }
             }
 
-            return default(TOut);
+            if (Default == null)
+                return default(TOut);
+
+            return Default((TIn)entity);
         }
     }
 }
