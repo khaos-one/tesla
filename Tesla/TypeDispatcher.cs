@@ -18,6 +18,9 @@ namespace SlashCube.Server
 
         public TOut Dispatch(object entity)
         {
+            if (entity == null)
+                return default(TOut);
+
             var type = entity.GetType();
 
             foreach (var kv in this)
