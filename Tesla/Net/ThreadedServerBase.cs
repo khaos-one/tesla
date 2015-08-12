@@ -79,6 +79,10 @@ namespace Tesla.Net
                 try
                 {
                     var obj = AcceptClient();
+
+                    if (obj == null)
+                        continue;
+
                     ThreadPool.QueueUserWorkItem(HandleClient, obj);
                 }
                 catch (ObjectDisposedException e)

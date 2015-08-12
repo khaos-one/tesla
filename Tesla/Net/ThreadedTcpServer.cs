@@ -121,7 +121,18 @@ namespace Tesla.Net
 
         protected override object AcceptClient()
         {
-            return ListenerSocket.Accept();
+            try
+            {
+                return ListenerSocket.Accept();
+            }
+            catch (SocketException e)
+            {
+                // Ignore on WSACancelBlockingCall.
+                if (e.ErrorCode != 0x2714)
+                    throw;
+            }
+
+            return null;
         }
 
         /// <summary>
