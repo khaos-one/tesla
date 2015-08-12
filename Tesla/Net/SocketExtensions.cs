@@ -118,5 +118,22 @@ namespace Tesla.Net
                 return ns.ReadToTimeout();
             }
         }
+
+        /// <summary>
+        /// Выполняет poll-чтение из сокета.
+        /// </summary>
+        /// <param name="socket">Сокет, для которого производится чтение.</param>
+        /// <param name="buffer">Буфер для записи результата.</param>
+        /// <param name="microsecondsTimeout">Время ожидания завершения операции в микросекундах.</param>
+        /// <returns>Считанное количество данных.</returns>
+        public static int PollRead(this Socket socket, byte[] buffer, int microsecondsTimeout)
+        {
+            if (socket.Poll(microsecondsTimeout, SelectMode.SelectRead))
+            {
+                return socket.Receive(buffer);
+            }
+
+            return -1;
+        }
     }
 }
