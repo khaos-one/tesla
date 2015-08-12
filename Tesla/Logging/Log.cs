@@ -139,9 +139,10 @@ namespace Tesla.Logging
             }
 
             _builder.AppendFormat(message, args);
-            _builder.Append('\n');
+            _builder.AppendLine();
             var buffer = Encoding.GetBytes(_builder.ToString());
             _stream.Write(buffer, 0, buffer.Length);
+            _stream.Flush();
             _builder.Clear();
         }
 
