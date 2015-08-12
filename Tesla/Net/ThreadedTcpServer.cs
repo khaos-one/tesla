@@ -123,7 +123,13 @@ namespace Tesla.Net
         {
             try
             {
-                return ListenerSocket.Accept();
+                var socket = ListenerSocket.Accept();
+
+                if (ClientSocketReceiveTimeout != null)
+                    socket.ReceiveTimeout = ClientSocketReceiveTimeout.Value;
+
+                if (ClientSocketSendTimeout != null)
+                    socket.SendTimeout = ClientSocketSendTimeout.Value;
             }
             catch (SocketException e)
             {
