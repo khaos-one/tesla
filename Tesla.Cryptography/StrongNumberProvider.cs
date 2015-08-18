@@ -27,5 +27,12 @@ namespace Tesla.Cryptography
             float denominator = uint.MaxValue;
             return numerator / denominator;
         }
+
+        public byte[] NextBytes(int count)
+        {
+            var result = new byte[count];
+            csp.GetBytes(result);
+            return result;
+        }
     }
 }
