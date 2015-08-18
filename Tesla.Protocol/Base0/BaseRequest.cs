@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Tesla.Protocol.Base0
+﻿namespace Tesla.Protocol.Base0
 {
     public class BaseRequest
     {

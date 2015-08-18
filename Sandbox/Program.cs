@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using Tesla.Net;
-using Tesla.Net.FastCgi;
 
 namespace Sandbox
 {

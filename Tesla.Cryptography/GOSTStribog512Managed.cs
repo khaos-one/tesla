@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
 
 namespace Tesla.Cryptography
 {
@@ -233,12 +232,12 @@ namespace Tesla.Cryptography
 
                     Buffer.BlockCopy(state, i*8, tempArray, 0, 8);
 
-                    tempArray = tempArray.Reverse().ToArray();
+                    Array.Reverse(tempArray);
                     var tempBits1 = new BitArray(tempArray);
 
                     var tempBits = new bool[64];
                     tempBits1.CopyTo(tempBits, 0);
-                    tempBits = tempBits.Reverse().ToArray();
+                    Array.Reverse(tempBits);
 
                     for (int j = 0; j < 64; j++)
                     {
@@ -246,7 +245,8 @@ namespace Tesla.Cryptography
                             t = t ^ _a[j];
                     }
 
-                    var resPart = BitConverter.GetBytes(t).Reverse().ToArray();
+                    var resPart = BitConverter.GetBytes(t);
+                    Array.Reverse(resPart);
                     Buffer.BlockCopy(resPart, 0, result, i*8, 8);
                 }
 
@@ -344,7 +344,9 @@ namespace Tesla.Cryptography
                     Buffer.BlockCopy(message, message.Length - inc*64, tempMessage, 0, 64);
 
                     h = G_n(_n, h, tempMessage);
-                    _n = AddModulo512(_n, n512.Reverse().ToArray());
+                    var n512temp = new byte[n512.Length];           // <-- Check copying.
+                    Array.Copy(n512, n512temp, n512.Length);
+                    _n = AddModulo512(_n, n512temp);
                     _sigma = AddModulo512(_sigma, tempMessage);
                     len -= 512;
                 }
@@ -365,7 +367,8 @@ namespace Tesla.Cryptography
 
                 h = G_n(_n, h, paddedMessage);
                 var messageLen = BitConverter.GetBytes(message1.Length*8);
-                _n = AddModulo512(_n, messageLen.Reverse().ToArray());
+                Array.Reverse(messageLen);
+                _n = AddModulo512(_n, messageLen);
                 _sigma = AddModulo512(_sigma, paddedMessage);
                 h = G_n(n0, h, _n);
                 h = G_n(n0, h, _sigma);

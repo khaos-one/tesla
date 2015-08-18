@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tesla.Tests;
 

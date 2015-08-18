@@ -168,7 +168,7 @@ namespace Tesla.Cryptography
 
             if (!ReferenceEquals(HashAlgorithm, null))
             {
-                HashAlgorithm.Dispose();
+                //HashAlgorithm.Dispose();
                 HashAlgorithm = null;
             }
 
