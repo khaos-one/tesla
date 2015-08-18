@@ -28,7 +28,7 @@ namespace Tesla.Cryptography
             return numerator / denominator;
         }
 
-        public byte[] NextBytes(int count)
+        public static byte[] NextBytes(int count)
         {
             var result = new byte[count];
             csp.GetBytes(result);
