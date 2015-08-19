@@ -10,6 +10,14 @@ namespace Tesla.ServiceProcess
     {
         public void Run()
         {
+            if (Environment.UserInteractive)
+                RunInteractive();
+            else
+                RunServices();
+        }
+
+        public void RunServices()
+        {
             ServiceBase.Run(ToArray());
         }
 
