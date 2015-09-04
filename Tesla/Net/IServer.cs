@@ -17,5 +17,10 @@ namespace Tesla.Net
         /// Остановка сервера.
         /// </summary>
         void Stop();
+
+        /// <summary>
+        /// Ожидать останова сервера.
+        /// </summary>
+        void WaitForJoin();
     }
 }

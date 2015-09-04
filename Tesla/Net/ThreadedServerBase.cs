@@ -23,6 +23,7 @@ namespace Tesla.Net
         private int _runningThreadsCount = 0;
         /// <summary>Поток, "слушающий" входящие соединения.</summary>
         private Thread _listenerThread;
+        private ManualResetEventSlim _evt = new ManualResetEventSlim();
 
         protected bool IsCancellationRequested
         {
@@ -58,6 +59,7 @@ namespace Tesla.Net
 
             _listenerThread = new Thread(Listen) { IsBackground = true };
             _listenerThread.Start();
+            _evt.Reset();
         }
 
         protected abstract object AcceptClient();
@@ -120,6 +122,10 @@ namespace Tesla.Net
             {
                 Log.Entry(Priority.Warning, "[ServerBase] [{1}] Server stop exception: {0}.", ServerName, e);
             }
+            finally
+            {
+                _evt.Set();
+            }
         }
 
         /// <summary>
@@ -128,6 +134,11 @@ namespace Tesla.Net
         public void Dispose()
         {
             Stop();
+        }
+
+        public void WaitForJoin()
+        {
+            _evt.Wait();
         }
     }
 }
