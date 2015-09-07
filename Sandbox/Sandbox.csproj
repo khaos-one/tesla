@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Sandbox</RootNamespace>
     <AssemblyName>Sandbox</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -60,6 +60,10 @@
     <ProjectReference Include="..\Tesla.Protocol\Tesla.Protocol.csproj">
       <Project>{fe4a6849-039b-43ae-8a9f-696449251776}</Project>
       <Name>Tesla.Protocol</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tesla.SocialApi\Tesla.SocialApi.csproj">
+      <Project>{a753ca1d-3678-407e-9c68-3eb144fff206}</Project>
+      <Name>Tesla.SocialApi</Name>
     </ProjectReference>
     <ProjectReference Include="..\Tesla\Tesla.csproj">
       <Project>{d27077ac-2e22-49ef-9498-f2f023412d2a}</Project>

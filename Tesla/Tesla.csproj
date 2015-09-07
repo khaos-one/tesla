@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="BitArrayExtensions.cs" />
     <Compile Include="ByteArrayExtensions.cs" />
+    <Compile Include="Collections\IEnumerableExtensions.cs" />
     <Compile Include="Collections\ListExtensions.cs" />
     <Compile Include="Collections\NameValueCollectionExtensions.cs" />
     <Compile Include="Daemonizer.cs" />

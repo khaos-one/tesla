@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Net;
+using Tesla;
 using Tesla.Net;
+using Tesla.SocialApi.Vk;
 
 namespace Sandbox
 {
@@ -13,6 +15,9 @@ namespace Sandbox
 
         static void Main(string[] args)
         {
+            var vk = new VkApi(4996626, AccessScopeExtensions.AllWithNoHttps);
+            vk.Authorize("89684394141", "6519568700");
+
             var server = new RoutedHttpServer();
             server.AddRoute("/forward/isee/*", HandlerFunc);
             server.Start();

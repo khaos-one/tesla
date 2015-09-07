@@ -82,6 +82,11 @@ namespace Tesla.IO
             return count;
         }
 
+        public static void Write(this Stream stream, byte[] bytes)
+        {
+            stream.Write(bytes, 0, bytes.Length);
+        }
+
         public static void Write(this Stream stream, string str, Encoding encoding)
         {
             //var len = encoding.GetByteCount(str);
@@ -135,6 +140,16 @@ namespace Tesla.IO
             string result;
 
             using (var sr = new StreamReader(stream, encoding))
+                result = sr.ReadToEnd();
+
+            return result;
+        }
+
+        public static string ReadString(this Stream stream)
+        {
+            string result;
+
+            using (var sr = new StreamReader(stream, Encoding.UTF8))
                 result = sr.ReadToEnd();
 
             return result;

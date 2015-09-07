@@ -2,6 +2,7 @@
 
 namespace Tesla
 {
+    [Obsolete]
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public sealed class EnumStringValueAttribute
         : Attribute

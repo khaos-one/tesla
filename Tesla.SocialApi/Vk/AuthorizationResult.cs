@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 namespace Tesla.SocialApi.Vk
 {
-    public interface IVkApi
+    public enum AuthorizationResult
+        : byte
     {
-        AuthorizationResult Authorize(string username, string password);
+        Unknown,
+        Ok,
+        UnknownFailure,
+        CredentialsIncorrect,
+        CaptchaEngaged
     }
 }
