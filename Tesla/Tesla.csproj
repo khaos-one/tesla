@@ -56,6 +56,7 @@
     <Compile Include="Collections\NameValueCollectionExtensions.cs" />
     <Compile Include="Daemonizer.cs" />
     <Compile Include="DoubleExtensions.cs" />
+    <Compile Include="EnumStringValueAttribute.cs" />
     <Compile Include="IO\StreamExtensions.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Net\FastCgi\FastCgiBeginRequest.cs" />
