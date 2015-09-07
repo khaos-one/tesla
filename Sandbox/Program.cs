@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using Tesla;
 using Tesla.Net;
@@ -17,12 +18,13 @@ namespace Sandbox
         {
             var vk = new VkApi(4996626, AccessScopeExtensions.AllWithNoHttps);
             vk.Authorize("89684394141", "6519568700");
+            var result = vk.Raw("users.get", new Dictionary<string, string> { { "user_id", "66748" } });
 
-            var server = new RoutedHttpServer();
-            server.AddRoute("/forward/isee/*", HandlerFunc);
-            server.Start();
-            Console.WriteLine("Server started...");
-            Console.ReadLine();
+            //var server = new RoutedHttpServer();
+            //server.AddRoute("/forward/isee/*", HandlerFunc);
+            //server.Start();
+            //Console.WriteLine("Server started...");
+            //Console.ReadLine();
         }
     }
 }

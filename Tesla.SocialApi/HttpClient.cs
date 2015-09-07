@@ -51,7 +51,11 @@ namespace Tesla.SocialApi
 
             if (
                 response.StatusCode == HttpStatusCode.OK && 
-                (response.ContentType.StartsWith("text/html") || response.ContentType.StartsWith("text/plain"))
+                    (
+                        response.ContentType.StartsWith("text/html") || 
+                        response.ContentType.StartsWith("text/plain") ||
+                        response.ContentType.StartsWith("application/json")
+                    )
                )
             {
                 result.Encoding = Encoding.GetEncoding(response.CharacterSet);

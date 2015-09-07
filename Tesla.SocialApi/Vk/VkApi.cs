@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using Tesla.Collections;
@@ -93,9 +95,33 @@ namespace Tesla.SocialApi.Vk
             AccessToken = match.Groups[1].Value;
             ExpiresIn = new TimeSpan(0, 0, int.Parse(match.Groups[2].Value));
             UserId = ulong.Parse(match.Groups[3].Value);
-            ApiSecret = match.Groups[4].Value;
+
+            if ((Scope & AccessScope.NoHttps) == AccessScope.NoHttps)
+                ApiSecret = match.Groups[4].Value;
 
             return true;
+        }
+
+        public dynamic Raw(string method, Dictionary<string, string> parameters)
+        {
+            var parametersString = parameters
+                .Select(x => $"{x.Key}={x.Value}")
+                .JoinString("&");
+            var requestUri = $"/method/{method}?{parametersString}&v={ApiVersion}&access_token={AccessToken}";
+
+            if (!string.IsNullOrEmpty(ApiSecret))
+            {
+                var hash = MD5Extensions.HexDigest(requestUri + ApiSecret);
+                requestUri = "https://api.vk.com" + requestUri + $"&sig={hash}";
+            }
+            else
+                requestUri = "https://api.vk.com" + requestUri;
+
+            using (var web = new HttpClient())
+            {
+                var response = web.Get(requestUri);
+                return JObject.Parse(response.Content);
+            }
         }
     }
 }
