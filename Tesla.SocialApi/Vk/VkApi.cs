@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Tesla.SocialApi.Vk
 {
     public sealed class VkApi
+        : IVkApi
     {
         public const string ApiVersion = "5.34";
 

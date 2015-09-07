@@ -36,9 +36,6 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Tesla">
-      <HintPath>..\Tesla\bin\Debug\Tesla.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -46,7 +43,12 @@
     <Compile Include="Vk\IVkApi.cs" />
     <Compile Include="Vk\VkApi.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Tesla\Tesla.csproj">
+      <Project>{d27077ac-2e22-49ef-9498-f2f023412d2a}</Project>
+      <Name>Tesla</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

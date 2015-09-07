@@ -8,6 +8,5 @@ namespace Tesla.SocialApi.Vk
 {
     public interface IVkApi
     {
-        public bool Authorize
     }
 }
