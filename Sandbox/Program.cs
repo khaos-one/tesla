@@ -4,6 +4,7 @@ using System.Net;
 using Tesla;
 using Tesla.Net;
 using Tesla.SocialApi.Vk;
+using Tesla.Cryptography;
 
 namespace Sandbox
 {
@@ -16,12 +17,13 @@ namespace Sandbox
 
         static void Main(string[] args)
         {
-            var vk = new VkApi(4996626, AccessScopeExtensions.AllWithNoHttps);
-            var authResult = vk.Authorize("89684394141", "65198700");
+            var vk = new VkApi(4996626, AccessScopeExtensions.All);
+            var authResult = vk.Authorize("89684394141", "6519568700");
 
             if (authResult == AuthorizationResult.Ok)
             {
-                var result = vk.Raw("users.get", new Dictionary<string, string> { { "user_id", "66748" } });
+                var result = vk.Raw("messages.send", new Dictionary<string, string> { { "user_id", "10919704" }, { "message", "Some awesome message" }, { "guid", StrongNumberProvider.UInt32.ToString() } });
+                result = vk.Raw("messages.send", new Dictionary<string, string> { { "user_id", "10919704" }, { "message", "Some awesome message" }, { "guid", StrongNumberProvider.UInt32.ToString() } });
             }
 
             //var server = new RoutedHttpServer();
