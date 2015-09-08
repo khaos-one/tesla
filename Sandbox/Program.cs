@@ -17,8 +17,12 @@ namespace Sandbox
         static void Main(string[] args)
         {
             var vk = new VkApi(4996626, AccessScopeExtensions.AllWithNoHttps);
-            vk.Authorize("89684394141", "6519568700");
-            var result = vk.Raw("users.get", new Dictionary<string, string> { { "user_id", "66748" } });
+            var authResult = vk.Authorize("89684394141", "65198700");
+
+            if (authResult == AuthorizationResult.Ok)
+            {
+                var result = vk.Raw("users.get", new Dictionary<string, string> { { "user_id", "66748" } });
+            }
 
             //var server = new RoutedHttpServer();
             //server.AddRoute("/forward/isee/*", HandlerFunc);
