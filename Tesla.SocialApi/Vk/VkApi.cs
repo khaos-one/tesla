@@ -111,6 +111,9 @@ namespace Tesla.SocialApi.Vk
 
         public JArray Raw(string method, Dictionary<string, string> parameters)
         {
+            if (AccessToken == null)
+                return null;
+
             var parametersString = parameters
                 .Select(x => $"{x.Key}={x.Value}")
                 .JoinString("&");
