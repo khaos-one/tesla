@@ -109,7 +109,7 @@ namespace Tesla.SocialApi.Vk
             return true;
         }
 
-        public dynamic Raw(string method, Dictionary<string, string> parameters)
+        public JArray Raw(string method, Dictionary<string, string> parameters)
         {
             var parametersString = parameters
                 .Select(x => $"{x.Key}={x.Value}")
@@ -127,7 +127,7 @@ namespace Tesla.SocialApi.Vk
             using (var web = new HttpClient())
             {
                 var response = web.Get(requestUri);
-                return JObject.Parse(response.Content);
+                return JArray.Parse(response.Content);
             }
         }
     }
