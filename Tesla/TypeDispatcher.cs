@@ -36,5 +36,26 @@ namespace SlashCube.Server
 
             return Default((TIn)entity);
         }
+
+        public TOut Dispatch(object entity, object payload)
+        {
+            if (entity == null)
+                return default(TOut);
+
+            var type = entity.GetType();
+
+            foreach (var kv in this)
+            {
+                if (type == kv.Key)
+                {
+                    return kv.Value((TIn)payload);
+                }
+            }
+
+            if (Default == null)
+                return default(TOut);
+
+            return Default((TIn)entity);
+        }
     }
 }
