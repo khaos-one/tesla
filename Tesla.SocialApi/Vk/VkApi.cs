@@ -92,6 +92,34 @@ namespace Tesla.SocialApi.Vk
             return AuthorizationResult.Ok;
         }
 
+        public JArray Raw(string method, Dictionary<string, string> parameters)
+        {
+            if (AccessToken == null)
+                return null;
+
+            var requestUri = PrepareRequestUri(method, parameters);
+
+            using (var web = new HttpClient())
+            {
+                var response = web.Get(requestUri);
+                return JArray.Parse(response.Content);
+            }
+        }
+
+        public dynamic RawDynamic(string method, Dictionary<string, string> parameters)
+        {
+            if (AccessToken == null)
+                return null;
+
+            var requestUri = PrepareRequestUri(method, parameters);
+
+            using (var web = new HttpClient())
+            {
+                var response = web.Get(requestUri);
+                return JObject.Parse(response.Content);
+            }
+        }
+
         private bool RetrieveAuthParametersFromUri(string uri)
         {
             var match = _authFinalRegex.Match(uri);
@@ -109,11 +137,8 @@ namespace Tesla.SocialApi.Vk
             return true;
         }
 
-        public JArray Raw(string method, Dictionary<string, string> parameters)
+        private string PrepareRequestUri(string method, Dictionary<string, string> parameters)
         {
-            if (AccessToken == null)
-                return null;
-
             var parametersString = parameters
                 .Select(x => $"{x.Key}={x.Value}")
                 .JoinString("&");
@@ -127,11 +152,7 @@ namespace Tesla.SocialApi.Vk
             else
                 requestUri = "https://api.vk.com" + requestUri;
 
-            using (var web = new HttpClient())
-            {
-                var response = web.Get(requestUri);
-                return JArray.Parse(response.Content);
-            }
+            return requestUri;
         }
     }
 }
