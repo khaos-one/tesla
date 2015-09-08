@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace Tesla.SocialApi.Vk
         private static readonly Regex _authFormRegex = new Regex(@"form\smethod=""post""\saction=""(.+?)"".+name=""_origin""\svalue=""(.+?)"".+name=""ip_h""\svalue=""(.+?)"".+name=""lg_h""\svalue=""(.+?)"".+name=""to""\svalue=""(.+?)""", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex _authFormCredentialsErrorCheckRegex = new Regex(@"service_msg\sservice_msg_warning");
         private static readonly Regex _authFormNextRegex = new Regex(@"form\smethod=""post""\saction=""([^""]+)"">.+?name=""email_denied""\svalue=""([\d])""", RegexOptions.Singleline | RegexOptions.Compiled);
-        private static readonly Regex _authFinalRegex = new Regex(@"oauth.vk.com/blank.html#access_token=([a-f0-9]+)&expires_in=(\d+)&user_id=(\d+)&secret=([a-f0-9]+)", RegexOptions.Compiled);
+        private static readonly Regex _authFinalRegex = new Regex(@"oauth.vk.com/blank.html#access_token=([a-f0-9]+)&expires_in=(\d+)&user_id=(\d+)(&secret=([a-f0-9]+))?", RegexOptions.Compiled);
 
         public ulong AppId { get; private set; }
         public ulong UserId { get; private set; }
@@ -92,21 +93,7 @@ namespace Tesla.SocialApi.Vk
             return AuthorizationResult.Ok;
         }
 
-        public JArray Raw(string method, Dictionary<string, string> parameters)
-        {
-            if (AccessToken == null)
-                return null;
-
-            var requestUri = PrepareRequestUri(method, parameters);
-
-            using (var web = new HttpClient())
-            {
-                var response = web.Get(requestUri);
-                return JArray.Parse(response.Content);
-            }
-        }
-
-        public dynamic RawDynamic(string method, Dictionary<string, string> parameters)
+        public dynamic Raw(string method, Dictionary<string, string> parameters)
         {
             if (AccessToken == null)
                 return null;
@@ -131,7 +118,7 @@ namespace Tesla.SocialApi.Vk
             ExpiresIn = new TimeSpan(0, 0, int.Parse(match.Groups[2].Value));
             UserId = ulong.Parse(match.Groups[3].Value);
 
-            if ((Scope & AccessScope.NoHttps) == AccessScope.NoHttps)
+            if (Scope.HasFlag(AccessScope.NoHttps))
                 ApiSecret = match.Groups[4].Value;
 
             return true;
@@ -140,7 +127,7 @@ namespace Tesla.SocialApi.Vk
         private string PrepareRequestUri(string method, Dictionary<string, string> parameters)
         {
             var parametersString = parameters
-                .Select(x => $"{x.Key}={x.Value}")
+                .Select(x => $"{Uri.EscapeDataString(x.Key)}={Uri.EscapeDataString(x.Value)}")
                 .JoinString("&");
             var requestUri = $"/method/{method}?{parametersString}&v={ApiVersion}&access_token={AccessToken}";
 

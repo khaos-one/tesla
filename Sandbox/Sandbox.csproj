@@ -35,10 +35,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="RazorGenerator.Templating">
       <HintPath>..\packages\RazorGenerator.Templating.2.2.3\lib\net40\RazorGenerator.Templating.dll</HintPath>
     </Reference>
@@ -61,6 +57,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Tesla.Cryptography\Tesla.Cryptography.csproj">
+      <Project>{a336d892-5080-4689-b3bd-13ae76339886}</Project>
+      <Name>Tesla.Cryptography</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tesla.Protocol\Tesla.Protocol.csproj">
       <Project>{fe4a6849-039b-43ae-8a9f-696449251776}</Project>
       <Name>Tesla.Protocol</Name>

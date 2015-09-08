@@ -27,7 +27,7 @@ namespace Tesla.SocialApi.Vk
         Stats           = 1048576,
         Ads             = 32768,
         Offline         = 65536,
-        NoHttps
+        NoHttps         = 2147483648
     }
 
     public static class AccessScopeExtensions
