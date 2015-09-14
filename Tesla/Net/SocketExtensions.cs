@@ -135,5 +135,16 @@ namespace Tesla.Net
 
             return -1;
         }
+
+        /// <summary>
+        /// Выполняет реальную проверку, является ли сокет действительно подключенным.
+        /// </summary>
+        /// <param name="socket">Сокет, для которого производится проверка.</param>
+        /// <param name="timeout">Общий максимальный таймаут операции.</param>
+        /// <returns>Значение, показывающее, подключен ли сокет.</returns>
+        public static bool IsConnected(this Socket socket, int timeout = 100)
+        {
+            return !((socket.Poll(timeout, SelectMode.SelectRead) && (socket.Available == 0)) || !socket.Connected);
+        }
     }
 }
