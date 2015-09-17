@@ -8,8 +8,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Tesla.Protocol")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyProduct("Tesla")]
+[assembly: AssemblyCopyright("Copyright © Egor 'khaos' Zelensky, 2014-215")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
