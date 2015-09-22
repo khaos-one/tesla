@@ -1,4 +1,13 @@
-﻿using System.Collections.Generic;
+﻿//-----------------------------------------------------------------------------------------
+// <author>Egor 'khaos' Zelensky <i@khaos.su></author>
+// <description>
+//    This file originates from 
+//    <a href="https://github.com/khaos-one/tesla/tree/master/Tesla.Cryptography">Tesla</a>
+//    library.
+// </description>
+//-----------------------------------------------------------------------------------------
+
+using System.Collections.Generic;
 using System.Security.Cryptography;
 
 namespace Tesla.Cryptography
