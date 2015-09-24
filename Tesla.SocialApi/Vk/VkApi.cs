@@ -1,45 +1,48 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.RegularExpressions;
 using Tesla.Collections;
-using Tesla.IO;
 
-namespace Tesla.SocialApi.Vk
-{
+namespace Tesla.SocialApi.Vk {
     public sealed class VkApi
-        : IVkApi
-    {
+        : IVkApi {
         public const string ApiVersion = "5.34";
-        private static readonly Regex _authFormRegex = new Regex(@"form\smethod=""post""\saction=""(.+?)"".+name=""_origin""\svalue=""(.+?)"".+name=""ip_h""\svalue=""(.+?)"".+name=""lg_h""\svalue=""(.+?)"".+name=""to""\svalue=""(.+?)""", RegexOptions.Singleline | RegexOptions.Compiled);
-        private static readonly Regex _authFormCredentialsErrorCheckRegex = new Regex(@"service_msg\sservice_msg_warning");
-        private static readonly Regex _authFormNextRegex = new Regex(@"form\smethod=""post""\saction=""([^""]+)"">.+?name=""email_denied""\svalue=""([\d])""", RegexOptions.Singleline | RegexOptions.Compiled);
-        private static readonly Regex _authFinalRegex = new Regex(@"oauth.vk.com/blank.html#access_token=([a-f0-9]+)&expires_in=(\d+)&user_id=(\d+)(&secret=([a-f0-9]+))?", RegexOptions.Compiled);
 
-        public ulong AppId { get; private set; }
-        public ulong UserId { get; private set; }
-        public AccessScope Scope { get; private set; }
-        public string AccessToken { get; private set; }
-        public string ApiSecret { get; private set; }
-        public TimeSpan ExpiresIn { get; private set; }
+        private static readonly Regex _authFormRegex =
+            new Regex(
+                @"form\smethod=""post""\saction=""(.+?)"".+name=""_origin""\svalue=""(.+?)"".+name=""ip_h""\svalue=""(.+?)"".+name=""lg_h""\svalue=""(.+?)"".+name=""to""\svalue=""(.+?)""",
+                RegexOptions.Singleline | RegexOptions.Compiled);
 
-        public VkApi(ulong appId, AccessScope scope)
-        {
+        private static readonly Regex _authFormCredentialsErrorCheckRegex =
+            new Regex(@"service_msg\sservice_msg_warning");
+
+        private static readonly Regex _authFormNextRegex =
+            new Regex(@"form\smethod=""post""\saction=""([^""]+)"">.+?name=""email_denied""\svalue=""([\d])""",
+                RegexOptions.Singleline | RegexOptions.Compiled);
+
+        private static readonly Regex _authFinalRegex =
+            new Regex(
+                @"oauth.vk.com/blank.html#access_token=([a-f0-9]+)&expires_in=(\d+)&user_id=(\d+)(&secret=([a-f0-9]+))?",
+                RegexOptions.Compiled);
+
+        public VkApi(ulong appId, AccessScope scope) {
             AppId = appId;
             Scope = scope;
         }
 
-        public AuthorizationResult Authorize(string username, string password)
-        {
+        public ulong AppId { get; }
+        public ulong UserId { get; private set; }
+        public AccessScope Scope { get; }
+        public string AccessToken { get; private set; }
+        public string ApiSecret { get; private set; }
+        public TimeSpan ExpiresIn { get; private set; }
+
+        public AuthorizationResult Authorize(string username, string password) {
             var scope = Scope.GetUrlString();
-            var authorizationUrl = $"https://oauth.vk.com/authorize?client_id={AppId}&scope={scope}&redirect_uri=https://oauth.vk.com/blank.html &display=wap&response_type=token&v={ApiVersion}";
+            var authorizationUrl =
+                $"https://oauth.vk.com/authorize?client_id={AppId}&scope={scope}&redirect_uri=https://oauth.vk.com/blank.html &display=wap&response_type=token&v={ApiVersion}";
 
             // Initial request.
             var web = new HttpClient();
@@ -60,7 +63,7 @@ namespace Tesla.SocialApi.Vk
             inputs.Add("pass", password);
 
             // Finally parse accept form.
-            response = web.Post(formAction, inputs, response.Encoding, followRedirect: true);
+            response = web.Post(formAction, inputs, response.Encoding, true);
 
             match = _authFormCredentialsErrorCheckRegex.Match(response.Content);
 
@@ -70,8 +73,7 @@ namespace Tesla.SocialApi.Vk
             match = _authFormNextRegex.Match(response.Content);
             formAction = match.Groups[1].Value;
 
-            if (string.IsNullOrWhiteSpace(formAction))
-            {
+            if (string.IsNullOrWhiteSpace(formAction)) {
                 if (!RetrieveAuthParametersFromUri(response.Uri.ToString()))
                     return AuthorizationResult.UnknownFailure;
 
@@ -82,7 +84,7 @@ namespace Tesla.SocialApi.Vk
             inputs.Add("email_denied", match.Groups[2].Value);
 
             // And finally get access_token.
-            response = web.Post(formAction, inputs, response.Encoding, followRedirect: false);
+            response = web.Post(formAction, inputs, response.Encoding, false);
 
             if (response.Status != HttpStatusCode.Found)
                 return AuthorizationResult.UnknownFailure;
@@ -93,22 +95,19 @@ namespace Tesla.SocialApi.Vk
             return AuthorizationResult.Ok;
         }
 
-        public dynamic Raw(string method, Dictionary<string, string> parameters)
-        {
+        public dynamic Raw(string method, Dictionary<string, string> parameters) {
             if (AccessToken == null)
                 return null;
 
             var requestUri = PrepareRequestUri(method, parameters);
 
-            using (var web = new HttpClient())
-            {
+            using (var web = new HttpClient()) {
                 var response = web.Get(requestUri);
                 return JObject.Parse(response.Content);
             }
         }
 
-        private bool RetrieveAuthParametersFromUri(string uri)
-        {
+        private bool RetrieveAuthParametersFromUri(string uri) {
             var match = _authFinalRegex.Match(uri);
 
             if (!match.Success)
@@ -124,15 +123,13 @@ namespace Tesla.SocialApi.Vk
             return true;
         }
 
-        private string PrepareRequestUri(string method, Dictionary<string, string> parameters)
-        {
+        private string PrepareRequestUri(string method, Dictionary<string, string> parameters) {
             var parametersString = parameters
                 .Select(x => $"{Uri.EscapeDataString(x.Key)}={Uri.EscapeDataString(x.Value)}")
                 .JoinString("&");
             var requestUri = $"/method/{method}?{parametersString}&v={ApiVersion}&access_token={AccessToken}";
 
-            if (!string.IsNullOrEmpty(ApiSecret))
-            {
+            if (!string.IsNullOrEmpty(ApiSecret)) {
                 var hash = MD5Extensions.HexDigest(requestUri + ApiSecret);
                 requestUri = "https://api.vk.com" + requestUri + $"&sig={hash}";
             }

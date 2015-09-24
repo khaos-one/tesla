@@ -1,27 +1,11 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tesla.Protocol.Tests
-{
+namespace Tesla.Protocol.Tests {
     [TestClass]
-    public class ObjectMarshalTests
-    {
-        private struct SampleStruct
-        {
-            public UInt32 UInt32Val;
-            public Int64 Int64Val;
-            public float FloatVal;
-            public string StringVal;
-            public Int32[] Int32Array;
-            public string[] StringArray;
-            public double DoubleVal;
-        }
-
+    public class ObjectMarshalTests {
         [TestMethod]
-        public void SampleObjectRoundtripTest()
-        {
-            var sample = new SampleStruct
-            {
+        public void SampleObjectRoundtripTest() {
+            var sample = new SampleStruct {
                 UInt32Val = 72632,
                 Int64Val = -726253,
                 FloatVal = 3.1426f,
@@ -40,6 +24,16 @@ namespace Tesla.Protocol.Tests
             CollectionAssert.AreEqual(sample.Int32Array, deser.Int32Array);
             CollectionAssert.AreEqual(sample.StringArray, deser.StringArray);
             Assert.AreEqual(sample.DoubleVal, deser.DoubleVal);
+        }
+
+        private struct SampleStruct {
+            public uint UInt32Val;
+            public long Int64Val;
+            public float FloatVal;
+            public string StringVal;
+            public int[] Int32Array;
+            public string[] StringArray;
+            public double DoubleVal;
         }
     }
 }

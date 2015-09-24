@@ -6,51 +6,60 @@ using System.Threading;
 using Tesla.Logging;
 using Tesla.Supervisor.Configuration;
 
-namespace Tesla.Supervisor
-{
+namespace Tesla.Supervisor {
     /// <summary>
-    /// Represents service application that needs to be maintained online.
+    ///     Represents service application that needs to be maintained online.
     /// </summary>
     public sealed class Application
-        : IDisposable
-    {
-        /// <summary>Actual process of the application.</summary>
-        private Process _process;
-        /// <summary>Process startup information.</summary>
-        private readonly ProcessStartInfo _startInfo;
-        /// <summary>Hang detection timer.</summary>
-        private Timer _timer;
-        /// <summary>Whether the stop was initiated.</summary>
-        private bool _stopping;
-        /// <summary>Hang detection due period (application's warmup).</summary>
-        private readonly uint _startupTime;
-        /// <summary>Hang detection check interval.</summary>
-        private readonly uint _interval;
-        /// <summary>Standard error output stream (if any).</summary>
-        private StreamWriter _stdErr;
-        /// <summary>Standard output stream (if any).</summary>
-        private StreamWriter _stdOut;
-        /// <summary>Current hang count.</summary>
-        private byte _hangCount;
-        /// <summary>URI for hang detection checking.</summary>
-        private readonly string _webCheckRequestUri;
-        /// <summary>Maximum number of subsequent hangs to restart the process.</summary>
-        private readonly uint _recheckCount;
-        /// <summary>Web request timeout to diagnose a hang.</summary>
-        private readonly uint _webCheckRequestTimeout;
-        /// <summary>Wether current stop is planned.</summary>
-        private bool _plannedStop;
+        : IDisposable {
         /// <summary>Whether to use hang detection.</summary>
         private readonly bool _hangDetection;
 
+        /// <summary>Hang detection check interval.</summary>
+        private readonly uint _interval;
+
+        /// <summary>Maximum number of subsequent hangs to restart the process.</summary>
+        private readonly uint _recheckCount;
+
+        /// <summary>Process startup information.</summary>
+        private readonly ProcessStartInfo _startInfo;
+
+        /// <summary>Hang detection due period (application's warmup).</summary>
+        private readonly uint _startupTime;
+
+        /// <summary>Web request timeout to diagnose a hang.</summary>
+        private readonly uint _webCheckRequestTimeout;
+
+        /// <summary>URI for hang detection checking.</summary>
+        private readonly string _webCheckRequestUri;
+
+        /// <summary>Current hang count.</summary>
+        private byte _hangCount;
+
+        /// <summary>Wether current stop is planned.</summary>
+        private bool _plannedStop;
+
+        /// <summary>Actual process of the application.</summary>
+        private Process _process;
+
+        /// <summary>Standard error output stream (if any).</summary>
+        private StreamWriter _stdErr;
+
+        /// <summary>Standard output stream (if any).</summary>
+        private StreamWriter _stdOut;
+
+        /// <summary>Whether the stop was initiated.</summary>
+        private bool _stopping;
+
+        /// <summary>Hang detection timer.</summary>
+        private Timer _timer;
+
         /// <summary>
-        /// Creates new instance of service application with provided configuration.
+        ///     Creates new instance of service application with provided configuration.
         /// </summary>
         /// <param name="app">Configuration of a service app.</param>
-        public Application(SupervisorAppConfig app)
-        {
-            _startInfo = new ProcessStartInfo
-            {
+        public Application(SupervisorAppConfig app) {
+            _startInfo = new ProcessStartInfo {
                 FileName = app.Executable,
                 Arguments = app.Arguments,
                 UserName = app.User,
@@ -59,24 +68,21 @@ namespace Tesla.Supervisor
                 CreateNoWindow = true
             };
 
-            if (!string.IsNullOrEmpty(app.ErrorFile))
-            {
+            if (!string.IsNullOrEmpty(app.ErrorFile)) {
                 _stdErr = !File.Exists(app.ErrorFile)
                     ? File.CreateText(app.ErrorFile)
                     : new StreamWriter(app.ErrorFile, true);
                 _startInfo.RedirectStandardError = true;
             }
 
-            if (!string.IsNullOrEmpty(app.OutputFile))
-            {
+            if (!string.IsNullOrEmpty(app.OutputFile)) {
                 _stdErr = !File.Exists(app.OutputFile)
                     ? File.CreateText(app.OutputFile)
                     : new StreamWriter(app.OutputFile, true);
                 _startInfo.RedirectStandardOutput = true;
             }
 
-            if (app.UseHangDetection)
-            {
+            if (app.UseHangDetection) {
                 _webCheckRequestUri = app.WebCheckRequestUri;
                 _webCheckRequestTimeout = app.WebCheckRequestTimeout;
                 _startupTime = app.StartupTime;
@@ -88,45 +94,46 @@ namespace Tesla.Supervisor
         }
 
         /// <summary>
-        /// Hang detection timer callback.
+        ///     Dispose resources.
+        /// </summary>
+        public void Dispose() {
+            Stop();
+        }
+
+        /// <summary>
+        ///     Hang detection timer callback.
         /// </summary>
         /// <param name="state">The state.</param>
-        private void TimerCallback(object state)
-        {
+        private void TimerCallback(object state) {
             if (_stopping)
                 return;
 
             var request = WebRequest.Create(_webCheckRequestUri);
             request.Timeout = (int) _webCheckRequestTimeout;
 
-            try
-            {
+            try {
                 var response = (HttpWebResponse) request.GetResponse();
 
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
+                if (response.StatusCode != HttpStatusCode.OK) {
                     Log.Entry(Priority.Warning, "Web service `{0}` responded with error status `{1} - {2}`.",
                         _startInfo.FileName, (int) response.StatusCode, response.StatusDescription);
                 }
             }
-            catch (WebException)
-            {
+            catch (WebException) {
                 _hangCount++;
 
-                if (_hangCount >= _recheckCount)
-                {
+                if (_hangCount >= _recheckCount) {
                     Restart();
                 }
             }
         }
 
         /// <summary>
-        /// Service process exit event handler.
+        ///     Service process exit event handler.
         /// </summary>
         /// <param name="sender">Sender info.</param>
         /// <param name="e">Event arguments.</param>
-        private void Process_Exited(object sender, EventArgs e)
-        {
+        private void Process_Exited(object sender, EventArgs e) {
             if (_stopping)
                 return;
 
@@ -138,12 +145,11 @@ namespace Tesla.Supervisor
         }
 
         /// <summary>
-        /// Service process error data (STDERR) received event handler.
+        ///     Service process error data (STDERR) received event handler.
         /// </summary>
         /// <param name="sender">Sender info.</param>
         /// <param name="e">Data event arguments.</param>
-        private void Process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
-        {
+        private void Process_ErrorDataReceived(object sender, DataReceivedEventArgs e) {
             if (_stopping)
                 return;
 
@@ -152,12 +158,11 @@ namespace Tesla.Supervisor
         }
 
         /// <summary>
-        /// Service process output data (STDOUT) received event handler.
+        ///     Service process output data (STDOUT) received event handler.
         /// </summary>
         /// <param name="sender">Sender info.</param>
         /// <param name="e">Data event arguments.</param>
-        private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
-        {
+        private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e) {
             if (_stopping)
                 return;
 
@@ -166,12 +171,11 @@ namespace Tesla.Supervisor
         }
 
         /// <summary>
-        /// Start service application.
+        ///     Start service application.
         /// </summary>
-        public void Start()
-        {
+        public void Start() {
             _stopping = false;
-            _process = new Process { StartInfo = _startInfo, EnableRaisingEvents = true };
+            _process = new Process {StartInfo = _startInfo, EnableRaisingEvents = true};
             _process.Exited += Process_Exited;
 
             if (_stdErr != null)
@@ -193,11 +197,10 @@ namespace Tesla.Supervisor
         }
 
         /// <summary>
-        /// Stop service application.
-        /// <remarks>Method is blocking.</remarks>
+        ///     Stop service application.
+        ///     <remarks>Method is blocking.</remarks>
         /// </summary>
-        public void Stop()
-        {
+        public void Stop() {
             _stopping = true;
 
             if (_timer != null)
@@ -211,8 +214,7 @@ namespace Tesla.Supervisor
             if (_stdOut != null)
                 _process.CancelOutputRead();
 
-            if (!_process.HasExited)
-            {
+            if (!_process.HasExited) {
                 // TODO: Implement graceful stop if possible.
                 _process.Kill();
                 _process.WaitForExit();
@@ -221,15 +223,13 @@ namespace Tesla.Supervisor
 
             _process = null;
 
-            if (_stdErr != null)
-            {
+            if (_stdErr != null) {
                 _stdErr.Close();
                 _stdErr.Dispose();
                 _stdErr = null;
             }
 
-            if (_stdOut != null)
-            {
+            if (_stdOut != null) {
                 _stdOut.Close();
                 _stdOut.Dispose();
                 _stdOut = null;
@@ -237,21 +237,12 @@ namespace Tesla.Supervisor
         }
 
         /// <summary>
-        /// Restart service application.
+        ///     Restart service application.
         /// </summary>
-        public void Restart()
-        {
+        public void Restart() {
             Stop();
             _hangCount = 0;
             Start();
-        }
-
-        /// <summary>
-        /// Dispose resources.
-        /// </summary>
-        public void Dispose()
-        {
-            Stop();
         }
     }
 }

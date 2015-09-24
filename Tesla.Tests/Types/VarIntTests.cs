@@ -2,14 +2,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tesla.Types;
 
-namespace Tesla.Core.Tests.Types
-{
+namespace Tesla.Core.Tests.Types {
     [TestClass]
-    public class VarIntTests
-    {
+    public class VarIntTests {
         [TestMethod]
-        public void VarIntPositiveNumbersToByteArrayAgainstSample()
-        {
+        public void VarIntPositiveNumbersToByteArrayAgainstSample() {
             // Found in specification by Google.
             var aSample = new byte[] {0x96, 0x01};
             var bSample = new byte[] {0xAC, 0x02};
@@ -24,8 +21,7 @@ namespace Tesla.Core.Tests.Types
         }
 
         [TestMethod]
-        public void VarIntPositiveNumbersConversion()
-        {
+        public void VarIntPositiveNumbersConversion() {
             VarInt a = 12345678901234567879;
             var b = a.ToBytes().ToArray();
             VarInt c = b;
@@ -34,8 +30,7 @@ namespace Tesla.Core.Tests.Types
         }
 
         [TestMethod]
-        public void VarIntNegativeNumber()
-        {
+        public void VarIntNegativeNumber() {
             VarInt a = -123;
             var b = a.ToByteArray();
             VarInt c = b;

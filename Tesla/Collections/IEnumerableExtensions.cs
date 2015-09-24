@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Tesla.Collections
-{
-    public static class IEnumerableExtensions
-    {
-        public static string JoinString(this IEnumerable<string> collection, string separator = ",")
-        {
+namespace Tesla.Collections {
+    public static class IEnumerableExtensions {
+        public static string JoinString(this IEnumerable<string> collection, string separator = ",") {
             if (collection == null)
                 return string.Empty;
 
-            return string.Join(separator, collection.Select(i => i.ToString()).Where(s => !string.IsNullOrEmpty(s)).ToArray());
+            return string.Join(separator,
+                collection.Select(i => i.ToString()).Where(s => !string.IsNullOrEmpty(s)).ToArray());
         }
     }
 }

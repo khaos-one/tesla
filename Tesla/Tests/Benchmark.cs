@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Tesla.Tests
-{
-    public static class Benchmark
-    {
+namespace Tesla.Tests {
+    public static class Benchmark {
         public static IList<double> Run<T>(Action action, uint iterations, uint runs = 5)
-            where T : IStopwatch, new()
-        {
+            where T : IStopwatch, new() {
             // Collect garbage and force pending finalizations.
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -19,13 +16,11 @@ namespace Tesla.Tests
             var stopwatch = new T();
             var timings = new double[runs];
 
-            for (var i = 0; i < timings.Length; i++)
-            {
+            for (var i = 0; i < timings.Length; i++) {
                 stopwatch.Reset();
                 stopwatch.Start();
 
-                for (var j = 0; j < iterations; j++)
-                {
+                for (var j = 0; j < iterations; j++) {
                     action();
                 }
 
@@ -37,8 +32,7 @@ namespace Tesla.Tests
             return timings;
         }
 
-        public static double Mean(IList<double> data)
-        {
+        public static double Mean(IList<double> data) {
             return data.Mean();
         }
     }

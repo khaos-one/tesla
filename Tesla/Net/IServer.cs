@@ -1,25 +1,23 @@
 ﻿using System;
 
-namespace Tesla.Net
-{
+namespace Tesla.Net {
     /// <summary>
-    /// Общий интерфейс сервера.
+    ///     Общий интерфейс сервера.
     /// </summary>
     public interface IServer
-        : IDisposable
-    {
+        : IDisposable {
         /// <summary>
-        /// Запуск сервера.
+        ///     Запуск сервера.
         /// </summary>
         void Start();
 
         /// <summary>
-        /// Остановка сервера.
+        ///     Остановка сервера.
         /// </summary>
         void Stop();
 
         /// <summary>
-        /// Ожидать останова сервера.
+        ///     Ожидать останова сервера.
         /// </summary>
         void WaitForJoin();
     }

@@ -1,8 +1,6 @@
-﻿namespace Tesla.Net.FastCgi
-{
+﻿namespace Tesla.Net.FastCgi {
     public enum FastCgiRole
-        : ushort
-    {
+        : ushort {
         Responder = 1,
         Authorizer = 2,
         Filter = 3

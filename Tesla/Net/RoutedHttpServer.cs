@@ -1,37 +1,28 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 
-namespace Tesla.Net
-{
+namespace Tesla.Net {
     public class RoutedHttpServer
-        : HttpServerBase
-    {
+        : HttpServerBase {
         protected Dictionary<string, HttpHandlerFunc> Routes
             = new Dictionary<string, HttpHandlerFunc>();
 
         public RoutedHttpServer(string[] uriPrefixes)
-            : base(uriPrefixes)
-        { }
-        
+            : base(uriPrefixes) {}
+
         public RoutedHttpServer(string uriPrefix)
-            : base(uriPrefix)
-        { }
+            : base(uriPrefix) {}
 
-        public RoutedHttpServer()
-            : base()
-        { }
+        public RoutedHttpServer() {}
 
-        public void AddRoute(string pattern, HttpHandlerFunc handler)
-        {
+        public void AddRoute(string pattern, HttpHandlerFunc handler) {
             Routes.Add(pattern, handler);
         }
 
-        protected override void HandleRequest(HttpListenerContext context)
-        {
+        protected override void HandleRequest(HttpListenerContext context) {
             var absPath = context.Request.Url.AbsolutePath;
 
-            foreach (var route in Routes)
-            {
+            foreach (var route in Routes) {
                 var param = absPath.SplitWildcard(route.Key);
 
                 if (param == null)

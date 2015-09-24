@@ -1,9 +1,7 @@
 ﻿using System;
 
-namespace Tesla.Tests
-{
-    public interface IStopwatch
-    {
+namespace Tesla.Tests {
+    public interface IStopwatch {
         bool IsRunning { get; }
         TimeSpan Elapsed { get; }
 

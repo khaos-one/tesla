@@ -4,29 +4,22 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace Tesla.Net
-{
-    public static class HttpListenerRequestExtensions
-    {
-        public static bool IsGet(this HttpListenerRequest request)
-        {
+namespace Tesla.Net {
+    public static class HttpListenerRequestExtensions {
+        public static bool IsGet(this HttpListenerRequest request) {
             return request.HttpMethod == "GET";
         }
 
-        public static bool IsPost(this HttpListenerRequest request)
-        {
+        public static bool IsPost(this HttpListenerRequest request) {
             return request.HttpMethod == "POST";
         }
 
-        public static NameValueCollection FormData(this HttpListenerRequest request)
-        {
+        public static NameValueCollection FormData(this HttpListenerRequest request) {
             var result = new NameValueCollection();
 
-            if (request.HasEntityBody)
-            {
+            if (request.HasEntityBody) {
                 if (request.ContentType != null &&
-                    request.ContentType.ToLowerInvariant() == "application/x-www-form-urlencoded")
-                {
+                    request.ContentType.ToLowerInvariant() == "application/x-www-form-urlencoded") {
                     string body;
 
                     using (var sr = new StreamReader(request.InputStream, request.ContentEncoding))
@@ -39,15 +32,12 @@ namespace Tesla.Net
             return result;
         }
 
-        public static async Task<NameValueCollection> FormDataAsync(this HttpListenerRequest request)
-        {
+        public static async Task<NameValueCollection> FormDataAsync(this HttpListenerRequest request) {
             var result = new NameValueCollection();
 
-            if (request.HasEntityBody)
-            {
+            if (request.HasEntityBody) {
                 if (request.ContentType != null &&
-                    request.ContentType.ToLowerInvariant() == "application/x-www-form-urlencoded")
-                {
+                    request.ContentType.ToLowerInvariant() == "application/x-www-form-urlencoded") {
                     string body;
 
                     using (var sr = new StreamReader(request.InputStream, request.ContentEncoding))

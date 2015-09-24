@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-namespace Tesla.Supervisor.Configuration
-{
-    public sealed class SupervisorAppConfig
-    {
+
+namespace Tesla.Supervisor.Configuration {
+    public sealed class SupervisorAppConfig {
         public string Executable { get; set; }
         public string Arguments { get; set; }
         public string User { get; set; }
@@ -17,14 +16,13 @@ namespace Tesla.Supervisor.Configuration
         public uint WebCheckRequestTimeout { get; set; }
     }
 
-    public sealed class SupervisorConfig
-    {
+    public sealed class SupervisorConfig {
         public List<SupervisorAppConfig> Apps;
-        public string LogFile { get; set; }
 
-        public SupervisorConfig()
-        {
+        public SupervisorConfig() {
             Apps = new List<SupervisorAppConfig>();
         }
+
+        public string LogFile { get; set; }
     }
 }

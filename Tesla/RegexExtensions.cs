@@ -1,11 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Tesla
-{
-    public static class RegexExtensions
-    {
-        public static string[] GetMatchingGroups(this Regex regex, string str)
-        {
+namespace Tesla {
+    public static class RegexExtensions {
+        public static string[] GetMatchingGroups(this Regex regex, string str) {
             var m = regex.Match(str);
             var ret = new string[m.Groups.Count];
 

@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tesla.SocialApi.Vk
-{
+﻿namespace Tesla.SocialApi.Vk {
     public enum AuthorizationResult
-        : byte
-    {
+        : byte {
         Unknown,
         Ok,
         UnknownFailure,

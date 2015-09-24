@@ -2,16 +2,12 @@
 using System.Diagnostics;
 using System.Threading;
 
-namespace Tesla.Tests
-{
+namespace Tesla.Tests {
     public class Timewatch
         : Stopwatch,
-          IStopwatch
-    {
-        public Timewatch()
-        {
-            if (!IsHighResolution)
-            {
+            IStopwatch {
+        public Timewatch() {
+            if (!IsHighResolution) {
                 throw new NotSupportedException("Your hardware does not support high resolution timers.");
             }
 

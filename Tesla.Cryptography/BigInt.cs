@@ -132,11 +132,9 @@
 
 using System;
 
-namespace Tesla.Cryptography
-{
-    public class BigInt 
-        : IDisposable
-    {
+namespace Tesla.Cryptography {
+    public class BigInt
+        : IDisposable {
         // maximum length of the BigInteger in uint (4 bytes)
         // change this to suit the required level of precision.
 
@@ -145,38 +143,38 @@ namespace Tesla.Cryptography
         // primes smaller than 2000 to test the generated prime number
 
         public static readonly int[] primesBelow2000 = {
-        2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97,
-        101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199,
-	211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293,
-	307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397,
-	401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499,
-	503, 509, 521, 523, 541, 547, 557, 563, 569, 571, 577, 587, 593, 599,
-	601, 607, 613, 617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677, 683, 691,
-	701, 709, 719, 727, 733, 739, 743, 751, 757, 761, 769, 773, 787, 797,
-	809, 811, 821, 823, 827, 829, 839, 853, 857, 859, 863, 877, 881, 883, 887,
-	907, 911, 919, 929, 937, 941, 947, 953, 967, 971, 977, 983, 991, 997,
-	1009, 1013, 1019, 1021, 1031, 1033, 1039, 1049, 1051, 1061, 1063, 1069, 1087, 1091, 1093, 1097,
-	1103, 1109, 1117, 1123, 1129, 1151, 1153, 1163, 1171, 1181, 1187, 1193,
-	1201, 1213, 1217, 1223, 1229, 1231, 1237, 1249, 1259, 1277, 1279, 1283, 1289, 1291, 1297,
-	1301, 1303, 1307, 1319, 1321, 1327, 1361, 1367, 1373, 1381, 1399,
-	1409, 1423, 1427, 1429, 1433, 1439, 1447, 1451, 1453, 1459, 1471, 1481, 1483, 1487, 1489, 1493, 1499,
-	1511, 1523, 1531, 1543, 1549, 1553, 1559, 1567, 1571, 1579, 1583, 1597,
-	1601, 1607, 1609, 1613, 1619, 1621, 1627, 1637, 1657, 1663, 1667, 1669, 1693, 1697, 1699,
-	1709, 1721, 1723, 1733, 1741, 1747, 1753, 1759, 1777, 1783, 1787, 1789,
-	1801, 1811, 1823, 1831, 1847, 1861, 1867, 1871, 1873, 1877, 1879, 1889,
-	1901, 1907, 1913, 1931, 1933, 1949, 1951, 1973, 1979, 1987, 1993, 1997, 1999 };
+            2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97,
+            101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199,
+            211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293,
+            307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397,
+            401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499,
+            503, 509, 521, 523, 541, 547, 557, 563, 569, 571, 577, 587, 593, 599,
+            601, 607, 613, 617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677, 683, 691,
+            701, 709, 719, 727, 733, 739, 743, 751, 757, 761, 769, 773, 787, 797,
+            809, 811, 821, 823, 827, 829, 839, 853, 857, 859, 863, 877, 881, 883, 887,
+            907, 911, 919, 929, 937, 941, 947, 953, 967, 971, 977, 983, 991, 997,
+            1009, 1013, 1019, 1021, 1031, 1033, 1039, 1049, 1051, 1061, 1063, 1069, 1087, 1091, 1093, 1097,
+            1103, 1109, 1117, 1123, 1129, 1151, 1153, 1163, 1171, 1181, 1187, 1193,
+            1201, 1213, 1217, 1223, 1229, 1231, 1237, 1249, 1259, 1277, 1279, 1283, 1289, 1291, 1297,
+            1301, 1303, 1307, 1319, 1321, 1327, 1361, 1367, 1373, 1381, 1399,
+            1409, 1423, 1427, 1429, 1433, 1439, 1447, 1451, 1453, 1459, 1471, 1481, 1483, 1487, 1489, 1493, 1499,
+            1511, 1523, 1531, 1543, 1549, 1553, 1559, 1567, 1571, 1579, 1583, 1597,
+            1601, 1607, 1609, 1613, 1619, 1621, 1627, 1637, 1657, 1663, 1667, 1669, 1693, 1697, 1699,
+            1709, 1721, 1723, 1733, 1741, 1747, 1753, 1759, 1777, 1783, 1787, 1789,
+            1801, 1811, 1823, 1831, 1847, 1861, 1867, 1871, 1873, 1877, 1879, 1889,
+            1901, 1907, 1913, 1931, 1933, 1949, 1951, 1973, 1979, 1987, 1993, 1997, 1999
+        };
 
 
-        private uint[] data = null;             // stores bytes from the Big Integer
-        public int dataLength;                 // number of actual chars used
+        private uint[] data; // stores bytes from the Big Integer
+        public int dataLength; // number of actual chars used
 
 
         //***********************************************************************
         // Constructor (Default value for BigInteger is 0
         //***********************************************************************
 
-        public BigInt()
-        {
+        public BigInt() {
             data = new uint[maxLength];
             dataLength = 1;
         }
@@ -186,28 +184,26 @@ namespace Tesla.Cryptography
         // Constructor (Default value provided by long)
         //***********************************************************************
 
-        public BigInt(long value)
-        {
+        public BigInt(long value) {
             data = new uint[maxLength];
-            long tempVal = value;
+            var tempVal = value;
 
             // copy bytes from long to BigInteger without any assumption of
             // the length of the long datatype
 
             dataLength = 0;
-            while (value != 0 && dataLength < maxLength)
-            {
-                data[dataLength] = (uint)(value & 0xFFFFFFFF);
+            while (value != 0 && dataLength < maxLength) {
+                data[dataLength] = (uint) (value & 0xFFFFFFFF);
                 value >>= 32;
                 dataLength++;
             }
 
-            if (tempVal > 0)         // overflow check for +ve value
+            if (tempVal > 0) // overflow check for +ve value
             {
                 if (value != 0 || (data[maxLength - 1] & 0x80000000) != 0)
                     throw (new ArithmeticException("Positive overflow in constructor."));
             }
-            else if (tempVal < 0)    // underflow check for -ve value
+            else if (tempVal < 0) // underflow check for -ve value
             {
                 if (value != -1 || (data[dataLength - 1] & 0x80000000) == 0)
                     throw (new ArithmeticException("Negative underflow in constructor."));
@@ -222,17 +218,15 @@ namespace Tesla.Cryptography
         // Constructor (Default value provided by ulong)
         //***********************************************************************
 
-        public BigInt(ulong value)
-        {
+        public BigInt(ulong value) {
             data = new uint[maxLength];
 
             // copy bytes from ulong to BigInteger without any assumption of
             // the length of the ulong datatype
 
             dataLength = 0;
-            while (value != 0 && dataLength < maxLength)
-            {
-                data[dataLength] = (uint)(value & 0xFFFFFFFF);
+            while (value != 0 && dataLength < maxLength) {
+                data[dataLength] = (uint) (value & 0xFFFFFFFF);
                 value >>= 32;
                 dataLength++;
             }
@@ -245,18 +239,16 @@ namespace Tesla.Cryptography
         }
 
 
-
         //***********************************************************************
         // Constructor (Default value provided by BigInteger)
         //***********************************************************************
 
-        public BigInt(BigInt bi)
-        {
+        public BigInt(BigInt bi) {
             data = new uint[maxLength];
 
             dataLength = bi.dataLength;
 
-            for (int i = 0; i < dataLength; i++)
+            for (var i = 0; i < dataLength; i++)
                 data[i] = bi.data[i];
         }
 
@@ -286,55 +278,50 @@ namespace Tesla.Cryptography
         //
         //***********************************************************************
 
-        public BigInt(string value, int radix)
-        {
-            BigInt multiplier = new BigInt(1);
-            BigInt result = new BigInt();
+        public BigInt(string value, int radix) {
+            var multiplier = new BigInt(1);
+            var result = new BigInt();
             value = (value.ToUpper()).Trim();
-            int limit = 0;
+            var limit = 0;
 
             if (value[0] == '-')
                 limit = 1;
 
-            for (int i = value.Length - 1; i >= limit; i--)
-            {
-                int posVal = (int)value[i];
+            for (var i = value.Length - 1; i >= limit; i--) {
+                int posVal = value[i];
 
                 if (posVal >= '0' && posVal <= '9')
                     posVal -= '0';
                 else if (posVal >= 'A' && posVal <= 'Z')
                     posVal = (posVal - 'A') + 10;
                 else
-                    posVal = 9999999;       // arbitrary large
+                    posVal = 9999999; // arbitrary large
 
 
                 if (posVal >= radix)
                     throw (new ArithmeticException("Invalid string in constructor."));
-                else
-                {
-                    if (value[0] == '-')
-                        posVal = -posVal;
+                if (value[0] == '-')
+                    posVal = -posVal;
 
-                    result = result + (multiplier * posVal);
+                result = result + (multiplier*posVal);
 
-                    if ((i - 1) >= limit)
-                        multiplier = multiplier * radix;
-                }
+                if ((i - 1) >= limit)
+                    multiplier = multiplier*radix;
             }
 
-            if (value[0] == '-')     // negative values
+            if (value[0] == '-') // negative values
             {
                 if ((result.data[maxLength - 1] & 0x80000000) == 0)
                     throw (new ArithmeticException("Negative underflow in constructor."));
             }
-            else    // positive values
+            else // positive values
             {
                 if ((result.data[maxLength - 1] & 0x80000000) != 0)
                     throw (new ArithmeticException("Positive overflow in constructor."));
             }
 
             data = new uint[maxLength];
-            for (int i = 0; i < result.dataLength; i++)
+            for (var i = 0; i < result.dataLength; i++)
                 data[i] = result.data[i];
 
             dataLength = result.dataLength;
@@ -358,12 +345,11 @@ namespace Tesla.Cryptography
         //
         //***********************************************************************
 
-        public BigInt(byte[] inData)
-        {
+        public BigInt(byte[] inData) {
             dataLength = inData.Length >> 2;
 
-            int leftOver = inData.Length & 0x3;
-            if (leftOver != 0)         // length not multiples of 4
+            var leftOver = inData.Length & 0x3;
+            if (leftOver != 0) // length not multiples of 4
                 dataLength++;
 
 
@@ -372,18 +358,17 @@ namespace Tesla.Cryptography
 
             data = new uint[maxLength];
 
-            for (int i = inData.Length - 1, j = 0; i >= 3; i -= 4, j++)
-            {
-                data[j] = (uint)((inData[i - 3] << 24) + (inData[i - 2] << 16) +
-                                 (inData[i - 1] << 8) + inData[i]);
+            for (int i = inData.Length - 1, j = 0; i >= 3; i -= 4, j++) {
+                data[j] = (uint) ((inData[i - 3] << 24) + (inData[i - 2] << 16) +
+                                  (inData[i - 1] << 8) + inData[i]);
             }
 
             if (leftOver == 1)
-                data[dataLength - 1] = (uint)inData[0];
+                data[dataLength - 1] = inData[0];
             else if (leftOver == 2)
-                data[dataLength - 1] = (uint)((inData[0] << 8) + inData[1]);
+                data[dataLength - 1] = (uint) ((inData[0] << 8) + inData[1]);
             else if (leftOver == 3)
-                data[dataLength - 1] = (uint)((inData[0] << 16) + (inData[1] << 8) + inData[2]);
+                data[dataLength - 1] = (uint) ((inData[0] << 16) + (inData[1] << 8) + inData[2]);
 
 
             while (dataLength > 1 && data[dataLength - 1] == 0)
@@ -398,12 +383,11 @@ namespace Tesla.Cryptography
         // specified length.)
         //***********************************************************************
 
-        public BigInt(byte[] inData, int inLen)
-        {
+        public BigInt(byte[] inData, int inLen) {
             dataLength = inLen >> 2;
 
-            int leftOver = inLen & 0x3;
-            if (leftOver != 0)         // length not multiples of 4
+            var leftOver = inLen & 0x3;
+            if (leftOver != 0) // length not multiples of 4
                 dataLength++;
 
             if (dataLength > maxLength || inLen > inData.Length)
@@ -412,18 +396,17 @@ namespace Tesla.Cryptography
 
             data = new uint[maxLength];
 
-            for (int i = inLen - 1, j = 0; i >= 3; i -= 4, j++)
-            {
-                data[j] = (uint)((inData[i - 3] << 24) + (inData[i - 2] << 16) +
-                                 (inData[i - 1] << 8) + inData[i]);
+            for (int i = inLen - 1, j = 0; i >= 3; i -= 4, j++) {
+                data[j] = (uint) ((inData[i - 3] << 24) + (inData[i - 2] << 16) +
+                                  (inData[i - 1] << 8) + inData[i]);
             }
 
             if (leftOver == 1)
-                data[dataLength - 1] = (uint)inData[0];
+                data[dataLength - 1] = inData[0];
             else if (leftOver == 2)
-                data[dataLength - 1] = (uint)((inData[0] << 8) + inData[1]);
+                data[dataLength - 1] = (uint) ((inData[0] << 8) + inData[1]);
             else if (leftOver == 3)
-                data[dataLength - 1] = (uint)((inData[0] << 16) + (inData[1] << 8) + inData[2]);
+                data[dataLength - 1] = (uint) ((inData[0] << 16) + (inData[1] << 8) + inData[2]);
 
 
             if (dataLength == 0)
@@ -440,8 +423,7 @@ namespace Tesla.Cryptography
         // Constructor (Default value provided by an array of unsigned integers)
         //*********************************************************************
 
-        public BigInt(uint[] inData)
-        {
+        public BigInt(uint[] inData) {
             dataLength = inData.Length;
 
             if (dataLength > maxLength)
@@ -458,30 +440,36 @@ namespace Tesla.Cryptography
             //Console.WriteLine("Len = " + dataLength);
         }
 
+        #region IDisposable Members
+
+        public void Dispose() {
+            data = new uint[0];
+            data = null;
+            GC.Collect();
+            GC.Collect();
+        }
+
+        #endregion
 
         //***********************************************************************
         // Overloading of the typecast operator.
         // For BigInteger bi = 10;
         //***********************************************************************
 
-        public static implicit operator BigInt(long value)
-        {
+        public static implicit operator BigInt(long value) {
             return (new BigInt(value));
         }
 
-        public static implicit operator BigInt(ulong value)
-        {
+        public static implicit operator BigInt(ulong value) {
             return (new BigInt(value));
         }
 
-        public static implicit operator BigInt(int value)
-        {
-            return (new BigInt((long)value));
+        public static implicit operator BigInt(int value) {
+            return (new BigInt(value));
         }
 
-        public static implicit operator BigInt(uint value)
-        {
-            return (new BigInt((ulong)value));
+        public static implicit operator BigInt(uint value) {
+            return (new BigInt((ulong) value));
         }
 
 
@@ -489,23 +477,20 @@ namespace Tesla.Cryptography
         // Overloading of addition operator
         //***********************************************************************
 
-        public static BigInt operator +(BigInt bi1, BigInt bi2)
-        {
-            BigInt result = new BigInt();
+        public static BigInt operator +(BigInt bi1, BigInt bi2) {
+            var result = new BigInt();
 
             result.dataLength = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
 
             long carry = 0;
-            for (int i = 0; i < result.dataLength; i++)
-            {
-                long sum = (long)bi1.data[i] + (long)bi2.data[i] + carry;
+            for (var i = 0; i < result.dataLength; i++) {
+                var sum = bi1.data[i] + (long) bi2.data[i] + carry;
                 carry = sum >> 32;
-                result.data[i] = (uint)(sum & 0xFFFFFFFF);
+                result.data[i] = (uint) (sum & 0xFFFFFFFF);
             }
 
-            if (carry != 0 && result.dataLength < maxLength)
-            {
-                result.data[result.dataLength] = (uint)(carry);
+            if (carry != 0 && result.dataLength < maxLength) {
+                result.data[result.dataLength] = (uint) (carry);
                 result.dataLength++;
             }
 
@@ -514,10 +499,9 @@ namespace Tesla.Cryptography
 
 
             // overflow check
-            int lastPos = maxLength - 1;
+            var lastPos = maxLength - 1;
             if ((bi1.data[lastPos] & 0x80000000) == (bi2.data[lastPos] & 0x80000000) &&
-               (result.data[lastPos] & 0x80000000) != (bi1.data[lastPos] & 0x80000000))
-            {
+                (result.data[lastPos] & 0x80000000) != (bi1.data[lastPos] & 0x80000000)) {
                 throw (new ArithmeticException());
             }
 
@@ -529,19 +513,17 @@ namespace Tesla.Cryptography
         // Overloading of the unary ++ operator
         //***********************************************************************
 
-        public static BigInt operator ++(BigInt bi1)
-        {
-            BigInt result = new BigInt(bi1);
+        public static BigInt operator ++(BigInt bi1) {
+            var result = new BigInt(bi1);
 
             long val, carry = 1;
-            int index = 0;
+            var index = 0;
 
-            while (carry != 0 && index < maxLength)
-            {
-                val = (long)(result.data[index]);
+            while (carry != 0 && index < maxLength) {
+                val = result.data[index];
                 val++;
 
-                result.data[index] = (uint)(val & 0xFFFFFFFF);
+                result.data[index] = (uint) (val & 0xFFFFFFFF);
                 carry = val >> 32;
 
                 index++;
@@ -549,21 +531,19 @@ namespace Tesla.Cryptography
 
             if (index > result.dataLength)
                 result.dataLength = index;
-            else
-            {
+            else {
                 while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
                     result.dataLength--;
             }
 
             // overflow check
-            int lastPos = maxLength - 1;
+            var lastPos = maxLength - 1;
 
             // overflow if initial value was +ve but ++ caused a sign
             // change to negative.
 
             if ((bi1.data[lastPos] & 0x80000000) == 0 &&
-               (result.data[lastPos] & 0x80000000) != (bi1.data[lastPos] & 0x80000000))
-            {
+                (result.data[lastPos] & 0x80000000) != (bi1.data[lastPos] & 0x80000000)) {
                 throw (new ArithmeticException("Overflow in ++."));
             }
             return result;
@@ -574,19 +554,17 @@ namespace Tesla.Cryptography
         // Overloading of subtraction operator
         //***********************************************************************
 
-        public static BigInt operator -(BigInt bi1, BigInt bi2)
-        {
-            BigInt result = new BigInt();
+        public static BigInt operator -(BigInt bi1, BigInt bi2) {
+            var result = new BigInt();
 
             result.dataLength = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
 
             long carryIn = 0;
-            for (int i = 0; i < result.dataLength; i++)
-            {
+            for (var i = 0; i < result.dataLength; i++) {
                 long diff;
 
-                diff = (long)bi1.data[i] - (long)bi2.data[i] - carryIn;
-                result.data[i] = (uint)(diff & 0xFFFFFFFF);
+                diff = bi1.data[i] - (long) bi2.data[i] - carryIn;
+                result.data[i] = (uint) (diff & 0xFFFFFFFF);
 
                 if (diff < 0)
                     carryIn = 1;
@@ -595,9 +573,8 @@ namespace Tesla.Cryptography
             }
 
             // roll over to negative
-            if (carryIn != 0)
-            {
-                for (int i = result.dataLength; i < maxLength; i++)
+            if (carryIn != 0) {
+                for (var i = result.dataLength; i < maxLength; i++)
                     result.data[i] = 0xFFFFFFFF;
                 result.dataLength = maxLength;
             }
@@ -608,10 +585,9 @@ namespace Tesla.Cryptography
 
             // overflow check
 
-            int lastPos = maxLength - 1;
+            var lastPos = maxLength - 1;
             if ((bi1.data[lastPos] & 0x80000000) != (bi2.data[lastPos] & 0x80000000) &&
-               (result.data[lastPos] & 0x80000000) != (bi1.data[lastPos] & 0x80000000))
-            {
+                (result.data[lastPos] & 0x80000000) != (bi1.data[lastPos] & 0x80000000)) {
                 throw (new ArithmeticException());
             }
 
@@ -623,20 +599,18 @@ namespace Tesla.Cryptography
         // Overloading of the unary -- operator
         //***********************************************************************
 
-        public static BigInt operator --(BigInt bi1)
-        {
-            BigInt result = new BigInt(bi1);
+        public static BigInt operator --(BigInt bi1) {
+            var result = new BigInt(bi1);
 
             long val;
-            bool carryIn = true;
-            int index = 0;
+            var carryIn = true;
+            var index = 0;
 
-            while (carryIn && index < maxLength)
-            {
-                val = (long)(result.data[index]);
+            while (carryIn && index < maxLength) {
+                val = result.data[index];
                 val--;
 
-                result.data[index] = (uint)(val & 0xFFFFFFFF);
+                result.data[index] = (uint) (val & 0xFFFFFFFF);
 
                 if (val >= 0)
                     carryIn = false;
@@ -651,14 +625,13 @@ namespace Tesla.Cryptography
                 result.dataLength--;
 
             // overflow check
-            int lastPos = maxLength - 1;
+            var lastPos = maxLength - 1;
 
             // overflow if initial value was -ve but -- caused a sign
             // change to positive.
 
             if ((bi1.data[lastPos] & 0x80000000) != 0 &&
-               (result.data[lastPos] & 0x80000000) != (bi1.data[lastPos] & 0x80000000))
-            {
+                (result.data[lastPos] & 0x80000000) != (bi1.data[lastPos] & 0x80000000)) {
                 throw (new ArithmeticException("Underflow in --."));
             }
 
@@ -670,51 +643,47 @@ namespace Tesla.Cryptography
         // Overloading of multiplication operator
         //***********************************************************************
 
-        public static BigInt operator *(BigInt bi1, BigInt bi2)
-        {
-            int lastPos = maxLength - 1;
+        public static BigInt operator *(BigInt bi1, BigInt bi2) {
+            var lastPos = maxLength - 1;
             bool bi1Neg = false, bi2Neg = false;
 
             // take the absolute value of the inputs
-            try
-            {
-                if ((bi1.data[lastPos] & 0x80000000) != 0)     // bi1 negative
+            try {
+                if ((bi1.data[lastPos] & 0x80000000) != 0) // bi1 negative
                 {
-                    bi1Neg = true; bi1 = -bi1;
+                    bi1Neg = true;
+                    bi1 = -bi1;
                 }
-                if ((bi2.data[lastPos] & 0x80000000) != 0)     // bi2 negative
+                if ((bi2.data[lastPos] & 0x80000000) != 0) // bi2 negative
                 {
-                    bi2Neg = true; bi2 = -bi2;
+                    bi2Neg = true;
+                    bi2 = -bi2;
                 }
             }
-            catch (Exception) { }
+            catch (Exception) {}
 
-            BigInt result = new BigInt();
+            var result = new BigInt();
 
             // multiply the absolute values
-            try
-            {
-                for (int i = 0; i < bi1.dataLength; i++)
-                {
+            try {
+                for (var i = 0; i < bi1.dataLength; i++) {
                     if (bi1.data[i] == 0) continue;
 
                     ulong mcarry = 0;
-                    for (int j = 0, k = i; j < bi2.dataLength; j++, k++)
-                    {
+                    for (int j = 0, k = i; j < bi2.dataLength; j++, k++) {
                         // k = i + j
-                        ulong val = ((ulong)bi1.data[i] * (ulong)bi2.data[j]) +
-                                     (ulong)result.data[k] + mcarry;
+                        var val = (bi1.data[i]*(ulong) bi2.data[j]) +
+                                  result.data[k] + mcarry;
 
-                        result.data[k] = (uint)(val & 0xFFFFFFFF);
+                        result.data[k] = (uint) (val & 0xFFFFFFFF);
                         mcarry = (val >> 32);
                     }
 
                     if (mcarry != 0)
-                        result.data[i + bi2.dataLength] = (uint)mcarry;
+                        result.data[i + bi2.dataLength] = (uint) mcarry;
                 }
             }
-            catch (Exception)
-            {
+            catch (Exception) {
                 throw (new ArithmeticException("Multiplication overflow."));
             }
 
@@ -727,27 +696,22 @@ namespace Tesla.Cryptography
                 result.dataLength--;
 
             // overflow check (result is -ve)
-            if ((result.data[lastPos] & 0x80000000) != 0)
-            {
-                if (bi1Neg != bi2Neg && result.data[lastPos] == 0x80000000)    // different sign
+            if ((result.data[lastPos] & 0x80000000) != 0) {
+                if (bi1Neg != bi2Neg && result.data[lastPos] == 0x80000000) // different sign
                 {
                     // handle the special case where multiplication produces
                     // a max negative number in 2's complement.
 
                     if (result.dataLength == 1)
                         return result;
-                    else
-                    {
-                        bool isMaxNeg = true;
-                        for (int i = 0; i < result.dataLength - 1 && isMaxNeg; i++)
-                        {
-                            if (result.data[i] != 0)
-                                isMaxNeg = false;
-                        }
-
-                        if (isMaxNeg)
-                            return result;
+                    var isMaxNeg = true;
+                    for (var i = 0; i < result.dataLength - 1 && isMaxNeg; i++) {
+                        if (result.data[i] != 0)
+                            isMaxNeg = false;
                     }
+
+                    if (isMaxNeg)
+                        return result;
                 }
 
                 throw (new ArithmeticException("Multiplication overflow."));
@@ -761,14 +725,12 @@ namespace Tesla.Cryptography
         }
 
 
-
         //***********************************************************************
         // Overloading of unary << operators
         //***********************************************************************
 
-        public static BigInt operator <<(BigInt bi1, int shiftVal)
-        {
-            BigInt result = new BigInt(bi1);
+        public static BigInt operator <<(BigInt bi1, int shiftVal) {
+            var result = new BigInt(bi1);
             result.dataLength = ShiftLeft(result.data, shiftVal);
 
             return result;
@@ -777,36 +739,31 @@ namespace Tesla.Cryptography
 
         // least significant bits at lower part of buffer
 
-        private static int ShiftLeft(uint[] buffer, int shiftVal)
-        {
-            int shiftAmount = 32;
-            int bufLen = buffer.Length;
+        private static int ShiftLeft(uint[] buffer, int shiftVal) {
+            var shiftAmount = 32;
+            var bufLen = buffer.Length;
 
             while (bufLen > 1 && buffer[bufLen - 1] == 0)
                 bufLen--;
 
-            for (int count = shiftVal; count > 0; )
-            {
+            for (var count = shiftVal; count > 0;) {
                 if (count < shiftAmount)
                     shiftAmount = count;
 
                 //Console.WriteLine("shiftAmount = {0}", shiftAmount);
 
                 ulong carry = 0;
-                for (int i = 0; i < bufLen; i++)
-                {
-                    ulong val = ((ulong)buffer[i]) << shiftAmount;
+                for (var i = 0; i < bufLen; i++) {
+                    var val = ((ulong) buffer[i]) << shiftAmount;
                     val |= carry;
 
-                    buffer[i] = (uint)(val & 0xFFFFFFFF);
+                    buffer[i] = (uint) (val & 0xFFFFFFFF);
                     carry = val >> 32;
                 }
 
-                if (carry != 0)
-                {
-                    if (bufLen + 1 <= buffer.Length)
-                    {
-                        buffer[bufLen] = (uint)carry;
+                if (carry != 0) {
+                    if (bufLen + 1 <= buffer.Length) {
+                        buffer[bufLen] = (uint) carry;
                         bufLen++;
                     }
                 }
@@ -820,20 +777,18 @@ namespace Tesla.Cryptography
         // Overloading of unary >> operators
         //***********************************************************************
 
-        public static BigInt operator >>(BigInt bi1, int shiftVal)
-        {
-            BigInt result = new BigInt(bi1);
+        public static BigInt operator >>(BigInt bi1, int shiftVal) {
+            var result = new BigInt(bi1);
             result.dataLength = ShiftRight(result.data, shiftVal);
 
 
             if ((bi1.data[maxLength - 1] & 0x80000000) != 0) // negative
             {
-                for (int i = maxLength - 1; i >= result.dataLength; i--)
+                for (var i = maxLength - 1; i >= result.dataLength; i--)
                     result.data[i] = 0xFFFFFFFF;
 
-                uint mask = 0x80000000;
-                for (int i = 0; i < 32; i++)
-                {
+                var mask = 0x80000000;
+                for (var i = 0; i < 32; i++) {
                     if ((result.data[result.dataLength - 1] & mask) != 0)
                         break;
 
@@ -847,21 +802,18 @@ namespace Tesla.Cryptography
         }
 
 
-        private static int ShiftRight(uint[] buffer, int shiftVal)
-        {
-            int shiftAmount = 32;
-            int invShift = 0;
-            int bufLen = buffer.Length;
+        private static int ShiftRight(uint[] buffer, int shiftVal) {
+            var shiftAmount = 32;
+            var invShift = 0;
+            var bufLen = buffer.Length;
 
             while (bufLen > 1 && buffer[bufLen - 1] == 0)
                 bufLen--;
 
             //Console.WriteLine("bufLen = " + bufLen + " buffer.Length = " + buffer.Length);
 
-            for (int count = shiftVal; count > 0; )
-            {
-                if (count < shiftAmount)
-                {
+            for (var count = shiftVal; count > 0;) {
+                if (count < shiftAmount) {
                     shiftAmount = count;
                     invShift = 32 - shiftAmount;
                 }
@@ -869,13 +821,12 @@ namespace Tesla.Cryptography
                 //Console.WriteLine("shiftAmount = {0}", shiftAmount);
 
                 ulong carry = 0;
-                for (int i = bufLen - 1; i >= 0; i--)
-                {
-                    ulong val = ((ulong)buffer[i]) >> shiftAmount;
+                for (var i = bufLen - 1; i >= 0; i--) {
+                    var val = ((ulong) buffer[i]) >> shiftAmount;
                     val |= carry;
 
-                    carry = ((ulong)buffer[i]) << invShift;
-                    buffer[i] = (uint)(val);
+                    carry = ((ulong) buffer[i]) << invShift;
+                    buffer[i] = (uint) (val);
                 }
 
                 count -= shiftAmount;
@@ -892,12 +843,11 @@ namespace Tesla.Cryptography
         // Overloading of the NOT operator (1's complement)
         //***********************************************************************
 
-        public static BigInt operator ~(BigInt bi1)
-        {
-            BigInt result = new BigInt(bi1);
+        public static BigInt operator ~(BigInt bi1) {
+            var result = new BigInt(bi1);
 
-            for (int i = 0; i < maxLength; i++)
-                result.data[i] = (uint)(~(bi1.data[i]));
+            for (var i = 0; i < maxLength; i++)
+                result.data[i] = ~(bi1.data[i]);
 
             result.dataLength = maxLength;
 
@@ -912,30 +862,28 @@ namespace Tesla.Cryptography
         // Overloading of the NEGATE operator (2's complement)
         //***********************************************************************
 
-        public static BigInt operator -(BigInt bi1)
-        {
+        public static BigInt operator -(BigInt bi1) {
             // handle neg of zero separately since it'll cause an overflow
             // if we proceed.
 
             if (bi1.dataLength == 1 && bi1.data[0] == 0)
                 return (new BigInt());
 
-            BigInt result = new BigInt(bi1);
+            var result = new BigInt(bi1);
 
             // 1's complement
-            for (int i = 0; i < maxLength; i++)
-                result.data[i] = (uint)(~(bi1.data[i]));
+            for (var i = 0; i < maxLength; i++)
+                result.data[i] = ~(bi1.data[i]);
 
             // add one to result of 1's complement
             long val, carry = 1;
-            int index = 0;
+            var index = 0;
 
-            while (carry != 0 && index < maxLength)
-            {
-                val = (long)(result.data[index]);
+            while (carry != 0 && index < maxLength) {
+                val = result.data[index];
                 val++;
 
-                result.data[index] = (uint)(val & 0xFFFFFFFF);
+                result.data[index] = (uint) (val & 0xFFFFFFFF);
                 carry = val >> 32;
 
                 index++;
@@ -956,37 +904,32 @@ namespace Tesla.Cryptography
         // Overloading of equality operator
         //***********************************************************************
 
-        public static bool operator ==(BigInt bi1, BigInt bi2)
-        {
+        public static bool operator ==(BigInt bi1, BigInt bi2) {
             return bi1.Equals(bi2);
         }
 
 
-        public static bool operator !=(BigInt bi1, BigInt bi2)
-        {
+        public static bool operator !=(BigInt bi1, BigInt bi2) {
             return !(bi1.Equals(bi2));
         }
 
 
-        public override bool Equals(object o)
-        {
-            BigInt bi = (BigInt)o;
+        public override bool Equals(object o) {
+            var bi = (BigInt) o;
 
-            if (this.dataLength != bi.dataLength)
+            if (dataLength != bi.dataLength)
                 return false;
 
-            for (int i = 0; i < this.dataLength; i++)
-            {
-                if (this.data[i] != bi.data[i])
+            for (var i = 0; i < dataLength; i++) {
+                if (data[i] != bi.data[i])
                     return false;
             }
             return true;
         }
 
 
-        public override int GetHashCode()
-        {
-            return this.ToString().GetHashCode();
+        public override int GetHashCode() {
+            return ToString().GetHashCode();
         }
 
 
@@ -994,24 +937,22 @@ namespace Tesla.Cryptography
         // Overloading of inequality operator
         //***********************************************************************
 
-        public static bool operator >(BigInt bi1, BigInt bi2)
-        {
-            int pos = maxLength - 1;
+        public static bool operator >(BigInt bi1, BigInt bi2) {
+            var pos = maxLength - 1;
 
             // bi1 is negative, bi2 is positive
             if ((bi1.data[pos] & 0x80000000) != 0 && (bi2.data[pos] & 0x80000000) == 0)
                 return false;
 
             // bi1 is positive, bi2 is negative
-            else if ((bi1.data[pos] & 0x80000000) == 0 && (bi2.data[pos] & 0x80000000) != 0)
+            if ((bi1.data[pos] & 0x80000000) == 0 && (bi2.data[pos] & 0x80000000) != 0)
                 return true;
 
             // same sign
-            int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
+            var len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
             for (pos = len - 1; pos >= 0 && bi1.data[pos] == bi2.data[pos]; pos--) ;
 
-            if (pos >= 0)
-            {
+            if (pos >= 0) {
                 if (bi1.data[pos] > bi2.data[pos])
                     return true;
                 return false;
@@ -1020,24 +961,22 @@ namespace Tesla.Cryptography
         }
 
 
-        public static bool operator <(BigInt bi1, BigInt bi2)
-        {
-            int pos = maxLength - 1;
+        public static bool operator <(BigInt bi1, BigInt bi2) {
+            var pos = maxLength - 1;
 
             // bi1 is negative, bi2 is positive
             if ((bi1.data[pos] & 0x80000000) != 0 && (bi2.data[pos] & 0x80000000) == 0)
                 return true;
 
             // bi1 is positive, bi2 is negative
-            else if ((bi1.data[pos] & 0x80000000) == 0 && (bi2.data[pos] & 0x80000000) != 0)
+            if ((bi1.data[pos] & 0x80000000) == 0 && (bi2.data[pos] & 0x80000000) != 0)
                 return false;
 
             // same sign
-            int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
+            var len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
             for (pos = len - 1; pos >= 0 && bi1.data[pos] == bi2.data[pos]; pos--) ;
 
-            if (pos >= 0)
-            {
+            if (pos >= 0) {
                 if (bi1.data[pos] < bi2.data[pos])
                     return true;
                 return false;
@@ -1046,14 +985,12 @@ namespace Tesla.Cryptography
         }
 
 
-        public static bool operator >=(BigInt bi1, BigInt bi2)
-        {
+        public static bool operator >=(BigInt bi1, BigInt bi2) {
             return (bi1 == bi2 || bi1 > bi2);
         }
 
 
-        public static bool operator <=(BigInt bi1, BigInt bi2)
-        {
+        public static bool operator <=(BigInt bi1, BigInt bi2) {
             return (bi1 == bi2 || bi1 < bi2);
         }
 
@@ -1066,26 +1003,25 @@ namespace Tesla.Cryptography
         //***********************************************************************
 
         private static void MultiByteDivide(BigInt bi1, BigInt bi2,
-                                            BigInt outQuotient, BigInt outRemainder)
-        {
-            uint[] result = new uint[maxLength];
+            BigInt outQuotient, BigInt outRemainder) {
+            var result = new uint[maxLength];
 
-            int remainderLen = bi1.dataLength + 1;
-            uint[] remainder = new uint[remainderLen];
+            var remainderLen = bi1.dataLength + 1;
+            var remainder = new uint[remainderLen];
 
-            uint mask = 0x80000000;
-            uint val = bi2.data[bi2.dataLength - 1];
+            var mask = 0x80000000;
+            var val = bi2.data[bi2.dataLength - 1];
             int shift = 0, resultPos = 0;
 
-            while (mask != 0 && (val & mask) == 0)
-            {
-                shift++; mask >>= 1;
+            while (mask != 0 && (val & mask) == 0) {
+                shift++;
+                mask >>= 1;
             }
 
             //Console.WriteLine("shift = {0}", shift);
             //Console.WriteLine("Before bi1 Len = {0}, bi2 Len = {1}", bi1.dataLength, bi2.dataLength);
 
-            for (int i = 0; i < bi1.dataLength; i++)
+            for (var i = 0; i < bi1.dataLength; i++)
                 remainder[i] = bi1.data[i];
             ShiftLeft(remainder, shift);
             bi2 = bi2 << shift;
@@ -1098,33 +1034,30 @@ namespace Tesla.Cryptography
             Console.WriteLine();
             */
 
-            int j = remainderLen - bi2.dataLength;
-            int pos = remainderLen - 1;
+            var j = remainderLen - bi2.dataLength;
+            var pos = remainderLen - 1;
 
             ulong firstDivisorByte = bi2.data[bi2.dataLength - 1];
             ulong secondDivisorByte = bi2.data[bi2.dataLength - 2];
 
-            int divisorLen = bi2.dataLength + 1;
-            uint[] dividendPart = new uint[divisorLen];
+            var divisorLen = bi2.dataLength + 1;
+            var dividendPart = new uint[divisorLen];
 
-            while (j > 0)
-            {
-                ulong dividend = ((ulong)remainder[pos] << 32) + (ulong)remainder[pos - 1];
+            while (j > 0) {
+                var dividend = ((ulong) remainder[pos] << 32) + remainder[pos - 1];
                 //Console.WriteLine("dividend = {0}", dividend);
 
-                ulong q_hat = dividend / firstDivisorByte;
-                ulong r_hat = dividend % firstDivisorByte;
+                var q_hat = dividend/firstDivisorByte;
+                var r_hat = dividend%firstDivisorByte;
 
                 //Console.WriteLine("q_hat = {0:X}, r_hat = {1:X}", q_hat, r_hat);
 
-                bool done = false;
-                while (!done)
-                {
+                var done = false;
+                while (!done) {
                     done = true;
 
                     if (q_hat == 0x100000000 ||
-                       (q_hat * secondDivisorByte) > ((r_hat << 32) + remainder[pos - 2]))
-                    {
+                        (q_hat*secondDivisorByte) > ((r_hat << 32) + remainder[pos - 2])) {
                         q_hat--;
                         r_hat += firstDivisorByte;
 
@@ -1133,26 +1066,25 @@ namespace Tesla.Cryptography
                     }
                 }
 
-                for (int h = 0; h < divisorLen; h++)
+                for (var h = 0; h < divisorLen; h++)
                     dividendPart[h] = remainder[pos - h];
 
-                BigInt kk = new BigInt(dividendPart);
-                BigInt ss = bi2 * (long)q_hat;
+                var kk = new BigInt(dividendPart);
+                var ss = bi2*(long) q_hat;
 
                 //Console.WriteLine("ss before = " + ss);
-                while (ss > kk)
-                {
+                while (ss > kk) {
                     q_hat--;
                     ss -= bi2;
                     //Console.WriteLine(ss);
                 }
-                BigInt yy = kk - ss;
+                var yy = kk - ss;
 
                 //Console.WriteLine("ss = " + ss);
                 //Console.WriteLine("kk = " + kk);
                 //Console.WriteLine("yy = " + yy);
 
-                for (int h = 0; h < divisorLen; h++)
+                for (var h = 0; h < divisorLen; h++)
                     remainder[pos - h] = yy.data[bi2.dataLength - h];
 
                 /*
@@ -1162,15 +1094,15 @@ namespace Tesla.Cryptography
                 Console.WriteLine("\n************ q_hat = {0:X}\n", q_hat);
                 */
 
-                result[resultPos++] = (uint)q_hat;
+                result[resultPos++] = (uint) q_hat;
 
                 pos--;
                 j--;
             }
 
             outQuotient.dataLength = resultPos;
-            int y = 0;
-            for (int x = outQuotient.dataLength - 1; x >= 0; x--, y++)
+            var y = 0;
+            for (var x = outQuotient.dataLength - 1; x >= 0; x--, y++)
                 outQuotient.data[y] = result[x];
             for (; y < maxLength; y++)
                 outQuotient.data[y] = 0;
@@ -1196,51 +1128,48 @@ namespace Tesla.Cryptography
         //***********************************************************************
 
         private static void SingleByteDivide(BigInt bi1, BigInt bi2,
-                                             BigInt outQuotient, BigInt outRemainder)
-        {
-            uint[] result = new uint[maxLength];
-            int resultPos = 0;
+            BigInt outQuotient, BigInt outRemainder) {
+            var result = new uint[maxLength];
+            var resultPos = 0;
 
             // copy dividend to reminder
-            for (int i = 0; i < maxLength; i++)
+            for (var i = 0; i < maxLength; i++)
                 outRemainder.data[i] = bi1.data[i];
             outRemainder.dataLength = bi1.dataLength;
 
             while (outRemainder.dataLength > 1 && outRemainder.data[outRemainder.dataLength - 1] == 0)
                 outRemainder.dataLength--;
 
-            ulong divisor = (ulong)bi2.data[0];
-            int pos = outRemainder.dataLength - 1;
-            ulong dividend = (ulong)outRemainder.data[pos];
+            ulong divisor = bi2.data[0];
+            var pos = outRemainder.dataLength - 1;
+            ulong dividend = outRemainder.data[pos];
 
             //Console.WriteLine("divisor = " + divisor + " dividend = " + dividend);
             //Console.WriteLine("divisor = " + bi2 + "\ndividend = " + bi1);
 
-            if (dividend >= divisor)
-            {
-                ulong quotient = dividend / divisor;
-                result[resultPos++] = (uint)quotient;
+            if (dividend >= divisor) {
+                var quotient = dividend/divisor;
+                result[resultPos++] = (uint) quotient;
 
-                outRemainder.data[pos] = (uint)(dividend % divisor);
+                outRemainder.data[pos] = (uint) (dividend%divisor);
             }
             pos--;
 
-            while (pos >= 0)
-            {
+            while (pos >= 0) {
                 //Console.WriteLine(pos);
 
-                dividend = ((ulong)outRemainder.data[pos + 1] << 32) + (ulong)outRemainder.data[pos];
-                ulong quotient = dividend / divisor;
-                result[resultPos++] = (uint)quotient;
+                dividend = ((ulong) outRemainder.data[pos + 1] << 32) + outRemainder.data[pos];
+                var quotient = dividend/divisor;
+                result[resultPos++] = (uint) quotient;
 
                 outRemainder.data[pos + 1] = 0;
-                outRemainder.data[pos--] = (uint)(dividend % divisor);
+                outRemainder.data[pos--] = (uint) (dividend%divisor);
                 //Console.WriteLine(">>>> " + bi1);
             }
 
             outQuotient.dataLength = resultPos;
-            int j = 0;
-            for (int i = outQuotient.dataLength - 1; i >= 0; i--, j++)
+            var j = 0;
+            for (var i = outQuotient.dataLength - 1; i >= 0; i--, j++)
                 outQuotient.data[j] = result[i];
             for (; j < maxLength; j++)
                 outQuotient.data[j] = 0;
@@ -1260,42 +1189,37 @@ namespace Tesla.Cryptography
         // Overloading of division operator
         //***********************************************************************
 
-        public static BigInt operator /(BigInt bi1, BigInt bi2)
-        {
-            BigInt quotient = new BigInt();
-            BigInt remainder = new BigInt();
+        public static BigInt operator /(BigInt bi1, BigInt bi2) {
+            var quotient = new BigInt();
+            var remainder = new BigInt();
 
-            int lastPos = maxLength - 1;
+            var lastPos = maxLength - 1;
             bool divisorNeg = false, dividendNeg = false;
 
-            if ((bi1.data[lastPos] & 0x80000000) != 0)     // bi1 negative
+            if ((bi1.data[lastPos] & 0x80000000) != 0) // bi1 negative
             {
                 bi1 = -bi1;
                 dividendNeg = true;
             }
-            if ((bi2.data[lastPos] & 0x80000000) != 0)     // bi2 negative
+            if ((bi2.data[lastPos] & 0x80000000) != 0) // bi2 negative
             {
                 bi2 = -bi2;
                 divisorNeg = true;
             }
 
-            if (bi1 < bi2)
-            {
+            if (bi1 < bi2) {
                 return quotient;
             }
 
+            if (bi2.dataLength == 1)
+                SingleByteDivide(bi1, bi2, quotient, remainder);
             else
-            {
-                if (bi2.dataLength == 1)
-                    SingleByteDivide(bi1, bi2, quotient, remainder);
-                else
-                    MultiByteDivide(bi1, bi2, quotient, remainder);
+                MultiByteDivide(bi1, bi2, quotient, remainder);
 
-                if (dividendNeg != divisorNeg)
-                    return -quotient;
+            if (dividendNeg != divisorNeg)
+                return -quotient;
 
-                return quotient;
-            }
+            return quotient;
         }
 
 
@@ -1303,39 +1227,34 @@ namespace Tesla.Cryptography
         // Overloading of modulus operator
         //***********************************************************************
 
-        public static BigInt operator %(BigInt bi1, BigInt bi2)
-        {
-            BigInt quotient = new BigInt();
-            BigInt remainder = new BigInt(bi1);
+        public static BigInt operator %(BigInt bi1, BigInt bi2) {
+            var quotient = new BigInt();
+            var remainder = new BigInt(bi1);
 
-            int lastPos = maxLength - 1;
-            bool dividendNeg = false;
+            var lastPos = maxLength - 1;
+            var dividendNeg = false;
 
-            if ((bi1.data[lastPos] & 0x80000000) != 0)     // bi1 negative
+            if ((bi1.data[lastPos] & 0x80000000) != 0) // bi1 negative
             {
                 bi1 = -bi1;
                 dividendNeg = true;
             }
-            if ((bi2.data[lastPos] & 0x80000000) != 0)     // bi2 negative
+            if ((bi2.data[lastPos] & 0x80000000) != 0) // bi2 negative
                 bi2 = -bi2;
 
-            if (bi1 < bi2)
-            {
+            if (bi1 < bi2) {
                 return remainder;
             }
 
+            if (bi2.dataLength == 1)
+                SingleByteDivide(bi1, bi2, quotient, remainder);
             else
-            {
-                if (bi2.dataLength == 1)
-                    SingleByteDivide(bi1, bi2, quotient, remainder);
-                else
-                    MultiByteDivide(bi1, bi2, quotient, remainder);
+                MultiByteDivide(bi1, bi2, quotient, remainder);
 
-                if (dividendNeg)
-                    return -remainder;
+            if (dividendNeg)
+                return -remainder;
 
-                return remainder;
-            }
+            return remainder;
         }
 
 
@@ -1343,15 +1262,13 @@ namespace Tesla.Cryptography
         // Overloading of bitwise AND operator
         //***********************************************************************
 
-        public static BigInt operator &(BigInt bi1, BigInt bi2)
-        {
-            BigInt result = new BigInt();
+        public static BigInt operator &(BigInt bi1, BigInt bi2) {
+            var result = new BigInt();
 
-            int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
+            var len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
 
-            for (int i = 0; i < len; i++)
-            {
-                uint sum = (uint)(bi1.data[i] & bi2.data[i]);
+            for (var i = 0; i < len; i++) {
+                var sum = bi1.data[i] & bi2.data[i];
                 result.data[i] = sum;
             }
 
@@ -1368,15 +1285,13 @@ namespace Tesla.Cryptography
         // Overloading of bitwise OR operator
         //***********************************************************************
 
-        public static BigInt operator |(BigInt bi1, BigInt bi2)
-        {
-            BigInt result = new BigInt();
+        public static BigInt operator |(BigInt bi1, BigInt bi2) {
+            var result = new BigInt();
 
-            int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
+            var len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
 
-            for (int i = 0; i < len; i++)
-            {
-                uint sum = (uint)(bi1.data[i] | bi2.data[i]);
+            for (var i = 0; i < len; i++) {
+                var sum = bi1.data[i] | bi2.data[i];
                 result.data[i] = sum;
             }
 
@@ -1393,15 +1308,13 @@ namespace Tesla.Cryptography
         // Overloading of bitwise XOR operator
         //***********************************************************************
 
-        public static BigInt operator ^(BigInt bi1, BigInt bi2)
-        {
-            BigInt result = new BigInt();
+        public static BigInt operator ^(BigInt bi1, BigInt bi2) {
+            var result = new BigInt();
 
-            int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
+            var len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
 
-            for (int i = 0; i < len; i++)
-            {
-                uint sum = (uint)(bi1.data[i] ^ bi2.data[i]);
+            for (var i = 0; i < len; i++) {
+                var sum = bi1.data[i] ^ bi2.data[i];
                 result.data[i] = sum;
             }
 
@@ -1418,12 +1331,10 @@ namespace Tesla.Cryptography
         // Returns max(this, bi)
         //***********************************************************************
 
-        public BigInt Max(BigInt bi)
-        {
+        public BigInt Max(BigInt bi) {
             if (this > bi)
                 return (new BigInt(this));
-            else
-                return (new BigInt(bi));
+            return (new BigInt(bi));
         }
 
 
@@ -1431,13 +1342,10 @@ namespace Tesla.Cryptography
         // Returns min(this, bi)
         //***********************************************************************
 
-        public BigInt Min(BigInt bi)
-        {
+        public BigInt Min(BigInt bi) {
             if (this < bi)
                 return (new BigInt(this));
-            else
-                return (new BigInt(bi));
-
+            return (new BigInt(bi));
         }
 
 
@@ -1445,12 +1353,10 @@ namespace Tesla.Cryptography
         // Returns the absolute value
         //***********************************************************************
 
-        public BigInt Abs()
-        {
-            if ((this.data[maxLength - 1] & 0x80000000) != 0)
+        public BigInt Abs() {
+            if ((data[maxLength - 1] & 0x80000000) != 0)
                 return (-this);
-            else
-                return (new BigInt(this));
+            return (new BigInt(this));
         }
 
 
@@ -1458,8 +1364,7 @@ namespace Tesla.Cryptography
         // Returns a string representing the BigInteger in base 10.
         //***********************************************************************
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return ToString(10);
         }
 
@@ -1475,43 +1380,38 @@ namespace Tesla.Cryptography
         //
         //***********************************************************************
 
-        public string ToString(int radix)
-        {
+        public string ToString(int radix) {
             if (radix < 2 || radix > 36)
                 throw (new ArgumentException("Radix must be >= 2 and <= 36"));
 
-            string charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            string result = "";
+            var charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var result = "";
 
-            BigInt a = this;
+            var a = this;
 
-            bool negative = false;
-            if ((a.data[maxLength - 1] & 0x80000000) != 0)
-            {
+            var negative = false;
+            if ((a.data[maxLength - 1] & 0x80000000) != 0) {
                 negative = true;
-                try
-                {
+                try {
                     a = -a;
                 }
-                catch (Exception) { }
+                catch (Exception) {}
             }
 
-            BigInt quotient = new BigInt();
-            BigInt remainder = new BigInt();
-            BigInt biRadix = new BigInt(radix);
+            var quotient = new BigInt();
+            var remainder = new BigInt();
+            var biRadix = new BigInt(radix);
 
             if (a.dataLength == 1 && a.data[0] == 0)
                 result = "0";
-            else
-            {
-                while (a.dataLength > 1 || (a.dataLength == 1 && a.data[0] != 0))
-                {
+            else {
+                while (a.dataLength > 1 || (a.dataLength == 1 && a.data[0] != 0)) {
                     SingleByteDivide(a, biRadix, quotient, remainder);
 
                     if (remainder.data[0] < 10)
                         result = remainder.data[0] + result;
                     else
-                        result = charSet[(int)remainder.data[0] - 10] + result;
+                        result = charSet[(int) remainder.data[0] - 10] + result;
 
                     a = quotient;
                 }
@@ -1537,12 +1437,10 @@ namespace Tesla.Cryptography
         //
         //***********************************************************************
 
-        public string ToHexString()
-        {
-            string result = data[dataLength - 1].ToString("X");
+        public string ToHexString() {
+            var result = data[dataLength - 1].ToString("X");
 
-            for (int i = dataLength - 2; i >= 0; i--)
-            {
+            for (var i = dataLength - 2; i >= 0; i--) {
                 result += data[i].ToString("X8");
             }
 
@@ -1550,61 +1448,56 @@ namespace Tesla.Cryptography
         }
 
 
-
         //***********************************************************************
         // Modulo Exponentiation
         //***********************************************************************
 
-        public BigInt ModPow(BigInt exp, BigInt n)
-        {
+        public BigInt ModPow(BigInt exp, BigInt n) {
             if ((exp.data[maxLength - 1] & 0x80000000) != 0)
                 throw (new ArithmeticException("Positive exponents only."));
 
             BigInt resultNum = 1;
             BigInt tempNum;
-            bool thisNegative = false;
+            var thisNegative = false;
 
-            if ((this.data[maxLength - 1] & 0x80000000) != 0)   // negative this
+            if ((data[maxLength - 1] & 0x80000000) != 0) // negative this
             {
-                tempNum = -this % n;
+                tempNum = -this%n;
                 thisNegative = true;
             }
             else
-                tempNum = this % n;  // ensures (tempNum * tempNum) < b^(2k)
+                tempNum = this%n; // ensures (tempNum * tempNum) < b^(2k)
 
-            if ((n.data[maxLength - 1] & 0x80000000) != 0)   // negative n
+            if ((n.data[maxLength - 1] & 0x80000000) != 0) // negative n
                 n = -n;
 
             // calculate constant = b^(2k) / m
-            BigInt constant = new BigInt();
+            var constant = new BigInt();
 
-            int i = n.dataLength << 1;
+            var i = n.dataLength << 1;
             constant.data[i] = 0x00000001;
             constant.dataLength = i + 1;
 
-            constant = constant / n;
-            int totalBits = exp.BitCount();
-            int count = 0;
+            constant = constant/n;
+            var totalBits = exp.BitCount();
+            var count = 0;
 
             // perform squaring and multiply exponentiation
-            for (int pos = 0; pos < exp.dataLength; pos++)
-            {
+            for (var pos = 0; pos < exp.dataLength; pos++) {
                 uint mask = 0x01;
                 //Console.WriteLine("pos = " + pos);
 
-                for (int index = 0; index < 32; index++)
-                {
+                for (var index = 0; index < 32; index++) {
                     if ((exp.data[pos] & mask) != 0)
-                        resultNum = BarrettReduction(resultNum * tempNum, n, constant);
+                        resultNum = BarrettReduction(resultNum*tempNum, n, constant);
 
                     mask <<= 1;
 
-                    tempNum = BarrettReduction(tempNum * tempNum, n, constant);
+                    tempNum = BarrettReduction(tempNum*tempNum, n, constant);
 
 
-                    if (tempNum.dataLength == 1 && tempNum.data[0] == 1)
-                    {
-                        if (thisNegative && (exp.data[0] & 0x1) != 0)    //odd exp
+                    if (tempNum.dataLength == 1 && tempNum.data[0] == 1) {
+                        if (thisNegative && (exp.data[0] & 0x1) != 0) //odd exp
                             return -resultNum;
                         return resultNum;
                     }
@@ -1614,12 +1507,11 @@ namespace Tesla.Cryptography
                 }
             }
 
-            if (thisNegative && (exp.data[0] & 0x1) != 0)    //odd exp
+            if (thisNegative && (exp.data[0] & 0x1) != 0) //odd exp
                 return -resultNum;
 
             return resultNum;
         }
-
 
 
         //***********************************************************************
@@ -1630,13 +1522,12 @@ namespace Tesla.Cryptography
         // Reference [4]
         //***********************************************************************
 
-        private BigInt BarrettReduction(BigInt x, BigInt n, BigInt constant)
-        {
+        private BigInt BarrettReduction(BigInt x, BigInt n, BigInt constant) {
             int k = n.dataLength,
                 kPlusOne = k + 1,
                 kMinusOne = k - 1;
 
-            BigInt q1 = new BigInt();
+            var q1 = new BigInt();
 
             // q1 = x / b^(k-1)
             for (int i = kMinusOne, j = 0; i < x.dataLength; i++, j++)
@@ -1646,8 +1537,8 @@ namespace Tesla.Cryptography
                 q1.dataLength = 1;
 
 
-            BigInt q2 = q1 * constant;
-            BigInt q3 = new BigInt();
+            var q2 = q1*constant;
+            var q3 = new BigInt();
 
             // q3 = q2 / b^(k+1)
             for (int i = kPlusOne, j = 0; i < q2.dataLength; i++, j++)
@@ -1659,9 +1550,9 @@ namespace Tesla.Cryptography
 
             // r1 = x mod b^(k+1)
             // i.e. keep the lowest (k+1) words
-            BigInt r1 = new BigInt();
-            int lengthToCopy = (x.dataLength > kPlusOne) ? kPlusOne : x.dataLength;
-            for (int i = 0; i < lengthToCopy; i++)
+            var r1 = new BigInt();
+            var lengthToCopy = (x.dataLength > kPlusOne) ? kPlusOne : x.dataLength;
+            for (var i = 0; i < lengthToCopy; i++)
                 r1.data[i] = x.data[i];
             r1.dataLength = lengthToCopy;
 
@@ -1669,34 +1560,32 @@ namespace Tesla.Cryptography
             // r2 = (q3 * n) mod b^(k+1)
             // partial multiplication of q3 and n
 
-            BigInt r2 = new BigInt();
-            for (int i = 0; i < q3.dataLength; i++)
-            {
+            var r2 = new BigInt();
+            for (var i = 0; i < q3.dataLength; i++) {
                 if (q3.data[i] == 0) continue;
 
                 ulong mcarry = 0;
-                int t = i;
-                for (int j = 0; j < n.dataLength && t < kPlusOne; j++, t++)
-                {
+                var t = i;
+                for (var j = 0; j < n.dataLength && t < kPlusOne; j++, t++) {
                     // t = i + j
-                    ulong val = ((ulong)q3.data[i] * (ulong)n.data[j]) +
-                                 (ulong)r2.data[t] + mcarry;
+                    var val = (q3.data[i]*(ulong) n.data[j]) +
+                              r2.data[t] + mcarry;
 
-                    r2.data[t] = (uint)(val & 0xFFFFFFFF);
+                    r2.data[t] = (uint) (val & 0xFFFFFFFF);
                     mcarry = (val >> 32);
                 }
 
                 if (t < kPlusOne)
-                    r2.data[t] = (uint)mcarry;
+                    r2.data[t] = (uint) mcarry;
             }
             r2.dataLength = kPlusOne;
             while (r2.dataLength > 1 && r2.data[r2.dataLength - 1] == 0)
                 r2.dataLength--;
 
             r1 -= r2;
-            if ((r1.data[maxLength - 1] & 0x80000000) != 0)        // negative
+            if ((r1.data[maxLength - 1] & 0x80000000) != 0) // negative
             {
-                BigInt val = new BigInt();
+                var val = new BigInt();
                 val.data[kPlusOne] = 0x00000001;
                 val.dataLength = kPlusOne + 1;
                 r1 += val;
@@ -1713,27 +1602,25 @@ namespace Tesla.Cryptography
         // Returns gcd(this, bi)
         //***********************************************************************
 
-        public BigInt Gcd(BigInt bi)
-        {
+        public BigInt Gcd(BigInt bi) {
             BigInt x;
             BigInt y;
 
-            if ((data[maxLength - 1] & 0x80000000) != 0)     // negative
+            if ((data[maxLength - 1] & 0x80000000) != 0) // negative
                 x = -this;
             else
                 x = this;
 
-            if ((bi.data[maxLength - 1] & 0x80000000) != 0)     // negative
+            if ((bi.data[maxLength - 1] & 0x80000000) != 0) // negative
                 y = -bi;
             else
                 y = bi;
 
-            BigInt g = y;
+            var g = y;
 
-            while (x.dataLength > 1 || (x.dataLength == 1 && x.data[0] != 0))
-            {
+            while (x.dataLength > 1 || (x.dataLength == 1 && x.data[0] != 0)) {
                 g = x;
-                x = y % x;
+                x = y%x;
                 y = g;
             }
 
@@ -1745,10 +1632,9 @@ namespace Tesla.Cryptography
         // Populates "this" with the specified amount of random bits
         //***********************************************************************
 
-        public void GenRandomBits(int bits, StrongNumberProvider rand)
-        {
-            int dwords = bits >> 5;
-            int remBits = bits & 0x1F;
+        public void GenRandomBits(int bits, StrongNumberProvider rand) {
+            var dwords = bits >> 5;
+            var remBits = bits & 0x1F;
 
             if (remBits != 0)
                 dwords++;
@@ -1756,18 +1642,17 @@ namespace Tesla.Cryptography
             if (dwords > maxLength)
                 throw (new ArithmeticException("Number of required bits > maxLength."));
 
-            for (int i = 0; i < dwords; i++)
-                data[i] = (uint)rand.NextUInt32();
+            for (var i = 0; i < dwords; i++)
+                data[i] = rand.NextUInt32();
 
-            for (int i = dwords; i < maxLength; i++)
+            for (var i = dwords; i < maxLength; i++)
                 data[i] = 0;
 
-            if (remBits != 0)
-            {
-                uint mask = (uint)(0x01 << (remBits - 1));
+            if (remBits != 0) {
+                var mask = (uint) (0x01 << (remBits - 1));
                 data[dwords - 1] |= mask;
 
-                mask = (uint)(0xFFFFFFFF >> (32 - remBits));
+                mask = 0xFFFFFFFF >> (32 - remBits);
                 data[dwords - 1] &= mask;
             }
             else
@@ -1790,17 +1675,15 @@ namespace Tesla.Cryptography
         //
         //***********************************************************************
 
-        public int BitCount()
-        {
+        public int BitCount() {
             while (dataLength > 1 && data[dataLength - 1] == 0)
                 dataLength--;
 
-            uint value = data[dataLength - 1];
-            uint mask = 0x80000000;
-            int bits = 32;
+            var value = data[dataLength - 1];
+            var mask = 0x80000000;
+            var bits = 32;
 
-            while (bits > 0 && (value & mask) == 0)
-            {
+            while (bits > 0 && (value & mask) == 0) {
                 bits--;
                 mask >>= 1;
             }
@@ -1831,46 +1714,43 @@ namespace Tesla.Cryptography
         //
         //***********************************************************************
 
-        public bool FermatLittleTest(int confidence)
-        {
+        public bool FermatLittleTest(int confidence) {
             BigInt thisVal;
-            if ((this.data[maxLength - 1] & 0x80000000) != 0)        // negative
+            if ((data[maxLength - 1] & 0x80000000) != 0) // negative
                 thisVal = -this;
             else
                 thisVal = this;
 
-            if (thisVal.dataLength == 1)
-            {
+            if (thisVal.dataLength == 1) {
                 // test small numbers
                 if (thisVal.data[0] == 0 || thisVal.data[0] == 1)
                     return false;
-                else if (thisVal.data[0] == 2 || thisVal.data[0] == 3)
+                if (thisVal.data[0] == 2 || thisVal.data[0] == 3)
                     return true;
             }
 
-            if ((thisVal.data[0] & 0x1) == 0)     // even numbers
+            if ((thisVal.data[0] & 0x1) == 0) // even numbers
                 return false;
 
-            int bits = thisVal.BitCount();
-            BigInt a = new BigInt();
-            BigInt p_sub1 = thisVal - (new BigInt(1));
-            StrongNumberProvider rand = new StrongNumberProvider();
+            var bits = thisVal.BitCount();
+            var a = new BigInt();
+            var p_sub1 = thisVal - (new BigInt(1));
+            var rand = new StrongNumberProvider();
 
-            for (int round = 0; round < confidence; round++)
-            {
-                bool done = false;
+            for (var round = 0; round < confidence; round++) {
+                var done = false;
 
-                while (!done)		// generate a < n
+                while (!done) // generate a < n
                 {
-                    int testBits = 0;
+                    var testBits = 0;
 
                     // make sure "a" has at least 2 bits
                     while (testBits < 2)
-                        testBits = rand.NextInt() * bits;
+                        testBits = rand.NextInt()*bits;
 
                     a.GenRandomBits(testBits, rand);
 
-                    int byteLen = a.dataLength;
+                    var byteLen = a.dataLength;
 
                     // make sure "a" is not 0
                     if (byteLen > 1 || (byteLen == 1 && a.data[0] != 1))
@@ -1878,19 +1758,18 @@ namespace Tesla.Cryptography
                 }
 
                 // check whether a factor exists (fix for version 1.03)
-                BigInt gcdTest = a.Gcd(thisVal);
+                var gcdTest = a.Gcd(thisVal);
                 if (gcdTest.dataLength == 1 && gcdTest.data[0] != 1)
                     return false;
 
                 // calculate a^(p-1) mod p
-                BigInt expResult = a.ModPow(p_sub1, thisVal);
+                var expResult = a.ModPow(p_sub1, thisVal);
 
-                int resultLen = expResult.dataLength;
+                var resultLen = expResult.dataLength;
 
                 // is NOT prime is a^(p-1) mod p != 1
 
-                if (resultLen > 1 || (resultLen == 1 && expResult.data[0] != 1))
-                {
+                if (resultLen > 1 || (resultLen == 1 && expResult.data[0] != 1)) {
                     //Console.WriteLine("a = " + a.ToString());
                     return false;
                 }
@@ -1921,40 +1800,35 @@ namespace Tesla.Cryptography
         //
         //***********************************************************************
 
-        public bool RabinMillerTest(int confidence)
-        {
+        public bool RabinMillerTest(int confidence) {
             BigInt thisVal;
-            if ((this.data[maxLength - 1] & 0x80000000) != 0)        // negative
+            if ((data[maxLength - 1] & 0x80000000) != 0) // negative
                 thisVal = -this;
             else
                 thisVal = this;
 
-            if (thisVal.dataLength == 1)
-            {
+            if (thisVal.dataLength == 1) {
                 // test small numbers
                 if (thisVal.data[0] == 0 || thisVal.data[0] == 1)
                     return false;
-                else if (thisVal.data[0] == 2 || thisVal.data[0] == 3)
+                if (thisVal.data[0] == 2 || thisVal.data[0] == 3)
                     return true;
             }
 
-            if ((thisVal.data[0] & 0x1) == 0)     // even numbers
+            if ((thisVal.data[0] & 0x1) == 0) // even numbers
                 return false;
 
 
             // calculate values of s and t
-            BigInt p_sub1 = thisVal - (new BigInt(1));
-            int s = 0;
+            var p_sub1 = thisVal - (new BigInt(1));
+            var s = 0;
 
-            for (int index = 0; index < p_sub1.dataLength; index++)
-            {
+            for (var index = 0; index < p_sub1.dataLength; index++) {
                 uint mask = 0x01;
 
-                for (int i = 0; i < 32; i++)
-                {
-                    if ((p_sub1.data[index] & mask) != 0)
-                    {
-                        index = p_sub1.dataLength;      // to break the outer loop
+                for (var i = 0; i < 32; i++) {
+                    if ((p_sub1.data[index] & mask) != 0) {
+                        index = p_sub1.dataLength; // to break the outer loop
                         break;
                     }
                     mask <<= 1;
@@ -1962,27 +1836,26 @@ namespace Tesla.Cryptography
                 }
             }
 
-            BigInt t = p_sub1 >> s;
+            var t = p_sub1 >> s;
 
-            int bits = thisVal.BitCount();
-            BigInt a = new BigInt();
-            StrongNumberProvider rand = new StrongNumberProvider();
+            var bits = thisVal.BitCount();
+            var a = new BigInt();
+            var rand = new StrongNumberProvider();
 
-            for (int round = 0; round < confidence; round++)
-            {
-                bool done = false;
+            for (var round = 0; round < confidence; round++) {
+                var done = false;
 
-                while (!done)		// generate a < n
+                while (!done) // generate a < n
                 {
-                    int testBits = 0;
+                    var testBits = 0;
 
                     // make sure "a" has at least 2 bits
                     while (testBits < 2)
-                        testBits = (int)(rand.NextSingle() * bits);
+                        testBits = (int) (rand.NextSingle()*bits);
 
                     a.GenRandomBits(testBits, rand);
 
-                    int byteLen = a.dataLength;
+                    var byteLen = a.dataLength;
 
                     // make sure "a" is not 0
                     if (byteLen > 1 || (byteLen == 1 && a.data[0] != 1))
@@ -1990,26 +1863,25 @@ namespace Tesla.Cryptography
                 }
 
                 // check whether a factor exists (fix for version 1.03)
-                BigInt gcdTest = a.Gcd(thisVal);
+                var gcdTest = a.Gcd(thisVal);
                 if (gcdTest.dataLength == 1 && gcdTest.data[0] != 1)
                     return false;
 
-                BigInt b = a.ModPow(t, thisVal);
+                var b = a.ModPow(t, thisVal);
 
-                bool result = false;
+                var result = false;
 
-                if (b.dataLength == 1 && b.data[0] == 1)         // a^t mod p = 1
+                if (b.dataLength == 1 && b.data[0] == 1) // a^t mod p = 1
                     result = true;
 
-                for (int j = 0; result == false && j < s; j++)
-                {
-                    if (b == p_sub1)         // a^((2^j)*t) mod p = p-1 for some 0 <= j <= s-1
+                for (var j = 0; result == false && j < s; j++) {
+                    if (b == p_sub1) // a^((2^j)*t) mod p = p-1 for some 0 <= j <= s-1
                     {
                         result = true;
                         break;
                     }
 
-                    b = (b * b) % thisVal;
+                    b = (b*b)%thisVal;
                 }
 
                 if (result == false)
@@ -2039,49 +1911,46 @@ namespace Tesla.Cryptography
         //
         //***********************************************************************
 
-        public bool SolovayStrassenTest(int confidence)
-        {
+        public bool SolovayStrassenTest(int confidence) {
             BigInt thisVal;
-            if ((this.data[maxLength - 1] & 0x80000000) != 0)        // negative
+            if ((data[maxLength - 1] & 0x80000000) != 0) // negative
                 thisVal = -this;
             else
                 thisVal = this;
 
-            if (thisVal.dataLength == 1)
-            {
+            if (thisVal.dataLength == 1) {
                 // test small numbers
                 if (thisVal.data[0] == 0 || thisVal.data[0] == 1)
                     return false;
-                else if (thisVal.data[0] == 2 || thisVal.data[0] == 3)
+                if (thisVal.data[0] == 2 || thisVal.data[0] == 3)
                     return true;
             }
 
-            if ((thisVal.data[0] & 0x1) == 0)     // even numbers
+            if ((thisVal.data[0] & 0x1) == 0) // even numbers
                 return false;
 
 
-            int bits = thisVal.BitCount();
-            BigInt a = new BigInt();
-            BigInt p_sub1 = thisVal - 1;
-            BigInt p_sub1_shift = p_sub1 >> 1;
+            var bits = thisVal.BitCount();
+            var a = new BigInt();
+            var p_sub1 = thisVal - 1;
+            var p_sub1_shift = p_sub1 >> 1;
 
-            StrongNumberProvider rand = new StrongNumberProvider();
+            var rand = new StrongNumberProvider();
 
-            for (int round = 0; round < confidence; round++)
-            {
-                bool done = false;
+            for (var round = 0; round < confidence; round++) {
+                var done = false;
 
-                while (!done)		// generate a < n
+                while (!done) // generate a < n
                 {
-                    int testBits = 0;
+                    var testBits = 0;
 
                     // make sure "a" has at least 2 bits
                     while (testBits < 2)
-                        testBits = (int)(rand.NextSingle() * bits);
+                        testBits = (int) (rand.NextSingle()*bits);
 
                     a.GenRandomBits(testBits, rand);
 
-                    int byteLen = a.dataLength;
+                    var byteLen = a.dataLength;
 
                     // make sure "a" is not 0
                     if (byteLen > 1 || (byteLen == 1 && a.data[0] != 1))
@@ -2089,13 +1958,13 @@ namespace Tesla.Cryptography
                 }
 
                 // check whether a factor exists (fix for version 1.03)
-                BigInt gcdTest = a.Gcd(thisVal);
+                var gcdTest = a.Gcd(thisVal);
                 if (gcdTest.dataLength == 1 && gcdTest.data[0] != 1)
                     return false;
 
                 // calculate a^((p-1)/2) mod p
 
-                BigInt expResult = a.ModPow(p_sub1_shift, thisVal);
+                var expResult = a.ModPow(p_sub1_shift, thisVal);
                 if (expResult == p_sub1)
                     expResult = -1;
 
@@ -2128,80 +1997,71 @@ namespace Tesla.Cryptography
         // Otherwise, returns False indicating that number is composite.
         //***********************************************************************
 
-        public bool LucasStrongTest()
-        {
+        public bool LucasStrongTest() {
             BigInt thisVal;
-            if ((this.data[maxLength - 1] & 0x80000000) != 0)        // negative
+            if ((data[maxLength - 1] & 0x80000000) != 0) // negative
                 thisVal = -this;
             else
                 thisVal = this;
 
-            if (thisVal.dataLength == 1)
-            {
+            if (thisVal.dataLength == 1) {
                 // test small numbers
                 if (thisVal.data[0] == 0 || thisVal.data[0] == 1)
                     return false;
-                else if (thisVal.data[0] == 2 || thisVal.data[0] == 3)
+                if (thisVal.data[0] == 2 || thisVal.data[0] == 3)
                     return true;
             }
 
-            if ((thisVal.data[0] & 0x1) == 0)     // even numbers
+            if ((thisVal.data[0] & 0x1) == 0) // even numbers
                 return false;
 
             return LucasStrongTestHelper(thisVal);
         }
 
 
-        private bool LucasStrongTestHelper(BigInt thisVal)
-        {
+        private bool LucasStrongTestHelper(BigInt thisVal) {
             // Do the test (selects D based on Selfridge)
             // Let D be the first element of the sequence
             // 5, -7, 9, -11, 13, ... for which J(D,n) = -1
             // Let P = 1, Q = (1-D) / 4
 
             long D = 5, sign = -1, dCount = 0;
-            bool done = false;
+            var done = false;
 
-            while (!done)
-            {
-                int Jresult = BigInt.Jacobi(D, thisVal);
+            while (!done) {
+                var Jresult = Jacobi(D, thisVal);
 
                 if (Jresult == -1)
-                    done = true;    // J(D, this) = 1
-                else
-                {
-                    if (Jresult == 0 && Math.Abs(D) < thisVal)       // divisor found
+                    done = true; // J(D, this) = 1
+                else {
+                    if (Jresult == 0 && Math.Abs(D) < thisVal) // divisor found
                         return false;
 
-                    if (dCount == 20)
-                    {
+                    if (dCount == 20) {
                         // check for square
-                        BigInt root = thisVal.Sqrt();
-                        if (root * root == thisVal)
+                        var root = thisVal.Sqrt();
+                        if (root*root == thisVal)
                             return false;
                     }
 
                     //Console.WriteLine(D);
-                    D = (Math.Abs(D) + 2) * sign;
+                    D = (Math.Abs(D) + 2)*sign;
                     sign = -sign;
                 }
                 dCount++;
             }
 
-            long Q = (1 - D) >> 2;
+            var Q = (1 - D) >> 2;
 
-            BigInt p_add1 = thisVal + 1;
-            int s = 0;
+            var p_add1 = thisVal + 1;
+            var s = 0;
 
-            for (int index = 0; index < p_add1.dataLength; index++)
-            {
+            for (var index = 0; index < p_add1.dataLength; index++) {
                 uint mask = 0x01;
 
-                for (int i = 0; i < 32; i++)
-                {
-                    if ((p_add1.data[index] & mask) != 0)
-                    {
-                        index = p_add1.dataLength;      // to break the outer loop
+                for (var i = 0; i < 32; i++) {
+                    if ((p_add1.data[index] & mask) != 0) {
+                        index = p_add1.dataLength; // to break the outer loop
                         break;
                     }
                     mask <<= 1;
@@ -2209,35 +2069,32 @@ namespace Tesla.Cryptography
                 }
             }
 
-            BigInt t = p_add1 >> s;
+            var t = p_add1 >> s;
 
             // calculate constant = b^(2k) / m
             // for Barrett Reduction
-            BigInt constant = new BigInt();
+            var constant = new BigInt();
 
-            int nLen = thisVal.dataLength << 1;
+            var nLen = thisVal.dataLength << 1;
             constant.data[nLen] = 0x00000001;
             constant.dataLength = nLen + 1;
 
-            constant = constant / thisVal;
+            constant = constant/thisVal;
 
-            BigInt[] lucas = LucasSequenceHelper(1, Q, t, thisVal, constant, 0);
-            bool isPrime = false;
+            var lucas = LucasSequenceHelper(1, Q, t, thisVal, constant, 0);
+            var isPrime = false;
 
             if ((lucas[0].dataLength == 1 && lucas[0].data[0] == 0) ||
-               (lucas[1].dataLength == 1 && lucas[1].data[0] == 0))
-            {
+                (lucas[1].dataLength == 1 && lucas[1].data[0] == 0)) {
                 // u(t) = 0 or V(t) = 0
                 isPrime = true;
             }
 
-            for (int i = 1; i < s; i++)
-            {
-                if (!isPrime)
-                {
+            for (var i = 1; i < s; i++) {
+                if (!isPrime) {
                     // doubling of index
-                    lucas[1] = thisVal.BarrettReduction(lucas[1] * lucas[1], thisVal, constant);
-                    lucas[1] = (lucas[1] - (lucas[2] << 1)) % thisVal;
+                    lucas[1] = thisVal.BarrettReduction(lucas[1]*lucas[1], thisVal, constant);
+                    lucas[1] = (lucas[1] - (lucas[2] << 1))%thisVal;
 
                     //lucas[1] = ((lucas[1] * lucas[1]) - (lucas[2] << 1)) % thisVal;
 
@@ -2245,22 +2102,22 @@ namespace Tesla.Cryptography
                         isPrime = true;
                 }
 
-                lucas[2] = thisVal.BarrettReduction(lucas[2] * lucas[2], thisVal, constant);     //Q^k
+                lucas[2] = thisVal.BarrettReduction(lucas[2]*lucas[2], thisVal, constant); //Q^k
             }
 
 
-            if (isPrime)     // additional checks for composite numbers
+            if (isPrime) // additional checks for composite numbers
             {
                 // If n is prime and gcd(n, Q) == 1, then
                 // Q^((n+1)/2) = Q * Q^((n-1)/2) is congruent to (Q * J(Q, n)) mod n
 
-                BigInt g = thisVal.Gcd(Q);
-                if (g.dataLength == 1 && g.data[0] == 1)         // gcd(this, Q) == 1
+                var g = thisVal.Gcd(Q);
+                if (g.dataLength == 1 && g.data[0] == 1) // gcd(this, Q) == 1
                 {
                     if ((lucas[2].data[maxLength - 1] & 0x80000000) != 0)
                         lucas[2] += thisVal;
 
-                    BigInt temp = (Q * BigInt.Jacobi(Q, thisVal)) % thisVal;
+                    var temp = (Q*Jacobi(Q, thisVal))%thisVal;
                     if ((temp.data[maxLength - 1] & 0x80000000) != 0)
                         temp += thisVal;
 
@@ -2281,26 +2138,23 @@ namespace Tesla.Cryptography
         // Returns true if number is probably prime.
         //***********************************************************************
 
-        public bool IsProbablePrime(int confidence)
-        {
+        public bool IsProbablePrime(int confidence) {
             BigInt thisVal;
-            if ((this.data[maxLength - 1] & 0x80000000) != 0)        // negative
+            if ((data[maxLength - 1] & 0x80000000) != 0) // negative
                 thisVal = -this;
             else
                 thisVal = this;
 
 
             // test for divisibility by primes < 2000
-            for (int p = 0; p < primesBelow2000.Length; p++)
-            {
+            for (var p = 0; p < primesBelow2000.Length; p++) {
                 BigInt divisor = primesBelow2000[p];
 
                 if (divisor >= thisVal)
                     break;
 
-                BigInt resultNum = thisVal % divisor;
-                if (resultNum.IntValue() == 0)
-                {
+                var resultNum = thisVal%divisor;
+                if (resultNum.IntValue() == 0) {
                     /*
     Console.WriteLine("Not prime!  Divisible by {0}\n",
                                       primesBelow2000[p]);
@@ -2311,11 +2165,8 @@ namespace Tesla.Cryptography
 
             if (thisVal.RabinMillerTest(confidence))
                 return true;
-            else
-            {
-                //Console.WriteLine("Not prime!  Failed primality test\n");
-                return false;
-            }
+            //Console.WriteLine("Not prime!  Failed primality test\n");
+            return false;
         }
 
 
@@ -2341,38 +2192,34 @@ namespace Tesla.Cryptography
         //
         //***********************************************************************
 
-        public bool IsProbablePrime()
-        {
+        public bool IsProbablePrime() {
             BigInt thisVal;
-            if ((this.data[maxLength - 1] & 0x80000000) != 0)        // negative
+            if ((data[maxLength - 1] & 0x80000000) != 0) // negative
                 thisVal = -this;
             else
                 thisVal = this;
 
-            if (thisVal.dataLength == 1)
-            {
+            if (thisVal.dataLength == 1) {
                 // test small numbers
                 if (thisVal.data[0] == 0 || thisVal.data[0] == 1)
                     return false;
-                else if (thisVal.data[0] == 2 || thisVal.data[0] == 3)
+                if (thisVal.data[0] == 2 || thisVal.data[0] == 3)
                     return true;
             }
 
-            if ((thisVal.data[0] & 0x1) == 0)     // even numbers
+            if ((thisVal.data[0] & 0x1) == 0) // even numbers
                 return false;
 
 
             // test for divisibility by primes < 2000
-            for (int p = 0; p < primesBelow2000.Length; p++)
-            {
+            for (var p = 0; p < primesBelow2000.Length; p++) {
                 BigInt divisor = primesBelow2000[p];
 
                 if (divisor >= thisVal)
                     break;
 
-                BigInt resultNum = thisVal % divisor;
-                if (resultNum.IntValue() == 0)
-                {
+                var resultNum = thisVal%divisor;
+                if (resultNum.IntValue() == 0) {
                     //Console.WriteLine("Not prime!  Divisible by {0}\n",
                     //                  primesBelow2000[p]);
 
@@ -2383,18 +2230,15 @@ namespace Tesla.Cryptography
             // Perform BASE 2 Rabin-Miller Test
 
             // calculate values of s and t
-            BigInt p_sub1 = thisVal - (new BigInt(1));
-            int s = 0;
+            var p_sub1 = thisVal - (new BigInt(1));
+            var s = 0;
 
-            for (int index = 0; index < p_sub1.dataLength; index++)
-            {
+            for (var index = 0; index < p_sub1.dataLength; index++) {
                 uint mask = 0x01;
 
-                for (int i = 0; i < 32; i++)
-                {
-                    if ((p_sub1.data[index] & mask) != 0)
-                    {
-                        index = p_sub1.dataLength;      // to break the outer loop
+                for (var i = 0; i < 32; i++) {
+                    if ((p_sub1.data[index] & mask) != 0) {
+                        index = p_sub1.dataLength; // to break the outer loop
                         break;
                     }
                     mask <<= 1;
@@ -2402,27 +2246,26 @@ namespace Tesla.Cryptography
                 }
             }
 
-            BigInt t = p_sub1 >> s;
+            var t = p_sub1 >> s;
 
-            int bits = thisVal.BitCount();
+            var bits = thisVal.BitCount();
             BigInt a = 2;
 
             // b = a^t mod p
-            BigInt b = a.ModPow(t, thisVal);
-            bool result = false;
+            var b = a.ModPow(t, thisVal);
+            var result = false;
 
-            if (b.dataLength == 1 && b.data[0] == 1)         // a^t mod p = 1
+            if (b.dataLength == 1 && b.data[0] == 1) // a^t mod p = 1
                 result = true;
 
-            for (int j = 0; result == false && j < s; j++)
-            {
-                if (b == p_sub1)         // a^((2^j)*t) mod p = p-1 for some 0 <= j <= s-1
+            for (var j = 0; result == false && j < s; j++) {
+                if (b == p_sub1) // a^((2^j)*t) mod p = p-1 for some 0 <= j <= s-1
                 {
                     result = true;
                     break;
                 }
 
-                b = (b * b) % thisVal;
+                b = (b*b)%thisVal;
             }
 
             // if number is strong pseudoprime to base 2, then do a strong lucas test
@@ -2433,14 +2276,12 @@ namespace Tesla.Cryptography
         }
 
 
-
         //***********************************************************************
         // Returns the lowest 4 bytes of the BigInteger as an int.
         //***********************************************************************
 
-        public int IntValue()
-        {
-            return (int)data[0];
+        public int IntValue() {
+            return (int) data[0];
         }
 
 
@@ -2448,19 +2289,17 @@ namespace Tesla.Cryptography
         // Returns the lowest 8 bytes of the BigInteger as a long.
         //***********************************************************************
 
-        public long LongValue()
-        {
+        public long LongValue() {
             long val = 0;
 
-            val = (long)data[0];
-            try
-            {       // exception if maxLength = 1
-                val |= (long)data[1] << 32;
+            val = data[0];
+            try {
+                // exception if maxLength = 1
+                val |= (long) data[1] << 32;
             }
-            catch (Exception)
-            {
+            catch (Exception) {
                 if ((data[0] & 0x80000000) != 0) // negative
-                    val = (int)data[0];
+                    val = (int) data[0];
             }
 
             return val;
@@ -2472,34 +2311,28 @@ namespace Tesla.Cryptography
         // Algorithm adapted from [3] and [4] with some optimizations
         //***********************************************************************
 
-        public static int Jacobi(BigInt a, BigInt b)
-        {
+        public static int Jacobi(BigInt a, BigInt b) {
             // Jacobi defined only for odd integers
             if ((b.data[0] & 0x1) == 0)
                 throw (new ArgumentException("Jacobi defined only for odd integers."));
 
             if (a >= b) a %= b;
-            if (a.dataLength == 1 && a.data[0] == 0) return 0;  // a == 0
-            if (a.dataLength == 1 && a.data[0] == 1) return 1;  // a == 1
+            if (a.dataLength == 1 && a.data[0] == 0) return 0; // a == 0
+            if (a.dataLength == 1 && a.data[0] == 1) return 1; // a == 1
 
-            if (a < 0)
-            {
-                if ((((b - 1).data[0]) & 0x2) == 0)       //if( (((b-1) >> 1).data[0] & 0x1) == 0)
+            if (a < 0) {
+                if ((((b - 1).data[0]) & 0x2) == 0) //if( (((b-1) >> 1).data[0] & 0x1) == 0)
                     return Jacobi(-a, b);
-                else
-                    return -Jacobi(-a, b);
+                return -Jacobi(-a, b);
             }
 
-            int e = 0;
-            for (int index = 0; index < a.dataLength; index++)
-            {
+            var e = 0;
+            for (var index = 0; index < a.dataLength; index++) {
                 uint mask = 0x01;
 
-                for (int i = 0; i < 32; i++)
-                {
-                    if ((a.data[index] & mask) != 0)
-                    {
-                        index = a.dataLength;      // to break the outer loop
+                for (var i = 0; i < 32; i++) {
+                    if ((a.data[index] & mask) != 0) {
+                        index = a.dataLength; // to break the outer loop
                         break;
                     }
                     mask <<= 1;
@@ -2507,9 +2340,9 @@ namespace Tesla.Cryptography
                 }
             }
 
-            BigInt a1 = a >> e;
+            var a1 = a >> e;
 
-            int s = 1;
+            var s = 1;
             if ((e & 0x1) != 0 && ((b.data[0] & 0x7) == 3 || (b.data[0] & 0x7) == 5))
                 s = -1;
 
@@ -2518,25 +2351,21 @@ namespace Tesla.Cryptography
 
             if (a1.dataLength == 1 && a1.data[0] == 1)
                 return s;
-            else
-                return (s * Jacobi(b % a1, a1));
+            return (s*Jacobi(b%a1, a1));
         }
-
 
 
         //***********************************************************************
         // Generates a positive BigInteger that is probably prime.
         //***********************************************************************
 
-        public static BigInt GenPseudoPrime(int bits, int confidence, StrongNumberProvider rand)
-        {
-            BigInt result = new BigInt();
-            bool done = false;
+        public static BigInt GenPseudoPrime(int bits, int confidence, StrongNumberProvider rand) {
+            var result = new BigInt();
+            var done = false;
 
-            while (!done)
-            {
+            while (!done) {
                 result.GenRandomBits(bits, rand);
-                result.data[0] |= 0x01;		// make it odd
+                result.data[0] |= 0x01; // make it odd
 
                 // prime test
                 done = result.IsProbablePrime(confidence);
@@ -2550,18 +2379,16 @@ namespace Tesla.Cryptography
         // that gcd(number, this) = 1
         //***********************************************************************
 
-        public BigInt GenCoPrime(int bits, StrongNumberProvider rand)
-        {
-            bool done = false;
-            BigInt result = new BigInt();
+        public BigInt GenCoPrime(int bits, StrongNumberProvider rand) {
+            var done = false;
+            var result = new BigInt();
 
-            while (!done)
-            {
+            while (!done) {
                 result.GenRandomBits(bits, rand);
                 //Console.WriteLine(result.ToString(16));
 
                 // gcd test
-                BigInt g = result.Gcd(this);
+                var g = result.Gcd(this);
                 if (g.dataLength == 1 && g.data[0] == 1)
                     done = true;
             }
@@ -2575,25 +2402,22 @@ namespace Tesla.Cryptography
         // the inverse does not exist.  (i.e. gcd(this, modulus) != 1)
         //***********************************************************************
 
-        public BigInt ModInverse(BigInt modulus)
-        {
-            BigInt[] p = { 0, 1 };
-            BigInt[] q = new BigInt[2];    // quotients
-            BigInt[] r = { 0, 0 };             // remainders
+        public BigInt ModInverse(BigInt modulus) {
+            BigInt[] p = {0, 1};
+            var q = new BigInt[2]; // quotients
+            BigInt[] r = {0, 0}; // remainders
 
-            int step = 0;
+            var step = 0;
 
-            BigInt a = modulus;
-            BigInt b = this;
+            var a = modulus;
+            var b = this;
 
-            while (b.dataLength > 1 || (b.dataLength == 1 && b.data[0] != 0))
-            {
-                BigInt quotient = new BigInt();
-                BigInt remainder = new BigInt();
+            while (b.dataLength > 1 || (b.dataLength == 1 && b.data[0] != 0)) {
+                var quotient = new BigInt();
+                var remainder = new BigInt();
 
-                if (step > 1)
-                {
-                    BigInt pval = (p[0] - (p[1] * q[0])) % modulus;
+                if (step > 1) {
+                    var pval = (p[0] - (p[1]*q[0]))%modulus;
                     p[0] = p[1];
                     p[1] = pval;
                 }
@@ -2612,7 +2436,8 @@ namespace Tesla.Cryptography
 
                 q[0] = q[1];
                 r[0] = r[1];
-                q[1] = quotient; r[1] = remainder;
+                q[1] = quotient;
+                r[1] = remainder;
 
                 a = b;
                 b = remainder;
@@ -2623,10 +2448,10 @@ namespace Tesla.Cryptography
             if (r[0].dataLength > 1 || (r[0].dataLength == 1 && r[0].data[0] != 1))
                 throw (new ArithmeticException("No inverse!"));
 
-            BigInt result = ((p[0] - (p[1] * q[0])) % modulus);
+            var result = ((p[0] - (p[1]*q[0]))%modulus);
 
             if ((result.data[maxLength - 1] & 0x80000000) != 0)
-                result += modulus;  // get the least positive modulus
+                result += modulus; // get the least positive modulus
 
             return result;
         }
@@ -2637,40 +2462,38 @@ namespace Tesla.Cryptography
         // index contains the MSB.
         //***********************************************************************
 
-        public byte[] GetBytes()
-        {
-            int numBits = BitCount();
+        public byte[] GetBytes() {
+            var numBits = BitCount();
 
-            int numBytes = numBits >> 3;
+            var numBytes = numBits >> 3;
             if ((numBits & 0x7) != 0)
                 numBytes++;
 
-            byte[] result = new byte[numBytes];
+            var result = new byte[numBytes];
 
             //Console.WriteLine(result.Length);
 
-            int pos = 0;
+            var pos = 0;
             uint tempVal, val = data[dataLength - 1];
 
             if ((tempVal = (val >> 24 & 0xFF)) != 0)
-                result[pos++] = (byte)tempVal;
+                result[pos++] = (byte) tempVal;
             if ((tempVal = (val >> 16 & 0xFF)) != 0)
-                result[pos++] = (byte)tempVal;
+                result[pos++] = (byte) tempVal;
             if ((tempVal = (val >> 8 & 0xFF)) != 0)
-                result[pos++] = (byte)tempVal;
+                result[pos++] = (byte) tempVal;
             if ((tempVal = (val & 0xFF)) != 0)
-                result[pos++] = (byte)tempVal;
+                result[pos++] = (byte) tempVal;
 
-            for (int i = dataLength - 2; i >= 0; i--, pos += 4)
-            {
+            for (var i = dataLength - 2; i >= 0; i--, pos += 4) {
                 val = data[i];
-                result[pos + 3] = (byte)(val & 0xFF);
+                result[pos + 3] = (byte) (val & 0xFF);
                 val >>= 8;
-                result[pos + 2] = (byte)(val & 0xFF);
+                result[pos + 2] = (byte) (val & 0xFF);
                 val >>= 8;
-                result[pos + 1] = (byte)(val & 0xFF);
+                result[pos + 1] = (byte) (val & 0xFF);
                 val >>= 8;
-                result[pos] = (byte)(val & 0xFF);
+                result[pos] = (byte) (val & 0xFF);
             }
 
             return result;
@@ -2682,16 +2505,15 @@ namespace Tesla.Cryptography
         // The Least Significant Bit position is 0.
         //***********************************************************************
 
-        public void SetBit(uint bitNum)
-        {
-            uint bytePos = bitNum >> 5;             // divide by 32
-            byte bitPos = (byte)(bitNum & 0x1F);    // get the lowest 5 bits
+        public void SetBit(uint bitNum) {
+            var bytePos = bitNum >> 5; // divide by 32
+            var bitPos = (byte) (bitNum & 0x1F); // get the lowest 5 bits
 
-            uint mask = (uint)1 << bitPos;
-            this.data[bytePos] |= mask;
+            var mask = (uint) 1 << bitPos;
+            data[bytePos] |= mask;
 
-            if (bytePos >= this.dataLength)
-                this.dataLength = (int)bytePos + 1;
+            if (bytePos >= dataLength)
+                dataLength = (int) bytePos + 1;
         }
 
 
@@ -2700,21 +2522,19 @@ namespace Tesla.Cryptography
         // The Least Significant Bit position is 0.
         //***********************************************************************
 
-        public void UnsetBit(uint bitNum)
-        {
-            uint bytePos = bitNum >> 5;
+        public void UnsetBit(uint bitNum) {
+            var bytePos = bitNum >> 5;
 
-            if (bytePos < this.dataLength)
-            {
-                byte bitPos = (byte)(bitNum & 0x1F);
+            if (bytePos < dataLength) {
+                var bitPos = (byte) (bitNum & 0x1F);
 
-                uint mask = (uint)1 << bitPos;
-                uint mask2 = 0xFFFFFFFF ^ mask;
+                var mask = (uint) 1 << bitPos;
+                var mask2 = 0xFFFFFFFF ^ mask;
 
-                this.data[bytePos] &= mask2;
+                data[bytePos] &= mask2;
 
-                if (this.dataLength > 1 && this.data[this.dataLength - 1] == 0)
-                    this.dataLength--;
+                if (dataLength > 1 && data[dataLength - 1] == 0)
+                    dataLength--;
             }
         }
 
@@ -2728,39 +2548,35 @@ namespace Tesla.Cryptography
         //
         //***********************************************************************
 
-        public BigInt Sqrt()
-        {
-            uint numBits = (uint)this.BitCount();
+        public BigInt Sqrt() {
+            var numBits = (uint) BitCount();
 
-            if ((numBits & 0x1) != 0)        // odd number of bits
+            if ((numBits & 0x1) != 0) // odd number of bits
                 numBits = (numBits >> 1) + 1;
             else
                 numBits = (numBits >> 1);
 
-            uint bytePos = numBits >> 5;
-            byte bitPos = (byte)(numBits & 0x1F);
+            var bytePos = numBits >> 5;
+            var bitPos = (byte) (numBits & 0x1F);
 
             uint mask;
 
-            BigInt result = new BigInt();
+            var result = new BigInt();
             if (bitPos == 0)
                 mask = 0x80000000;
-            else
-            {
-                mask = (uint)1 << bitPos;
+            else {
+                mask = (uint) 1 << bitPos;
                 bytePos++;
             }
-            result.dataLength = (int)bytePos;
+            result.dataLength = (int) bytePos;
 
-            for (int i = (int)bytePos - 1; i >= 0; i--)
-            {
-                while (mask != 0)
-                {
+            for (var i = (int) bytePos - 1; i >= 0; i--) {
+                while (mask != 0) {
                     // guess
                     result.data[i] ^= mask;
 
                     // undo the guess if its square is larger than this
-                    if ((result * result) > this)
+                    if ((result*result) > this)
                         result.data[i] ^= mask;
 
                     mask >>= 1;
@@ -2804,38 +2620,35 @@ namespace Tesla.Cryptography
         //***********************************************************************
 
         public static BigInt[] LucasSequence(BigInt P, BigInt Q,
-                                                 BigInt k, BigInt n)
-        {
-            if (k.dataLength == 1 && k.data[0] == 0)
-            {
-                BigInt[] result = new BigInt[3];
+            BigInt k, BigInt n) {
+            if (k.dataLength == 1 && k.data[0] == 0) {
+                var result = new BigInt[3];
 
-                result[0] = 0; result[1] = 2 % n; result[2] = 1 % n;
+                result[0] = 0;
+                result[1] = 2%n;
+                result[2] = 1%n;
                 return result;
             }
 
             // calculate constant = b^(2k) / m
             // for Barrett Reduction
-            BigInt constant = new BigInt();
+            var constant = new BigInt();
 
-            int nLen = n.dataLength << 1;
+            var nLen = n.dataLength << 1;
             constant.data[nLen] = 0x00000001;
             constant.dataLength = nLen + 1;
 
-            constant = constant / n;
+            constant = constant/n;
 
             // calculate values of s and t
-            int s = 0;
+            var s = 0;
 
-            for (int index = 0; index < k.dataLength; index++)
-            {
+            for (var index = 0; index < k.dataLength; index++) {
                 uint mask = 0x01;
 
-                for (int i = 0; i < 32; i++)
-                {
-                    if ((k.data[index] & mask) != 0)
-                    {
-                        index = k.dataLength;      // to break the outer loop
+                for (var i = 0; i < 32; i++) {
+                    if ((k.data[index] & mask) != 0) {
+                        index = k.dataLength; // to break the outer loop
                         break;
                     }
                     mask <<= 1;
@@ -2843,7 +2656,7 @@ namespace Tesla.Cryptography
                 }
             }
 
-            BigInt t = k >> s;
+            var t = k >> s;
 
             //Console.WriteLine("s = " + s + " t = " + t);
             return LucasSequenceHelper(P, Q, t, n, constant, s);
@@ -2858,64 +2671,62 @@ namespace Tesla.Cryptography
         //***********************************************************************
 
         private static BigInt[] LucasSequenceHelper(BigInt P, BigInt Q,
-                                                        BigInt k, BigInt n,
-                                                        BigInt constant, int s)
-        {
-            BigInt[] result = new BigInt[3];
+            BigInt k, BigInt n,
+            BigInt constant, int s) {
+            var result = new BigInt[3];
 
             if ((k.data[0] & 0x00000001) == 0)
                 throw (new ArgumentException("Argument k must be odd."));
 
-            int numbits = k.BitCount();
-            uint mask = (uint)0x1 << ((numbits & 0x1F) - 1);
+            var numbits = k.BitCount();
+            var mask = (uint) 0x1 << ((numbits & 0x1F) - 1);
 
             // v = v0, v1 = v1, u1 = u1, Q_k = Q^0
 
-            BigInt v = 2 % n, Q_k = 1 % n,
-                       v1 = P % n, u1 = Q_k;
-            bool flag = true;
+            BigInt v = 2%n,
+                Q_k = 1%n,
+                v1 = P%n,
+                u1 = Q_k;
+            var flag = true;
 
-            for (int i = k.dataLength - 1; i >= 0; i--)     // iterate on the binary expansion of k
+            for (var i = k.dataLength - 1; i >= 0; i--) // iterate on the binary expansion of k
             {
                 //Console.WriteLine("round");
-                while (mask != 0)
-                {
-                    if (i == 0 && mask == 0x00000001)        // last bit
+                while (mask != 0) {
+                    if (i == 0 && mask == 0x00000001) // last bit
                         break;
 
-                    if ((k.data[i] & mask) != 0)             // bit is set
+                    if ((k.data[i] & mask) != 0) // bit is set
                     {
                         // index doubling with addition
 
-                        u1 = (u1 * v1) % n;
+                        u1 = (u1*v1)%n;
 
-                        v = ((v * v1) - (P * Q_k)) % n;
-                        v1 = n.BarrettReduction(v1 * v1, n, constant);
-                        v1 = (v1 - ((Q_k * Q) << 1)) % n;
+                        v = ((v*v1) - (P*Q_k))%n;
+                        v1 = n.BarrettReduction(v1*v1, n, constant);
+                        v1 = (v1 - ((Q_k*Q) << 1))%n;
 
                         if (flag)
                             flag = false;
                         else
-                            Q_k = n.BarrettReduction(Q_k * Q_k, n, constant);
+                            Q_k = n.BarrettReduction(Q_k*Q_k, n, constant);
 
-                        Q_k = (Q_k * Q) % n;
+                        Q_k = (Q_k*Q)%n;
                     }
-                    else
-                    {
+                    else {
                         // index doubling
-                        u1 = ((u1 * v) - Q_k) % n;
+                        u1 = ((u1*v) - Q_k)%n;
 
-                        v1 = ((v * v1) - (P * Q_k)) % n;
-                        v = n.BarrettReduction(v * v, n, constant);
-                        v = (v - (Q_k << 1)) % n;
+                        v1 = ((v*v1) - (P*Q_k))%n;
+                        v = n.BarrettReduction(v*v, n, constant);
+                        v = (v - (Q_k << 1))%n;
 
-                        if (flag)
-                        {
-                            Q_k = Q % n;
+                        if (flag) {
+                            Q_k = Q%n;
                             flag = false;
                         }
                         else
-                            Q_k = n.BarrettReduction(Q_k * Q_k, n, constant);
+                            Q_k = n.BarrettReduction(Q_k*Q_k, n, constant);
                     }
 
                     mask >>= 1;
@@ -2926,29 +2737,27 @@ namespace Tesla.Cryptography
             // at this point u1 = u(n+1) and v = v(n)
             // since the last bit always 1, we need to transform u1 to u(2n+1) and v to v(2n+1)
 
-            u1 = ((u1 * v) - Q_k) % n;
-            v = ((v * v1) - (P * Q_k)) % n;
+            u1 = ((u1*v) - Q_k)%n;
+            v = ((v*v1) - (P*Q_k))%n;
             if (flag)
                 flag = false;
             else
-                Q_k = n.BarrettReduction(Q_k * Q_k, n, constant);
+                Q_k = n.BarrettReduction(Q_k*Q_k, n, constant);
 
-            Q_k = (Q_k * Q) % n;
+            Q_k = (Q_k*Q)%n;
 
 
-            for (int i = 0; i < s; i++)
-            {
+            for (var i = 0; i < s; i++) {
                 // index doubling
-                u1 = (u1 * v) % n;
-                v = ((v * v) - (Q_k << 1)) % n;
+                u1 = (u1*v)%n;
+                v = ((v*v) - (Q_k << 1))%n;
 
-                if (flag)
-                {
-                    Q_k = Q % n;
+                if (flag) {
+                    Q_k = Q%n;
                     flag = false;
                 }
                 else
-                    Q_k = n.BarrettReduction(Q_k * Q_k, n, constant);
+                    Q_k = n.BarrettReduction(Q_k*Q_k, n, constant);
             }
 
             result[0] = u1;
@@ -2957,17 +2766,5 @@ namespace Tesla.Cryptography
 
             return result;
         }
-
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-            data = new uint[0];
-            data = null;
-            GC.Collect();
-            GC.Collect();
-        }
-
-        #endregion
     }
 }

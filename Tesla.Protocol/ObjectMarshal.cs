@@ -1,15 +1,11 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
-namespace Tesla.Protocol
-{
-    public static class ObjectMarshal
-    {
+namespace Tesla.Protocol {
+    public static class ObjectMarshal {
         public static byte[] BytesFromStructure<T>(T structure)
-            where T : struct
-        {
+            where T : struct {
             var size = Marshal.SizeOf(structure);
-            var buffer = new Byte[size];
+            var buffer = new byte[size];
             var ptr = Marshal.AllocHGlobal(size);
 
             Marshal.StructureToPtr(structure, ptr, true);
@@ -20,8 +16,7 @@ namespace Tesla.Protocol
         }
 
         public static T StructureFromBytes<T>(byte[] data)
-            where T : struct
-        {
+            where T : struct {
             var ptr = GCHandle.Alloc(data, GCHandleType.Pinned);
             var result = (T) Marshal.PtrToStructure(ptr.AddrOfPinnedObject(), typeof (T));
             ptr.Free();

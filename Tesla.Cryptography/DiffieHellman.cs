@@ -2,66 +2,53 @@
 using System.IO;
 using System.Security.Cryptography;
 
-namespace Tesla.Cryptography
-{
+namespace Tesla.Cryptography {
     public class DiffieHellman
-        : IDisposable
-    {
+        : IDisposable {
         protected static readonly StrongNumberProvider StrongRng = new StrongNumberProvider();
-
-        protected Stream InnerStream;
-        protected int NumberOfBits;
         protected bool CloseStream;
-
-        protected BigInt PublicPrime;
-        protected BigInt PublicBase;
-        protected BigInt PrivateKey;
-        protected BigInt PublicKey;
 
         protected HashAlgorithm HashAlgorithm;
 
-        public byte[] Key { get; protected set; }
+        protected Stream InnerStream;
+        protected int NumberOfBits;
+        protected BigInt PrivateKey;
+        protected BigInt PublicBase;
+        protected BigInt PublicKey;
 
-        public DiffieHellman(Stream stream, int numberOfBits = 256, HashAlgorithm hashAlgorithm = null, bool closeStream = false)
-        {
-            if (!(stream.CanRead && stream.CanWrite))
-            {
+        protected BigInt PublicPrime;
+
+        public DiffieHellman(Stream stream, int numberOfBits = 256, HashAlgorithm hashAlgorithm = null,
+            bool closeStream = false) {
+            if (!(stream.CanRead && stream.CanWrite)) {
                 throw new ArgumentException("Provided stream does not support Read and/or Write operations.");
             }
 
             InnerStream = stream;
 
-            if ((numberOfBits & (numberOfBits - 1)) != 0)
-            {
+            if ((numberOfBits & (numberOfBits - 1)) != 0) {
                 throw new ArgumentException("numberOfBits is not a power of 2.");
             }
 
             NumberOfBits = numberOfBits;
             CloseStream = closeStream;
 
-            if (ReferenceEquals(hashAlgorithm, null))
-            {
-                if (numberOfBits <= 128)
-                {
+            if (ReferenceEquals(hashAlgorithm, null)) {
+                if (numberOfBits <= 128) {
                     HashAlgorithm = HashAlgorithm.Create("SHA1");
                 }
-                else if (numberOfBits <= 256)
-                {
+                else if (numberOfBits <= 256) {
                     HashAlgorithm = GOSTStribog.Create("GOST256");
                 }
-                else if (numberOfBits <= 512)
-                {
+                else if (numberOfBits <= 512) {
                     HashAlgorithm = GOSTStribog.Create("GOST512");
                 }
-                else
-                {
+                else {
                     throw new ArgumentException("numberOfBits length exceeds hashing possibilities.");
                 }
             }
-            else
-            {
-                if (numberOfBits > hashAlgorithm.HashSize)
-                {
+            else {
+                if (numberOfBits > hashAlgorithm.HashSize) {
                     throw new ArgumentException("numberOfBits exceeds specified hash length.");
                 }
 
@@ -71,13 +58,38 @@ namespace Tesla.Cryptography
             PrivateKey = BigInt.GenPseudoPrime(NumberOfBits, 30, StrongRng);
         }
 
-        ~DiffieHellman()
-        {
+        public byte[] Key { get; protected set; }
+
+        public void Dispose() {
+            if (!ReferenceEquals(PublicPrime, null)) {
+                PublicPrime.Dispose();
+                PublicPrime = null;
+            }
+
+            if (!ReferenceEquals(PublicBase, null)) {
+                PublicBase.Dispose();
+                PublicBase = null;
+            }
+
+            if (!ReferenceEquals(PrivateKey, null)) {
+                PrivateKey.Dispose();
+                PrivateKey = null;
+            }
+
+            if (!ReferenceEquals(HashAlgorithm, null)) {
+                //HashAlgorithm.Dispose();
+                HashAlgorithm = null;
+            }
+
+            GC.Collect();
+            GC.Collect();
+        }
+
+        ~DiffieHellman() {
             Dispose();
         }
 
-        protected void Write(BigInt value)
-        {
+        protected void Write(BigInt value) {
             var buffer = value.GetBytes();
             var lengthBuffer = BitConverter.GetBytes(buffer.Length);
 
@@ -85,9 +97,8 @@ namespace Tesla.Cryptography
             InnerStream.Write(buffer, 0, buffer.Length);
         }
 
-        protected BigInt Read()
-        {
-            var lengthBuffer = new byte[sizeof (Int32)];
+        protected BigInt Read() {
+            var lengthBuffer = new byte[sizeof (int)];
             InnerStream.Read(lengthBuffer, 0, lengthBuffer.Length);
             var length = BitConverter.ToUInt32(lengthBuffer, 0);
             var buffer = new byte[length];
@@ -96,8 +107,7 @@ namespace Tesla.Cryptography
             return new BigInt(buffer);
         }
 
-        protected void SendRequest()
-        {
+        protected void SendRequest() {
             PublicPrime = BigInt.GenPseudoPrime(NumberOfBits, 30, StrongRng);
             PublicBase = 5;
             PublicKey = PublicBase.ModPow(PrivateKey, PublicPrime);
@@ -107,73 +117,35 @@ namespace Tesla.Cryptography
             Write(PublicKey);
         }
 
-        protected void HandleRequest()
-        {
+        protected void HandleRequest() {
             PublicPrime = Read();
             PublicBase = Read();
             PublicKey = PublicBase.ModPow(PrivateKey, PublicPrime);
 
-            using (var otherPublicKey = Read())
-            {
+            using (var otherPublicKey = Read()) {
                 Write(PublicKey);
 
-                using (var key = otherPublicKey.ModPow(PrivateKey, PublicPrime))
-                {
+                using (var key = otherPublicKey.ModPow(PrivateKey, PublicPrime)) {
                     Key = HashAlgorithm.ComputeHash(key.GetBytes());
                 }
             }
         }
 
-        protected void HandleResponse()
-        {
-            using (var otherPublicKey = Read())
-            {
-                using (var key = otherPublicKey.ModPow(PrivateKey, PublicPrime))
-                {
+        protected void HandleResponse() {
+            using (var otherPublicKey = Read()) {
+                using (var key = otherPublicKey.ModPow(PrivateKey, PublicPrime)) {
                     Key = HashAlgorithm.ComputeHash(key.GetBytes());
                 }
             }
         }
 
-        public void NegotiateAsClient()
-        {
+        public void NegotiateAsClient() {
             SendRequest();
             HandleResponse();
         }
 
-        public void NegotiateAsServer()
-        {
+        public void NegotiateAsServer() {
             HandleRequest();
-        }
-
-        public void Dispose()
-        {
-            if (!ReferenceEquals(PublicPrime, null))
-            {
-                PublicPrime.Dispose();
-                PublicPrime = null;
-            }
-
-            if (!ReferenceEquals(PublicBase, null))
-            {
-                PublicBase.Dispose();
-                PublicBase = null;
-            }
-
-            if (!ReferenceEquals(PrivateKey, null))
-            {
-                PrivateKey.Dispose();
-                PrivateKey = null;
-            }
-
-            if (!ReferenceEquals(HashAlgorithm, null))
-            {
-                //HashAlgorithm.Dispose();
-                HashAlgorithm = null;
-            }
-
-            GC.Collect();
-            GC.Collect();
         }
     }
 }

@@ -3,83 +3,113 @@ using System.Collections.Generic;
 using System.Threading;
 using Tesla.Logging;
 
-namespace Tesla.Net
-{
+namespace Tesla.Net {
     /// <summary>
-    /// Абстрактный базовый класс для реализации параллельных серверов.
+    ///     Абстрактный базовый класс для реализации параллельных серверов.
     /// </summary>
     public abstract class ThreadedServerBase
-        : IServer
-    {
+        : IServer {
         /// <summary>Объект синхронизации потоков обработчиков при необходимости остановки сервера.</summary>
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
-        /// <summary>Флаг, показывающий включен ли в данный момент сервер. Используется для многопоточной синхронизации.</summary>
-        private int _started;
-        /// <summary>Флаг, показывающий выключен ли в данный момент сервер. Используется для многопоточной синхронизации.</summary>
-        private int _stopped;
-        /// <summary>Обработчики ожидания для всех потоков обработчиков.</summary>
-        private List<WaitHandle> _threadPoolHandles;
-        /// <summary>Счётчик запущенных в данный момент потоков.</summary>
-        private int _runningThreadsCount = 0;
+
+        private readonly ManualResetEventSlim _evt = new ManualResetEventSlim();
+
         /// <summary>Поток, "слушающий" входящие соединения.</summary>
         private Thread _listenerThread;
-        private ManualResetEventSlim _evt = new ManualResetEventSlim();
 
-        protected bool IsCancellationRequested
-        {
-            get { return _cts.Token.IsCancellationRequested; }
-        }
+        /// <summary>Счётчик запущенных в данный момент потоков.</summary>
+        private int _runningThreadsCount = 0;
 
-        /// <summary>
-        /// Абстрактный метод, реализующий действия при запуске сервера.
-        /// </summary>
-        protected abstract void OnStart();
+        /// <summary>Флаг, показывающий включен ли в данный момент сервер. Используется для многопоточной синхронизации.</summary>
+        private int _started;
 
-        /// <summary>
-        /// Абстрактный метод, реализующий действия при останове сервера.
-        /// </summary>
-        protected abstract void OnStop();
+        /// <summary>Флаг, показывающий выключен ли в данный момент сервер. Используется для многопоточной синхронизации.</summary>
+        private int _stopped;
+
+        /// <summary>Обработчики ожидания для всех потоков обработчиков.</summary>
+        private List<WaitHandle> _threadPoolHandles;
+
+        protected bool IsCancellationRequested => _cts.Token.IsCancellationRequested;
 
         /// <summary>
-        /// Имя сервера.
+        ///     Имя сервера.
         /// </summary>
         public string ServerName { get; set; }
 
         /// <summary>
-        /// Запускает сервер.
+        ///     Запускает сервер.
         /// </summary>
-        public void Start()
-        {
-            if (Interlocked.CompareExchange(ref _started, 1, 0) != 0)
-            {
+        public void Start() {
+            if (Interlocked.CompareExchange(ref _started, 1, 0) != 0) {
                 throw new InvalidOperationException("Server has already been started.");
             }
 
             OnStart();
 
-            _listenerThread = new Thread(Listen) { IsBackground = true };
+            _listenerThread = new Thread(Listen) {IsBackground = true};
             _listenerThread.Start();
             _evt.Reset();
         }
+
+        /// <summary>
+        ///     Останавливает сервер.
+        /// </summary>
+        public void Stop() {
+            if (_started == 0) {
+                return;
+            }
+
+            if (Interlocked.CompareExchange(ref _stopped, 1, 0) != 0) {
+                return;
+            }
+
+            try {
+                _cts.Cancel();
+                OnStop();
+            }
+            catch (Exception e) {
+                Log.Entry(Priority.Warning, "[ServerBase] [{1}] Server stop exception: {0}.", ServerName, e);
+            }
+            finally {
+                _evt.Set();
+            }
+        }
+
+        /// <summary>
+        ///     Останавливает сервер и освобождает задействованные ресурсы.
+        /// </summary>
+        public void Dispose() {
+            Stop();
+        }
+
+        public void WaitForJoin() {
+            _evt.Wait();
+        }
+
+        /// <summary>
+        ///     Абстрактный метод, реализующий действия при запуске сервера.
+        /// </summary>
+        protected abstract void OnStart();
+
+        /// <summary>
+        ///     Абстрактный метод, реализующий действия при останове сервера.
+        /// </summary>
+        protected abstract void OnStop();
 
         protected abstract object AcceptClient();
         protected abstract void HandleClient(object obj);
 
         /// <summary>
-        /// Абстрактный метод, выполняющий ожидание новых соединений и запуск функций-обработчиков.
-        /// Вызывается рекурсивно внутри себя.
+        ///     Абстрактный метод, выполняющий ожидание новых соединений и запуск функций-обработчиков.
+        ///     Вызывается рекурсивно внутри себя.
         /// </summary>
-        protected void Listen()
-        {
-            while (true)
-            {
-                if (IsCancellationRequested)
-                {
+        protected void Listen() {
+            while (true) {
+                if (IsCancellationRequested) {
                     return;
                 }
 
-                try
-                {
+                try {
                     var obj = AcceptClient();
 
                     if (obj == null)
@@ -87,58 +117,13 @@ namespace Tesla.Net
 
                     ThreadPool.QueueUserWorkItem(HandleClient, obj);
                 }
-                catch (ObjectDisposedException e)
-                {
+                catch (ObjectDisposedException e) {
                     return;
                 }
-                catch (Exception e)
-                {
+                catch (Exception e) {
                     Log.Entry(Priority.Warning, "[ThreadedServerBase] [{0}] Listener exception: {1}", ServerName, e);
                 }
             }
-        }
-
-        /// <summary>
-        /// Останавливает сервер.
-        /// </summary>
-        public void Stop()
-        {
-            if (_started == 0)
-            {
-                return;
-            }
-
-            if (Interlocked.CompareExchange(ref _stopped, 1, 0) != 0)
-            {
-                return;
-            }
-
-            try
-            {
-                _cts.Cancel();
-                OnStop();
-            }
-            catch (Exception e)
-            {
-                Log.Entry(Priority.Warning, "[ServerBase] [{1}] Server stop exception: {0}.", ServerName, e);
-            }
-            finally
-            {
-                _evt.Set();
-            }
-        }
-
-        /// <summary>
-        /// Останавливает сервер и освобождает задействованные ресурсы.
-        /// </summary>
-        public void Dispose()
-        {
-            Stop();
-        }
-
-        public void WaitForJoin()
-        {
-            _evt.Wait();
         }
     }
 }
