@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SlashCube.Server
+namespace Tesla
 {
     public class TypeDispatcher<TIn, TOut>
         : Dictionary<Type, Func<TIn, TOut>>
