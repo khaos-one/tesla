@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.ServiceProcess;
+using Newtonsoft.Json;
 using Tesla.Logging;
 using Tesla.Supervisor.Configuration;
 

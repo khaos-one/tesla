@@ -20,7 +20,7 @@ namespace Tesla.Cryptography.Tests {
                 0x6d, 0x3f, 0x57, 0xd7, 0x23, 0x36, 0xe6, 0x32, 0x3f, 0xbe, 0xca, 0x88
             };
 
-            using (var cipher = new RC4Managed())
+            using (var cipher = new Rс4Managed())
             using (var transform = cipher.CreateEncryptor(key, null)) {
                 var encrypted = transform.TransformFinalBlock(sampleData, 0, sampleData.Length);
                 var decrypted = transform.TransformFinalBlock(encrypted, 0, encrypted.Length);

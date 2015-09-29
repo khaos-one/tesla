@@ -11,12 +11,12 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 
 namespace Tesla.Cryptography {
-    public sealed class RC4ManagedCryptoTransform
+    public sealed class Rc4ManagedCryptoTransform
         : ICryptoTransform {
         private byte[] _key;
         private byte[] _s = new byte[256];
 
-        public RC4ManagedCryptoTransform(byte[] key) {
+        public Rc4ManagedCryptoTransform(byte[] key) {
             _key = key;
 
             KeySchedule();

@@ -8,9 +8,7 @@ namespace Tesla.Tests {
         protected TimeSpan StartTime;
         protected TimeSpan StopTime;
 
-        public bool IsRunning {
-            get { return IsStopwatchRunning; }
-        }
+        public bool IsRunning => IsStopwatchRunning;
 
         public TimeSpan Elapsed {
             get {
