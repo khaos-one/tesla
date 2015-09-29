@@ -18,45 +18,40 @@ namespace Tesla.Cryptography {
 
         public Rc4ManagedCryptoTransform(byte[] key) {
             _key = key;
-
             KeySchedule();
         }
 
         public int TransformBlock(byte[] inputBuffer, int inputOffset, int inputCount, byte[] outputBuffer,
             int outputOffset) {
-            for (int i = 0, j = 0; i < inputCount; i++) {
-                outputBuffer[i + outputOffset] = (byte) (inputBuffer[i + inputOffset] ^ GetKeyWord(i, j));
-            }
+            unchecked {
+                for (int i = 0, j = 0; i < inputCount; i++) {
+                    outputBuffer[i + outputOffset] = (byte) (inputBuffer[i + inputOffset] ^ GetKeyWord(i, j));
+                }
 
-            return inputCount;
+                return inputCount;
+            }
         }
 
         public byte[] TransformFinalBlock(byte[] inputBuffer, int inputOffset, int inputCount) {
-            var output = new byte[inputCount];
+            unchecked {
+                var output = new byte[inputCount];
 
-            for (int i = 0, j = 0; i < inputCount; i++) {
-                output[i] = (byte) (inputBuffer[i + inputOffset] ^ GetKeyWord(i, j));
+                for (int i = 0, j = 0; i < inputCount; i++) {
+                    output[i] = (byte) (inputBuffer[i + inputOffset] ^ GetKeyWord(i, j));
+                }
+
+                KeySchedule();
+                return output;
             }
-
-            KeySchedule();
-            return output;
         }
 
-        public int InputBlockSize {
-            get { return 1; }
-        }
+        public int InputBlockSize => 1;
 
-        public int OutputBlockSize {
-            get { return 1; }
-        }
+        public int OutputBlockSize => 1;
 
-        public bool CanTransformMultipleBlocks {
-            get { return true; }
-        }
+        public bool CanTransformMultipleBlocks => true;
 
-        public bool CanReuseTransform {
-            get { return true; }
-        }
+        public bool CanReuseTransform => true;
 
         public void Dispose() {
             _key = null;
@@ -64,27 +59,33 @@ namespace Tesla.Cryptography {
         }
 
         private static void Swap(IList<byte> arr, int i1, int i2) {
-            var t = arr[i1];
-            arr[i1] = arr[i2];
-            arr[i2] = t;
+            unchecked {
+                var t = arr[i1];
+                arr[i1] = arr[i2];
+                arr[i2] = t;
+            }
         }
 
         private void KeySchedule() {
-            for (var i = 0; i < 256; i++)
-                _s[i] = (byte) i;
+            unchecked {
+                for (var i = 0; i < 256; i++)
+                    _s[i] = (byte) i;
 
-            for (int i = 0, j = 0; i < 256; i++) {
-                j = (j + _s[i] + _key[i%_key.Length])%256;
-                Swap(_s, i, j);
+                for (int i = 0, j = 0; i < 256; i++) {
+                    j = (j + _s[i] + _key[i%_key.Length])%256;
+                    Swap(_s, i, j);
+                }
             }
         }
 
         private byte GetKeyWord(int i, int j) {
-            i = (i + 1)%256;
-            j = (j + _s[i])%256;
-            Swap(_s, i, j);
+            unchecked {
+                i = (i + 1)%256;
+                j = (j + _s[i])%256;
+                Swap(_s, i, j);
 
-            return _s[(_s[i] + _s[j])%256];
+                return _s[(_s[i] + _s[j])%256];
+            }
         }
     }
 }
