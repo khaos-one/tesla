@@ -13,6 +13,7 @@ using System.Security.Cryptography;
 namespace Tesla.Cryptography {
     public sealed class Rс4Managed
         : SymmetricAlgorithm {
+
         public override ICryptoTransform CreateDecryptor(byte[] rgbKey, byte[] rgbIV) {
             return new Rc4ManagedCryptoTransform(rgbKey);
         }
