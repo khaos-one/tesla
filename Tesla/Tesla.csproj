@@ -89,6 +89,7 @@
     <Compile Include="Tests\CpuWatch.cs" />
     <Compile Include="Tests\IStopwatch.cs" />
     <Compile Include="Tests\Timewatch.cs" />
+    <Compile Include="TypeDiscovery.cs" />
     <Compile Include="TypeDispatcher.cs" />
     <Compile Include="Types\VarInt.cs" />
   </ItemGroup>
