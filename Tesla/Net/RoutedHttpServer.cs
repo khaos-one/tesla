@@ -4,8 +4,8 @@ using System.Net;
 namespace Tesla.Net {
     public class RoutedHttpServer
         : HttpServerBase {
-        protected Dictionary<string, HttpHandlerFunc> Routes
-            = new Dictionary<string, HttpHandlerFunc>();
+        protected List<KeyValuePair<string, HttpHandlerFunc>> Routes
+            = new List<KeyValuePair<string, HttpHandlerFunc>>();
 
         public RoutedHttpServer(string[] uriPrefixes)
             : base(uriPrefixes) {}
@@ -16,7 +16,11 @@ namespace Tesla.Net {
         public RoutedHttpServer() {}
 
         public void AddRoute(string pattern, HttpHandlerFunc handler) {
-            Routes.Add(pattern, handler);
+            Routes.Add(new KeyValuePair<string, HttpHandlerFunc>(pattern, handler));
+            
+            // Sort routes from by pattern length, longer patterns should always come first.
+            // I.e. descending sort.
+            Routes.Sort((x, y) => -x.Key.Length.CompareTo(y.Key.Length));
         }
 
         protected override void HandleRequest(HttpListenerContext context) {

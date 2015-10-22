@@ -27,7 +27,7 @@ namespace Tesla {
                 var matchGroups = new string[m];
 
                 for (i = 0, m = 0; i < str.Length;) {
-                    if (!accumulatingWildcard && pattern[j] == '*') {
+                    if (!accumulatingWildcard && j < pattern.Length && pattern[j] == '*') {
                         accumulatingWildcard = true;
                         j++;
                     }
@@ -49,6 +49,10 @@ namespace Tesla {
                         }
 
                         continue;
+                    }
+
+                    if (j >= pattern.Length) {
+                        break;
                     }
 
                     if (pattern[j] != str[i]) {
