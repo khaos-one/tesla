@@ -1,4 +1,13 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------------------------
+// <author>Egor 'khaos' Zelensky <i@khaos.su></author>
+// <description>
+//    This file originates from 
+//    <a href="https://github.com/khaos-one/tesla/tree/master/Tesla">Tesla</a>
+//    library.
+// </description>
+//-----------------------------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -56,12 +65,10 @@ namespace Tesla.Logging {
                         _stream = File.Create(path);
 
                     _dontClose = false;
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     throw new ArgumentException("Cannot create log file on executing assembly path.", e);
                 }
-            }
-            else {
+            } else {
                 _stream = logStream;
                 _dontClose = true;
             }

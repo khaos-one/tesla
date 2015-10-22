@@ -1,4 +1,13 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------------------------
+// <author>Egor 'khaos' Zelensky <i@khaos.su></author>
+// <description>
+//    This file originates from 
+//    <a href="https://github.com/khaos-one/tesla/tree/master/Tesla">Tesla</a>
+//    library.
+// </description>
+//-----------------------------------------------------------------------------------------
+
+using System;
 using System.Net;
 using System.Net.Sockets;
 using Tesla.Logging;
@@ -31,7 +40,7 @@ namespace Tesla.Net {
         /// </summary>
         /// <param name="port">Порт сервера.</param>
         protected ThreadedTcpServer(int port)
-            : this(IPAddress.Any, port) {}
+            : this(IPAddress.Any, port) { }
 
         /// <summary>Локальная конечная точка (IP-адрес и порт), на которой в данный момент работает сервер.</summary>
         public IPEndPoint LocalEndPoint { get; protected set; }
@@ -56,12 +65,13 @@ namespace Tesla.Net {
                 ListenerSocket.Bind(LocalEndPoint);
                 ListenerSocket.Listen(500);
 
-                LocalEndPoint = (IPEndPoint) ListenerSocket.LocalEndPoint;
-            }
-            catch (SocketException) {
-                /* TODO: Process exception. */
-            }
-            catch (ObjectDisposedException) {
+                LocalEndPoint = (IPEndPoint)ListenerSocket.LocalEndPoint;
+            } catch (SocketException e) {
+                if (e.ErrorCode == 10048) {
+                    // Пара Адрес:Порт уже используются другим приложением.
+                    throw new InvalidOperationException("Specified Address/Port is already in use by other application.");
+                }
+            } catch (ObjectDisposedException) {
                 /* TODO: Process exception. */
             }
 
@@ -104,8 +114,7 @@ namespace Tesla.Net {
                     socket.Close();
                     socket.Dispose();
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Log.Entry(Priority.Warning, "[TcpServer] TCP closure exception: {0}.", e.Message);
             }
         }
@@ -122,8 +131,7 @@ namespace Tesla.Net {
                 socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
 
                 return socket;
-            }
-            catch (SocketException e) {
+            } catch (SocketException e) {
                 // Ignore on WSACancelBlockingCall.
                 if (e.ErrorCode != 0x2714)
                     throw;
@@ -138,7 +146,7 @@ namespace Tesla.Net {
         /// </summary>
         /// <returns>Анонимная функция-обработчик данного соединения.</returns>
         protected override void HandleClient(object state) {
-            var socket = (Socket) state;
+            var socket = (Socket)state;
 
             if (!socket.Connected) {
                 Disconnect(socket);
@@ -147,12 +155,10 @@ namespace Tesla.Net {
 
             try {
                 HandleConnection(socket);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Log.Entry(Priority.Warning, "[TcpServer] [{0}] TCP Handler exception: {1}.", ServerName, e);
                 HandleException(socket, e);
-            }
-            finally {
+            } finally {
                 Disconnect(socket);
             }
         }

@@ -1,4 +1,13 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------------------------
+// <author>Egor 'khaos' Zelensky <i@khaos.su></author>
+// <description>
+//    This file originates from 
+//    <a href="https://github.com/khaos-one/tesla/tree/master/Tesla">Tesla</a>
+//    library.
+// </description>
+//-----------------------------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using Tesla.Logging;
@@ -46,7 +55,7 @@ namespace Tesla.Net {
 
             OnStart();
 
-            _listenerThread = new Thread(Listen) {IsBackground = true};
+            _listenerThread = new Thread(Listen) { IsBackground = true };
             _listenerThread.Start();
             _evt.Reset();
         }
@@ -55,22 +64,20 @@ namespace Tesla.Net {
         ///     Останавливает сервер.
         /// </summary>
         public void Stop() {
-            if (_started == 0) {
+            /*if (_started == 0) {
                 return;
-            }
+            }*/
 
-            if (Interlocked.CompareExchange(ref _stopped, 1, 0) != 0) {
+            if (Interlocked.CompareExchange(ref _started, 0, 1) != 1) {
                 return;
             }
 
             try {
                 _cts.Cancel();
                 OnStop();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Log.Entry(Priority.Warning, "[ServerBase] [{1}] Server stop exception: {0}.", ServerName, e);
-            }
-            finally {
+            } finally {
                 _evt.Set();
             }
         }
@@ -116,11 +123,9 @@ namespace Tesla.Net {
                         continue;
 
                     ThreadPool.QueueUserWorkItem(HandleClient, obj);
-                }
-                catch (ObjectDisposedException e) {
+                } catch (ObjectDisposedException) {
                     return;
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     Log.Entry(Priority.Warning, "[ThreadedServerBase] [{0}] Listener exception: {1}", ServerName, e);
                 }
             }
