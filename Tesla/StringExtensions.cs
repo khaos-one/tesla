@@ -52,7 +52,7 @@ namespace Tesla {
                     }
 
                     if (j >= pattern.Length) {
-                        break;
+                        return null;
                     }
 
                     if (pattern[j] != str[i]) {
