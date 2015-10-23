@@ -9,6 +9,7 @@ namespace Tesla.Data {
         private static string DbProviderName;
         private static Type DbConnectionType;
         private static ObjectActivator<IDbConnection> DbConnectionActivator;
+        private static readonly Stack<string> DatabasesStack = new Stack<string>();
 
         public static void Initialize(string dbConnectionProvider, string connectionString = null) {
             DbProviderName = dbConnectionProvider;
@@ -135,6 +136,62 @@ namespace Tesla.Data {
 
             using (var cmd = connection.CreateCommand()) {
                 cmd.CommandText = $"USE {dbName}";
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public static void PushDatabase(string newDbName, IDbConnection connection = null) {
+            if (connection == null) {
+                using (connection = GetConnection()) {
+                    using (var cmd = connection.CreateCommand()) {
+                        cmd.CommandText = "SELECT DATABASE()";
+                        var currentDatabase = cmd.ExecuteScalar() as string;
+
+                        if (currentDatabase == null) {
+                            throw new ArgumentNullException("No current database selected.");
+                        }
+
+                        DatabasesStack.Push(currentDatabase);
+
+                        cmd.CommandText = $"USE {newDbName}";
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+
+            using (var cmd = connection.CreateCommand()) {
+                cmd.CommandText = "SELECT DATABASE()";
+                var currentDatabase = cmd.ExecuteScalar() as string;
+
+                if (currentDatabase == null) {
+                    throw new ArgumentNullException("No current database selected.");
+                }
+
+                DatabasesStack.Push(currentDatabase);
+
+                cmd.CommandText = $"USE {newDbName}";
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public static void PopDatabase(IDbConnection connection = null) {
+            if (DatabasesStack.Count == 0) {
+                throw new ArgumentOutOfRangeException("Databases stack is already empty.");
+            }
+
+            var oldDatabase = DatabasesStack.Pop();
+
+            if (connection == null) {
+                using (connection = GetConnection()) {
+                    using (var cmd = connection.CreateCommand()) {
+                        cmd.CommandText = $"USE {oldDatabase}";
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+
+            using (var cmd = connection.CreateCommand()) {
+                cmd.CommandText = $"USE {oldDatabase}";
                 cmd.ExecuteNonQuery();
             }
         }
