@@ -14,5 +14,16 @@ namespace Tesla.Collections {
             var result = collection.Get(key);
             return !string.IsNullOrWhiteSpace(result);
         }
+
+        public static int? GetInt32(this NameValueCollection collection, string key) {
+            var val = collection.Get(key);
+            int result;
+
+            if (int.TryParse(val, out result)) {
+                return new int?(result);
+            }
+
+            return null;
+        }
     }
 }

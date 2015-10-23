@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -9,7 +10,7 @@ namespace Tesla.Data {
         private static string DbProviderName;
         private static Type DbConnectionType;
         private static ObjectActivator<IDbConnection> DbConnectionActivator;
-        private static readonly Stack<string> DatabasesStack = new Stack<string>();
+        private static readonly ConcurrentStack<string> DatabasesStack = new ConcurrentStack<string>();
 
         public static void Initialize(string dbConnectionProvider, string connectionString = null) {
             DbProviderName = dbConnectionProvider;
@@ -175,11 +176,15 @@ namespace Tesla.Data {
         }
 
         public static void PopDatabase(IDbConnection connection = null) {
-            if (DatabasesStack.Count == 0) {
+            if (DatabasesStack.IsEmpty) {
                 throw new ArgumentOutOfRangeException("Databases stack is already empty.");
             }
 
-            var oldDatabase = DatabasesStack.Pop();
+            var oldDatabase = string.Empty;
+
+            if (!DatabasesStack.TryPop(out oldDatabase)) {
+                throw new InvalidOperationException("Was not able to pop database from a stack (concurrency?).");
+            }
 
             if (connection == null) {
                 using (connection = GetConnection()) {
