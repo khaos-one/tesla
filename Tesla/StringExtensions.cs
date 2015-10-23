@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace Tesla {
     public static class StringExtensions {
@@ -64,6 +65,30 @@ namespace Tesla {
                 }
 
                 return matchGroups;
+            }
+        }
+
+        public static string[] FromCommaSeparatedArray(this string arraySource) {
+            unchecked {
+                var arr = arraySource.Split(',');
+                
+                for (var i = 0; i < arr.Length; i++) {
+                    arr[i] = arr[i].Trim(' ', ',');
+                }
+
+                return arr;
+            }
+        }
+
+        public static string ToCommaSeparatedArray(this string[] array) {
+            unchecked {
+                var str = string.Empty;
+
+                foreach (var item in array) {
+                    str += item + ',';
+                }
+
+                return str.Trim(' ', ',');
             }
         }
     }
