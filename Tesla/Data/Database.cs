@@ -6,17 +6,15 @@ using System.Data;
 namespace Tesla.Data {
     public static class Database {
         private static string ConnectionString;
-            //ConfigurationManager.ConnectionStrings["Default"].ConnectionString;
-
         private static string DbProviderName;
-
-        private static readonly Type DbConnectionType = TypeDiscovery.TypeFromString(DbProviderName);
-        private static readonly ObjectActivator<IDbConnection> DbConnectionActivator = 
-            TypeDiscovery.CreateActivator<IDbConnection>(DbConnectionType.GetConstructor(new[] { typeof(string) }));
-            //TypeDiscovery.InterfaceFromString<IDbConnection>(DbProviderName);
+        private static Type DbConnectionType;
+        private static ObjectActivator<IDbConnection> DbConnectionActivator;
 
         public static void Initialize(string dbConnectionProvider, string connectionString = null) {
             DbProviderName = dbConnectionProvider;
+
+            DbConnectionType = TypeDiscovery.TypeFromString(DbProviderName);
+            DbConnectionActivator = TypeDiscovery.CreateActivator<IDbConnection>(DbConnectionType.GetConstructor(new[] { typeof(string) }));
 
             if (connectionString != null) {
                 ConnectionString = connectionString;
@@ -122,6 +120,22 @@ namespace Tesla.Data {
                 cmd.Assign(parameters);
 
                 return cmd.ExecuteScalar();
+            }
+        }
+
+        public static void UseDatabase(string dbName, IDbConnection connection = null) {
+            if (connection == null) {
+                using (connection = GetConnection()) {
+                    using (var cmd = connection.CreateCommand()) {
+                        cmd.CommandText = $"USE {dbName}";
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+
+            using (var cmd = connection.CreateCommand()) {
+                cmd.CommandText = $"USE {dbName}";
+                cmd.ExecuteNonQuery();
             }
         }
     }
