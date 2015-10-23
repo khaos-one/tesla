@@ -131,6 +131,7 @@ namespace Tesla.Data {
                     using (var cmd = connection.CreateCommand()) {
                         cmd.CommandText = $"USE {dbName}";
                         cmd.ExecuteNonQuery();
+                        return;
                     }
                 }
             }
@@ -156,6 +157,7 @@ namespace Tesla.Data {
 
                         cmd.CommandText = $"USE {newDbName}";
                         cmd.ExecuteNonQuery();
+                        return;
                     }
                 }
             }
@@ -191,6 +193,7 @@ namespace Tesla.Data {
                     using (var cmd = connection.CreateCommand()) {
                         cmd.CommandText = $"USE {oldDatabase}";
                         cmd.ExecuteNonQuery();
+                        return;
                     }
                 }
             }
