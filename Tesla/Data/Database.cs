@@ -2,22 +2,33 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Reflection;
 
 namespace Tesla.Data {
     public static class Database {
-        private static readonly string ConnectionString =
-            ConfigurationManager.ConnectionStrings["Default"].ConnectionString;
+        private static string ConnectionString;
+            //ConfigurationManager.ConnectionStrings["Default"].ConnectionString;
 
-        private static readonly string DbProviderName = ConfigurationManager.AppSettings["DbConnectionProvider"];
+        private static string DbProviderName;
 
         private static readonly Type DbConnectionType = TypeDiscovery.TypeFromString(DbProviderName);
         private static readonly ObjectActivator<IDbConnection> DbConnectionActivator = 
             TypeDiscovery.CreateActivator<IDbConnection>(DbConnectionType.GetConstructor(new[] { typeof(string) }));
             //TypeDiscovery.InterfaceFromString<IDbConnection>(DbProviderName);
 
-        public static IDbConnection GetConnection() {
-            var connection = DbConnectionActivator(ConnectionString);
+        public static void Initialize(string dbConnectionProvider, string connectionString = null) {
+            DbProviderName = dbConnectionProvider;
+
+            if (connectionString != null) {
+                ConnectionString = connectionString;
+            }
+        }
+
+        public static IDbConnection GetConnection(string connectionString = null) {
+            if (connectionString == null) {
+                connectionString = ConnectionString;
+            }
+
+            var connection = DbConnectionActivator(connectionString);
             connection.Open();
             return connection;
         }
