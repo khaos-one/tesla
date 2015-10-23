@@ -52,10 +52,13 @@
   <ItemGroup>
     <Compile Include="BitArrayExtensions.cs" />
     <Compile Include="ByteArrayExtensions.cs" />
+    <Compile Include="Data\IDbCommandExtensions.cs" />
     <Compile Include="Collections\IEnumerableExtensions.cs" />
     <Compile Include="Collections\ListExtensions.cs" />
     <Compile Include="Collections\NameValueCollectionExtensions.cs" />
     <Compile Include="Daemonizer.cs" />
+    <Compile Include="Data\Database.cs" />
+    <Compile Include="Data\DataResult.cs" />
     <Compile Include="DoubleExtensions.cs" />
     <Compile Include="EnumStringValueAttribute.cs" />
     <Compile Include="IO\StreamExtensions.cs" />
