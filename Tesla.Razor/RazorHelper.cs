@@ -14,7 +14,7 @@ namespace Tesla.Razor {
 
             foreach (var file in templateFiles) {
                 var contents = File.ReadAllText(file);
-                var templateName = file.Replace(templatesDirectory + "\\", string.Empty);
+                var templateName = file.Replace(templatesDirectory + Path.DirectorySeparatorChar, string.Empty).Replace(Path.DirectorySeparatorChar, '/');
 
                 if (excludeExtensions) {
                     templateName = templateName.Replace(".cshtml", string.Empty);
