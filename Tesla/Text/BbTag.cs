@@ -28,10 +28,10 @@ namespace Tesla.Text {
                 RegexOptions.IgnoreCase |
                 RegexOptions.Singleline |
                 RegexOptions.Compiled);
-            OverallRegex = new Regex(openingPattern + middlePattern + closingPattern,
-                RegexOptions.IgnoreCase |
-                RegexOptions.Singleline |
-                RegexOptions.Compiled);
+            //OverallRegex = new Regex(openingPattern + middlePattern + closingPattern,
+            //    RegexOptions.IgnoreCase |
+            //    RegexOptions.Singleline |
+            //    RegexOptions.Compiled);
         }
 
         public BbTag(string pattern, string replacement, bool regex = true) {

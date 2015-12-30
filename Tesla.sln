@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tesla", "Tesla\Tesla.csproj", "{D27077AC-2E22-49EF-9498-F2F023412D2A}"
 EndProject
@@ -28,6 +28,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tesla.SocialApi", "Tesla.SocialApi\Tesla.SocialApi.csproj", "{A753CA1D-3678-407E-9C68-3EB144FFF206}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tesla.Razor", "Tesla.Razor\Tesla.Razor.csproj", "{7C56D60B-AE75-4712-81E5-0B1CF6794BAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tesla.Union", "Tesla.Union\Tesla.Union.csproj", "{0C4F20DE-24C1-462C-8163-26B6FD8B14AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -159,6 +161,18 @@ Global
 		{7C56D60B-AE75-4712-81E5-0B1CF6794BAF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{7C56D60B-AE75-4712-81E5-0B1CF6794BAF}.Release|Win32.ActiveCfg = Release|Any CPU
 		{7C56D60B-AE75-4712-81E5-0B1CF6794BAF}.Release|Win32.Build.0 = Release|Any CPU
+		{0C4F20DE-24C1-462C-8163-26B6FD8B14AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C4F20DE-24C1-462C-8163-26B6FD8B14AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C4F20DE-24C1-462C-8163-26B6FD8B14AA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{0C4F20DE-24C1-462C-8163-26B6FD8B14AA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{0C4F20DE-24C1-462C-8163-26B6FD8B14AA}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{0C4F20DE-24C1-462C-8163-26B6FD8B14AA}.Debug|Win32.Build.0 = Debug|Any CPU
+		{0C4F20DE-24C1-462C-8163-26B6FD8B14AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C4F20DE-24C1-462C-8163-26B6FD8B14AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C4F20DE-24C1-462C-8163-26B6FD8B14AA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{0C4F20DE-24C1-462C-8163-26B6FD8B14AA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{0C4F20DE-24C1-462C-8163-26B6FD8B14AA}.Release|Win32.ActiveCfg = Release|Any CPU
+		{0C4F20DE-24C1-462C-8163-26B6FD8B14AA}.Release|Win32.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
