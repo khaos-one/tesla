@@ -161,5 +161,6 @@ $RECYCLE.BIN/
 # Packages folder
 [Pp]ackages/
 
-# Resharper dotsettings
+# Resharper
 *\.dotSettings
+*\.opendb

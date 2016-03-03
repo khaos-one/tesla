@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Tesla.Extensions;
 
 namespace Tesla.Security {
     public static class Cryptography {

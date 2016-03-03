@@ -1,7 +1,6 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
-namespace Tesla {
+namespace Tesla.Extensions {
     public static class StringExtensions {
         public static byte[] ToBytes(this string str, Encoding encoding) {
             return encoding.GetBytes(str);

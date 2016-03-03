@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Tesla.Extensions;
 
 namespace Tesla.IO {
     public static class StreamExtension {

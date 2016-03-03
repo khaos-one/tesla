@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Tesla {
+namespace Tesla.Extensions {
     public static class RegexExtensions {
         public static string[] GetMatchingGroups(this Regex regex, string str) {
             var m = regex.Match(str);

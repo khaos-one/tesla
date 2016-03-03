@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using Tesla.Collections;
+using Tesla.Extensions;
 using Tesla.IO;
 
 namespace Tesla.SocialApi {

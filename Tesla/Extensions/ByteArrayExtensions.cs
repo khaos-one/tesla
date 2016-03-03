@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Tesla {
+namespace Tesla.Extensions {
     public static class ByteArrayExtensions {
         public static string ToString(this byte[] array, Encoding encoding) {
             return encoding.GetString(array);

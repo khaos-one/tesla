@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Tesla.Extensions;
 using Tesla.Tests;
 
 namespace Tesla.Cryptography.Tests {

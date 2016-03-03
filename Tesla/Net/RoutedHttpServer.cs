@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+using Tesla.Extensions;
 
 namespace Tesla.Net {
     public class RoutedHttpServer

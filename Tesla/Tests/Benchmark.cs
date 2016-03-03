@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Tesla.Extensions;
 
 namespace Tesla.Tests {
     public static class Benchmark {
