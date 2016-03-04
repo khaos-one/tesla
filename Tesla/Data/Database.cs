@@ -1,39 +1,25 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 
 namespace Tesla.Data {
     public static class Database {
-        private static string ConnectionString;
-        private static string DbProviderName;
-        private static Type DbConnectionType;
-        private static ObjectActivator<IDbConnection> DbConnectionActivator;
-        private static readonly ConcurrentStack<string> DatabasesStack = new ConcurrentStack<string>();
+        private static readonly string ConnectionString =
+            ConfigurationManager.ConnectionStrings["Default"].ConnectionString;
 
-        public static void Initialize(string dbConnectionProvider, string connectionString = null) {
-            DbProviderName = dbConnectionProvider;
+        private static readonly string DbProviderName = ConfigurationManager.AppSettings["DefaultDatabaseProvider"];
 
-            DbConnectionType = TypeDiscovery.TypeFromString(DbProviderName);
-            DbConnectionActivator = TypeDiscovery.CreateActivator<IDbConnection>(DbConnectionType.GetConstructor(new[] { typeof(string) }));
+        private static readonly IDatabaseProvider Db =
+            TypeDiscovery.InterfaceFromString<IDatabaseProvider>(DbProviderName);
 
-            if (connectionString != null) {
-                ConnectionString = connectionString;
-            }
-        }
-
-        public static IDbConnection GetConnection(string connectionString = null) {
-            if (connectionString == null) {
-                connectionString = ConnectionString;
-            }
-
-            var connection = DbConnectionActivator(connectionString);
+        public static IDbConnection GetConnection() {
+            var connection = Db.GetConnection(ConnectionString);
             connection.Open();
             return connection;
         }
 
-        public static DataResult Query(string sql, Dictionary<string, object> parameters = null, IDbConnection connection = null) {
+        public static DataResult Query(string sql, Dictionary<string, object> parameters = null,
+            IDbConnection connection = null) {
             if (connection == null) {
                 using (connection = GetConnection()) {
                     using (var cmd = connection.CreateCommand()) {
@@ -57,7 +43,8 @@ namespace Tesla.Data {
             }
         }
 
-        public static IDataReader GetReader(string sql, IDbConnection connection, Dictionary<string, object> parameters = null) {
+        public static IDataReader GetReader(string sql, IDbConnection connection,
+            Dictionary<string, object> parameters = null) {
             var cmd = connection.CreateCommand();
             cmd.CommandText = sql;
             cmd.Assign(parameters);
@@ -65,7 +52,8 @@ namespace Tesla.Data {
             return cmd.ExecuteReader();
         }
 
-        public static int NonQuery(string sql, Dictionary<string, object> parameters = null, IDbConnection connection = null) {
+        public static int NonQuery(string sql, Dictionary<string, object> parameters = null,
+            IDbConnection connection = null) {
             if (connection == null) {
                 using (connection = GetConnection()) {
                     using (var cmd = connection.CreateCommand()) {
@@ -92,7 +80,7 @@ namespace Tesla.Data {
                     using (var cmd = connection.CreateCommand()) {
                         cmd.CommandText = sql.Trim(';') + "; SELECT @@IDENTITY;";
                         cmd.Assign(parameters);
-                        return (ulong)cmd.ExecuteScalar();
+                        return (ulong) cmd.ExecuteScalar();
                     }
                 }
             }
@@ -101,11 +89,12 @@ namespace Tesla.Data {
                 cmd.CommandText = sql.Trim(';') + "; SELECT @@IDENTITY;";
                 cmd.Assign(parameters);
 
-                return (ulong)cmd.ExecuteScalar();
+                return (ulong) cmd.ExecuteScalar();
             }
         }
 
-        public static object ScalarQuery(string sql, Dictionary<string, object> parameters = null, IDbConnection connection = null) {
+        public static object ScalarQuery(string sql, Dictionary<string, object> parameters = null,
+            IDbConnection connection = null) {
             if (connection == null) {
                 using (connection = GetConnection()) {
                     using (var cmd = connection.CreateCommand()) {
@@ -122,85 +111,6 @@ namespace Tesla.Data {
                 cmd.Assign(parameters);
 
                 return cmd.ExecuteScalar();
-            }
-        }
-
-        public static void UseDatabase(string dbName, IDbConnection connection = null) {
-            if (connection == null) {
-                using (connection = GetConnection()) {
-                    using (var cmd = connection.CreateCommand()) {
-                        cmd.CommandText = $"USE {dbName}";
-                        cmd.ExecuteNonQuery();
-                        return;
-                    }
-                }
-            }
-
-            using (var cmd = connection.CreateCommand()) {
-                cmd.CommandText = $"USE {dbName}";
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-        public static void PushDatabase(string newDbName, IDbConnection connection = null) {
-            if (connection == null) {
-                using (connection = GetConnection()) {
-                    using (var cmd = connection.CreateCommand()) {
-                        cmd.CommandText = "SELECT DATABASE()";
-                        var currentDatabase = cmd.ExecuteScalar() as string;
-
-                        if (currentDatabase == null) {
-                            throw new ArgumentNullException("No current database selected.");
-                        }
-
-                        DatabasesStack.Push(currentDatabase);
-
-                        cmd.CommandText = $"USE {newDbName}";
-                        cmd.ExecuteNonQuery();
-                        return;
-                    }
-                }
-            }
-
-            using (var cmd = connection.CreateCommand()) {
-                cmd.CommandText = "SELECT DATABASE()";
-                var currentDatabase = cmd.ExecuteScalar() as string;
-
-                if (currentDatabase == null) {
-                    throw new ArgumentNullException("No current database selected.");
-                }
-
-                DatabasesStack.Push(currentDatabase);
-
-                cmd.CommandText = $"USE {newDbName}";
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-        public static void PopDatabase(IDbConnection connection = null) {
-            if (DatabasesStack.IsEmpty) {
-                throw new ArgumentOutOfRangeException("Databases stack is already empty.");
-            }
-
-            var oldDatabase = string.Empty;
-
-            if (!DatabasesStack.TryPop(out oldDatabase)) {
-                throw new InvalidOperationException("Was not able to pop database from a stack (concurrency?).");
-            }
-
-            if (connection == null) {
-                using (connection = GetConnection()) {
-                    using (var cmd = connection.CreateCommand()) {
-                        cmd.CommandText = $"USE {oldDatabase}";
-                        cmd.ExecuteNonQuery();
-                        return;
-                    }
-                }
-            }
-
-            using (var cmd = connection.CreateCommand()) {
-                cmd.CommandText = $"USE {oldDatabase}";
-                cmd.ExecuteNonQuery();
             }
         }
     }
