@@ -1,0 +1,21 @@
+﻿---
+log-file: /var/log/tesla.supervisor.log
+server:
+  address: 0.0.0.0
+  port: 2500
+apps:
+  - executable: /opt/slashcube.server2/SlashCube.Server.exe
+    args: ""
+    working-dir: /opt/slashcube.server2
+    exec-as-user: monorow
+    out-file: /var/log/slashcube.server2.out.log
+    error-file: /var/log/slashcube.server2.error.log
+    autorestart: yes
+  - executable: /opt/catchi.server/CatChi.Server.exe
+    args: ""
+    working-dir: /opt/catchi.server
+    exec-as-user: monorow
+    out-file: /var/log/catchi.server.out.log
+    error-file: /var/log/catchi.server.error.log
+    autorestart: yes
+

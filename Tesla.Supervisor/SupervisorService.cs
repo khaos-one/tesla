@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.ServiceProcess;
-using Newtonsoft.Json;
 using Tesla.Logging;
-using Tesla.Supervisor.Configuration;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace Tesla.Supervisor {
     public partial class SupervisorService : ServiceBase {
@@ -19,13 +19,13 @@ namespace Tesla.Supervisor {
 
         protected override void OnStart(string[] args) {
             var configPath =
-                ConfigurationManager.AppSettings["config"] ?? "Default.json";
+                ConfigurationManager.AppSettings["config"] ?? "Default.yml";
 
             if (!File.Exists(configPath))
                 throw new Exception("Cannot find any configuration file.");
 
             using (var fs = File.OpenText(configPath)) {
-                var serializer = new JsonSerializer();
+                var serializer = new Deserializer(namingConvention: new HyphenatedNamingConvention());
                 Configuration = (SupervisorConfig) serializer.Deserialize(fs, typeof (SupervisorConfig));
             }
 
@@ -34,7 +34,7 @@ namespace Tesla.Supervisor {
                 : File.Create("Supervisor.log");
             Log.DefaultLogStream = LogStream;
 
-            Configuration.Apps.ForEach(x => Applications.Add(new Application(x)));
+            Configuration.Applications.ForEach(x => Applications.Add(new Application(x)));
             Applications.ForEach(x => x.Start());
 
             Log.Entry(Priority.Info, "Supervisor applications started.");

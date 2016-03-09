@@ -58,11 +58,11 @@ namespace Tesla.Supervisor {
         ///     Creates new instance of service application with provided configuration.
         /// </summary>
         /// <param name="app">Configuration of a service app.</param>
-        public Application(SupervisorAppConfig app) {
+        public Application(ApplicationConfig app) {
             _startInfo = new ProcessStartInfo {
                 FileName = app.Executable,
                 Arguments = app.Arguments,
-                UserName = app.User,
+                UserName = app.ExecuteAsUser,
                 WorkingDirectory = app.WorkingDirectory,
                 UseShellExecute = false,
                 CreateNoWindow = true
@@ -75,22 +75,22 @@ namespace Tesla.Supervisor {
                 _startInfo.RedirectStandardError = true;
             }
 
-            if (!string.IsNullOrEmpty(app.OutputFile)) {
-                _stdErr = !File.Exists(app.OutputFile)
-                    ? File.CreateText(app.OutputFile)
-                    : new StreamWriter(app.OutputFile, true);
+            if (!string.IsNullOrEmpty(app.OutFile)) {
+                _stdErr = !File.Exists(app.OutFile)
+                    ? File.CreateText(app.OutFile)
+                    : new StreamWriter(app.OutFile, true);
                 _startInfo.RedirectStandardOutput = true;
             }
 
-            if (app.UseHangDetection) {
-                _webCheckRequestUri = app.WebCheckRequestUri;
-                _webCheckRequestTimeout = app.WebCheckRequestTimeout;
-                _startupTime = app.StartupTime;
-                _interval = app.RecheckInterval;
-                _recheckCount = app.RecheckCount;
-            }
+            //if (app.UseHangDetection) {
+            //    _webCheckRequestUri = app.WebCheckRequestUri;
+            //    _webCheckRequestTimeout = app.WebCheckRequestTimeout;
+            //    _startupTime = app.StartupTime;
+            //    _interval = app.RecheckInterval;
+            //    _recheckCount = app.RecheckCount;
+            //}
 
-            _hangDetection = app.UseHangDetection;
+            //_hangDetection = app.UseHangDetection;
         }
 
         /// <summary>
