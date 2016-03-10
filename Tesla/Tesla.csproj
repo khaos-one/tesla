@@ -83,6 +83,7 @@
     <Compile Include="Net\ThreadedServerBase.cs" />
     <Compile Include="Net\SocketExtensions.cs" />
     <Compile Include="Net\TcpClientExtensions.cs" />
+    <Compile Include="Net\ThreadedSslServer.cs" />
     <Compile Include="Net\ThreadedTcpServer.cs" />
     <Compile Include="Net\ThreadedUdpServer.cs" />
     <Compile Include="ProgramBuffer.cs" />

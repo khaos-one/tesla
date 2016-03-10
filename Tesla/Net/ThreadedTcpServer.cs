@@ -107,7 +107,7 @@ namespace Tesla.Net {
         ///     Отсоединяет и закрывает указанный сокет и поток.
         /// </summary>
         /// <param name="socket">Сокет по которому разрывается соединение.</param>
-        private static void Disconnect(Socket socket) {
+        protected static void Disconnect(Socket socket) {
             try {
                 if (socket != null && socket.Connected) {
                     //socket.Shutdown(SocketShutdown.Both);
