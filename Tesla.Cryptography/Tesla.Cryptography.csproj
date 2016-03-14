@@ -52,6 +52,7 @@
     <Compile Include="RsaSignature.cs" />
     <Compile Include="Rс4ManagedCryptoTransform.cs" />
     <Compile Include="Rс4Managed.cs" />
+    <Compile Include="Sha1Helper.cs" />
     <Compile Include="StrongNumberProvider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
