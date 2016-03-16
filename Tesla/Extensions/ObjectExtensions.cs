@@ -8,5 +8,10 @@ namespace Tesla.Extensions {
                 yield return refobj;
             }
         }
+
+        public static T DefaultOnNull<T>(this T obj, T defaultValue)
+            where T : class {
+            return obj ?? defaultValue;
+        }
     }
 }

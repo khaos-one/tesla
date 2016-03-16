@@ -90,5 +90,13 @@ namespace Tesla.Extensions {
                 return str.Trim(' ', ',');
             }
         }
+
+        public static bool IsNullOrWhiteSpace(this string str) {
+            return string.IsNullOrWhiteSpace(str);
+        }
+
+        public static string DefaultOnEmpty(this string str, string defaultValue = null) {
+            return str.IsNullOrWhiteSpace() ? defaultValue : str;
+        }
     }
 }
