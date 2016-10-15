@@ -56,5 +56,34 @@ namespace Tesla.Extensions {
             int targetOffset = 0) {
             Buffer.BlockCopy(target, targetOffset, array, sourceOffset, target.Length);
         }
+
+        public static bool StartsWith(this byte[] haystack, byte[] needle, int offset = 0) {
+            if (haystack.Length - offset < needle.Length) {
+                return false;
+            }
+
+            for (var i = 0; i < needle.Length; i++) {
+                if (haystack[i + offset] != needle[i]) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public static byte[] SubArray(this byte[] array, int offset, int count = 0) {
+            if (count < 1) {
+                count = array.Length - offset;
+            }
+
+            if (array.Length < count) {
+                return new byte[0];
+            }
+
+            var result = new byte[count];
+            Buffer.BlockCopy(array, offset, result, 0, count);
+
+            return result;
+        }
     }
 }
